@@ -1,0 +1,59 @@
+/*
+ * Category listing — port spec §6.3. Content cap 1120px.
+ *
+ * The rows are the shared `ArticleRow`; the only screen-local work is the
+ * header block and the roomier row rhythm the comp uses here (18/20 padding,
+ * a 15.5px title and the snippet in place of the category sub-line).
+ */
+
+.cat__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-block-end: 26px;
+}
+
+.cat__head-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-inline-size: 0;
+}
+
+.cat__h1 {
+  margin: 0;
+  font-size: clamp(26px, 3.6vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.cat__blurb {
+  margin: 0;
+  font-size: 15px;
+  color: var(--fg-muted);
+  line-height: 1.6;
+  max-inline-size: 560px;
+  text-wrap: pretty;
+}
+
+.cat__count {
+  font-size: 12px;
+  color: var(--fg-subtle);
+}
+
+/* Row rhythm for this screen only. */
+.cat .art-row {
+  align-items: flex-start;
+  padding: 18px 20px;
+  gap: 16px;
+}
+
+.cat .art-row__title {
+  font-size: 15.5px;
+}
+
+.cat .art-row__sub {
+  font-size: 13px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}

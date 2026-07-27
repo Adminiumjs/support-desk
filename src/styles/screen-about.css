@@ -1,0 +1,250 @@
+/* screen-about.css — `about` (port spec §6.37). Imported by About.tsx only. */
+
+.abt {
+  padding-block: clamp(28px, 5vw, 60px) clamp(40px, 6vw, 72px);
+}
+
+.abt__eyebrow {
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--fg-subtle);
+}
+
+.abt__h1 {
+  margin: 0;
+  max-inline-size: 740px;
+  font-size: clamp(30px, 5vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.abt__lede {
+  margin: 18px 0 0;
+  max-inline-size: 640px;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+
+/* ------------------------------------------------------------- stat grid */
+
+.abt__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-block: 36px;
+}
+
+.abt__stat {
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.abt__stat-value {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.abt__stat-caption {
+  margin: 4px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+/* ----------------------------------------------------- two-up text/image */
+
+.abt__twoup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px;
+  align-items: center;
+  margin-block-end: 44px;
+}
+
+.abt__twoup-text {
+  flex: 1 1 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.abt__body {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+
+.abt__panel {
+  flex: 1 1 300px;
+  position: relative;
+  min-block-size: 240px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(120% 82% at 50% 0%, rgba(255, 255, 255, 0.28), transparent 58%),
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--accent) 22%, transparent),
+      color-mix(in srgb, var(--accent) 7%, transparent)
+    );
+}
+
+.abt__panel-icon {
+  color: color-mix(in srgb, var(--accent) 62%, transparent);
+}
+
+.abt__fname {
+  position: absolute;
+  inset-block-end: 10px;
+  inset-inline-start: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-subtle);
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 3px 7px;
+}
+
+/* ---------------------------------------------------------------- values */
+
+.abt__h2 {
+  margin: 0 0 16px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.abt__h2--tight {
+  margin: 0;
+}
+
+.abt__values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin-block-end: 44px;
+}
+
+.abt__value {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.abt__value-tile {
+  inline-size: 42px;
+  block-size: 42px;
+  border-radius: 12px;
+}
+
+.abt__value-title {
+  margin: 0;
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.abt__value-body {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.62;
+  color: var(--fg-muted);
+}
+
+/* ------------------------------------------------------------------ team */
+
+.abt__team {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-block-end: 44px;
+}
+
+.abt__member-tile {
+  min-block-size: 150px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-block-end: 11px;
+}
+
+.abt__member-initials {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.abt__member-name {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.abt__member-role {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  color: var(--fg-subtle);
+}
+
+/* ------------------------------------------------------------------- CTA */
+
+.abt__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: clamp(22px, 4vw, 34px);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.abt__cta-text {
+  flex: 1 1 300px;
+}
+
+.abt__cta-title {
+  margin: 0 0 6px;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.abt__cta-body {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+}
+
+.abt__cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+  align-items: center;
+}

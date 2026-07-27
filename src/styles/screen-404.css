@@ -1,0 +1,69 @@
+/*
+ * `404` — the wrong-turn page (port spec §6.7). Centred column, 620 cap.
+ */
+
+.nf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  padding-block: clamp(56px, 10vw, 120px);
+}
+
+.nf__ico {
+  inline-size: 76px;
+  block-size: 76px;
+  border-radius: 22px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nf__code {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--fg-subtle);
+}
+
+.nf__title {
+  margin: 0;
+  font-size: clamp(28px, 4.5vw, 42px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.nf__body {
+  margin: 0;
+  max-inline-size: 420px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+
+.nf__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-block-start: 4px;
+}
+
+.nf__btn {
+  padding: 13px 22px;
+  border-radius: 13px;
+  font-size: 14.5px;
+  font-weight: 700;
+}
+
+.nf__btn--ghost {
+  border: 1px solid var(--border-strong);
+}

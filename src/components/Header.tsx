@@ -58,8 +58,12 @@ export function Header() {
       if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
       if (e.key === "/") {
         e.preventDefault();
-        if (inputRef.current) {
-          inputRef.current.focus();
+        /* Below 1120 the inline field is `display: none`: it is still in the
+         * DOM, but focusing it is a no-op. Fall back to the search screen so
+         * the documented shortcut is never a dead key (ruling R5 / R2). */
+        const field = inputRef.current;
+        if (field && field.offsetParent !== null) {
+          field.focus();
           set({ hqFocus: true });
         } else {
           gotoKb("");
@@ -200,13 +204,19 @@ export function Header() {
             showLabel={labels}
             onClick={() => gotoKb()}
           />
+          {/* Both are desktop-only (see the responsive block in components.css):
+           * ⌘K means nothing on touch, and the overview is linked from the
+           * footer on every page. Below 980px the bar cannot fit five icons
+           * beside the wordmark without overflowing the viewport. */}
           <IconButton
+            className="hdr-cmd-btn"
             icon="command"
             label="Command palette — ⌘K"
             showLabel={labels}
             onClick={cpToggle}
           />
           <IconButton
+            className="hdr-grid-btn"
             icon="layout-grid"
             label="All screens"
             showLabel={labels}

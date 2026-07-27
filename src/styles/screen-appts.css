@@ -1,0 +1,151 @@
+/* `appts` — Service appointments (port spec §6.18). Scoped to `.ap`. */
+
+.ap .ap__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-block-end: 26px;
+}
+.ap .ap__head-text {
+  max-inline-size: 520px;
+}
+.ap .ap__h1 {
+  margin: 0 0 6px;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.ap .ap__lede {
+  margin: 0;
+  font-size: 15.5px;
+  color: var(--fg-muted);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+.ap .ap__book {
+  padding: 12px 19px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* -------------------------------------------------------------- upcoming */
+
+.ap .ap__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-block: 14px 32px;
+}
+.ap .ap__card {
+  border-radius: 16px;
+  padding: clamp(16px, 3vw, 20px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.ap .ap__top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-start;
+}
+.ap .ap__body {
+  flex: 1 1 220px;
+  min-inline-size: 0;
+}
+.ap .ap__kindrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+}
+.ap .ap__kind {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.ap .ap__when {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+.ap .ap__where {
+  margin: 6px 0 0;
+  font-size: 11.5px;
+  color: var(--fg-subtle);
+}
+
+.ap .ap__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  padding-block-start: 14px;
+  border-block-start: 1px solid var(--border);
+}
+.ap .ap__eng {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.ap .ap__eng-name {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.ap .ap__eng-role {
+  font-size: 11.5px;
+  color: var(--fg-subtle);
+}
+.ap .ap__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-inline-start: auto;
+}
+.ap .ap__act {
+  padding: 9px 14px;
+  border-radius: 11px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--fg-muted);
+}
+.ap .ap__act--danger {
+  color: var(--danger);
+}
+
+/* ------------------------------------------------------------------ past */
+
+.ap .ap__pastlist {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-block-start: 14px;
+}
+.ap .ap__pastrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  padding: 15px 17px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.ap .ap__pastbody {
+  flex: 1 1 200px;
+  min-inline-size: 0;
+}
+.ap .ap__pastkind {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 700;
+}
+.ap .ap__pastwhen {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  color: var(--fg-subtle);
+}

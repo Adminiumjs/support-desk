@@ -1,0 +1,114 @@
+/* screen-members.css — `members` (port spec §6.27). Imported by Members.tsx. */
+
+.mb__h1 {
+  margin: 0;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.mb__lede {
+  margin: 10px 0 20px;
+  max-inline-size: 62ch;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+
+/* --- invite bar --- */
+
+.mb__invite {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+  align-items: flex-end;
+  margin-block-end: 20px;
+}
+.mb__invite-email {
+  flex: 1 1 220px;
+}
+.mb__invite-email .sd-input {
+  block-size: 46px;
+}
+.mb__invite-role {
+  flex: 0 1 150px;
+  min-inline-size: 130px;
+}
+.mb__invite-role .sd-select {
+  block-size: 46px;
+}
+
+/* --- member rows --- */
+
+.mb__row {
+  gap: 13px;
+}
+.mb__main {
+  flex: 1 1 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-inline-size: 0;
+}
+.mb__name-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+}
+.mb__name {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.mb__meta {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--fg-subtle);
+}
+.mb__perms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-block-start: 2px;
+}
+.mb__perm {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fg-muted);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 4px 8px;
+}
+
+.mb__acts {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.mb__role {
+  block-size: 38px;
+  padding-block: 0;
+  font-size: 13px;
+  inline-size: auto;
+  min-inline-size: 104px;
+}
+.mb__remove {
+  block-size: 36px;
+  min-inline-size: 36px;
+  color: var(--danger);
+}
+.mb__you {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--fg-subtle);
+}
+
+.mb__note {
+  margin-block-start: 20px;
+}

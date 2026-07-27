@@ -1,0 +1,131 @@
+/*
+ * Article — port spec §6.4. Content cap 820px.
+ */
+
+.art__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+  margin-block-end: 12px;
+}
+
+.art__cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.art__read {
+  font-size: 12px;
+  color: var(--fg-subtle);
+}
+
+.art__h1 {
+  margin: 0 0 22px;
+  font-size: clamp(27px, 4vw, 38px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+/* --- save / library actions --- */
+
+.art__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-block-start: 22px;
+}
+
+.art__save {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  border-radius: 11px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--fg);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.art__save--on {
+  border-color: transparent;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* --- body --- */
+
+.art__body {
+  margin-block: 30px 8px;
+}
+
+/* --- was this helpful --- */
+
+.art__feedback {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 22px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface-2);
+  margin-block-start: 16px;
+}
+
+.art__feedback-label {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.art__feedback-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* The comp's `thumbStyle` — squarer and slightly larger than a filter chip. */
+.art__feedback-btns .sd-chip {
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 11px;
+  font-size: 13.5px;
+  color: var(--fg);
+}
+
+.art__feedback-btns .sd-chip[aria-pressed="true"] {
+  color: var(--accent-fg);
+}
+
+/* --- related --- */
+
+.art__related {
+  margin-block-start: 36px;
+}
+
+.art__related-h2 {
+  margin: 0 0 14px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.art__related-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

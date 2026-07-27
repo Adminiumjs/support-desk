@@ -537,6 +537,9 @@
 .hdr__nav {
   gap: 2px;
   margin-inline-start: 4px;
+  /* Items are flex-shrink:0, so a shrinking container would let them spill
+   * over .hdr__right. The search field absorbs the squeeze instead. */
+  flex-shrink: 0;
 }
 .hdr__navitem {
   display: inline-flex;
@@ -2008,4 +2011,59 @@
 }
 .sd-spread {
   justify-content: space-between;
+}
+
+/* ------------------------------------------------- header responsive switch
+ *
+ * Must live at the END of this file. These rules toggle `display` on elements
+ * that also carry .sd-iconbtn / .sd-btn (both of which set display above at
+ * equal specificity), and on .hdr-nav. Anywhere earlier — or in base.css,
+ * which is imported first — the component rule would win and the mobile menu
+ * button would stay visible on desktop.
+ *
+ * 980px  → the inline nav and the "Open a ticket" CTA replace the hamburger.
+ * 1120px → the search field replaces the search icon button.
+ */
+.hdr-nav,
+.hdr-cta {
+  display: none;
+}
+.hdr-menu-btn,
+.hdr-search-btn {
+  display: inline-flex;
+}
+.hdr-search-field {
+  display: none;
+}
+/* Five icon buttons plus the wordmark overflow a 375px viewport. These two are
+ * desktop-only: ⌘K is meaningless on touch, and "All screens" is linked from
+ * the footer on every page, so nothing becomes unreachable. */
+.hdr-cmd-btn,
+.hdr-grid-btn {
+  display: none;
+}
+
+@media (min-width: 980px) {
+  .hdr-nav {
+    display: flex;
+  }
+  .hdr-cta {
+    display: inline-flex;
+  }
+  .hdr-menu-btn {
+    display: none;
+  }
+  .hdr-cmd-btn,
+  .hdr-grid-btn {
+    display: inline-flex;
+  }
+}
+
+@media (min-width: 1120px) {
+  .hdr-search-field {
+    display: block;
+  }
+  .hdr-search-btn {
+    display: none;
+  }
 }

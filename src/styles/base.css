@@ -437,40 +437,11 @@ svg {
 
 /* --- the two real breakpoints (ruling R5) --- */
 
-.hdr-nav,
-.hdr-cta {
-  display: none;
-}
-.hdr-menu-btn {
-  display: inline-flex;
-}
-.hdr-search-field {
-  display: none;
-}
-.hdr-search-btn {
-  display: inline-flex;
-}
-
-@media (min-width: 980px) {
-  .hdr-nav {
-    display: flex;
-  }
-  .hdr-cta {
-    display: inline-flex;
-  }
-  .hdr-menu-btn {
-    display: none;
-  }
-}
-
-@media (min-width: 1120px) {
-  .hdr-search-field {
-    display: block;
-  }
-  .hdr-search-btn {
-    display: none;
-  }
-}
+/* The header's 980 / 1120 switches live at the end of components.css, not
+ * here. They toggle `display` on elements that also carry a component class
+ * (.sd-iconbtn, .sd-btn), and components.css is imported after this file — at
+ * equal specificity the later sheet wins, so a rule placed here would lose and
+ * the mobile menu button would stay visible on desktop. */
 
 /* Wide content never scrolls the page sideways. */
 .oh-xscroll {

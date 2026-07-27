@@ -1,0 +1,141 @@
+/* screen-overview.css — `overview` (port spec §6.39). Imported by Overview.tsx. */
+
+.ovw__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-block-end: 34px;
+}
+
+.ovw__intro {
+  flex: 1 1 420px;
+}
+
+.ovw__eyebrow {
+  margin: 0 0 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--fg-subtle);
+}
+
+.ovw__h1 {
+  margin: 0 0 10px;
+  font-size: clamp(26px, 3.6vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.ovw__lede {
+  margin: 0;
+  max-inline-size: 62ch;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+
+.ovw__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 11px;
+}
+
+/* ---------------------------------------------------------------- groups */
+
+.ovw__groups {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.ovw__group-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-block-end: 13px;
+}
+
+.ovw__group-head .sd-eyebrow {
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+.ovw__rule {
+  flex: 1;
+  block-size: 1px;
+  background: var(--border);
+}
+
+.ovw__group-count {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-subtle);
+}
+
+.ovw__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
+  gap: 13px;
+}
+
+/* ----------------------------------------------------------------- cards */
+
+.ovw__card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 17px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--fg);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  text-align: start;
+  font: inherit;
+}
+
+.ovw__card--on {
+  border-color: var(--accent);
+}
+
+.ovw__card-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.ovw__card-name {
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.ovw__dot {
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin-inline-start: auto;
+}
+
+.ovw__card-blurb {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+  text-align: start;
+}
+
+.ovw__card-id {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--fg-subtle);
+}

@@ -1,0 +1,222 @@
+/* screen-a11y.css — `a11y` (port spec §6.34). Imported by A11y.tsx only. */
+
+.a11__h1 {
+  margin: 0 0 10px;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.a11__lede {
+  margin: 0 0 24px;
+  max-inline-size: 62ch;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+
+.a11__split {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  align-items: flex-start;
+}
+
+/* ------------------------------------------------------------- left card */
+
+.a11__panel {
+  flex: 1 1 400px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.a11__block {
+  padding: clamp(18px, 3vw, 24px);
+}
+
+.a11__block--divided {
+  border-block-end: 1px solid var(--border);
+}
+
+.a11__block--top {
+  border-block-start: 1px solid var(--border);
+}
+
+.a11__block-title {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.a11__block-note {
+  margin: 0 0 14px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+
+/* ----------------------------------------------------------- toggle rows */
+
+.a11__row {
+  inline-size: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px clamp(18px, 3vw, 24px);
+  border: none;
+  border-block-end: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.a11__row:last-child {
+  border-block-end: none;
+}
+
+.a11__row:hover {
+  background: var(--surface-2);
+}
+
+.a11__row-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-inline-size: 0;
+}
+
+.a11__row-label {
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.a11__row-note {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--fg-subtle);
+}
+
+/*
+ * `aria-checked` lives on the row (one control per row), so the shared
+ * `.sd-toggle[aria-checked="true"]` rules cannot match. Mirror them here
+ * rather than re-implementing the switch.
+ */
+.a11__row[aria-checked="true"] .sd-toggle {
+  background: var(--accent);
+  border-color: transparent;
+}
+
+.a11__row[aria-checked="true"] .sd-toggle__knob {
+  transform: translateX(19px);
+  background: var(--accent-fg);
+}
+
+/* ----------------------------------------------------------------- aside */
+
+.a11__aside {
+  flex: 1 1 280px;
+  min-inline-size: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.a11__preview {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.a11__preview-h {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.a11__preview-p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.62;
+}
+
+.a11__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.a11__faux-btn {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 11px;
+  padding: 10px 16px;
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.a11__note {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--fg-subtle);
+}
+
+/* ------------------------------------------------------------- shortcuts */
+
+.a11__shortcuts {
+  padding: 18px;
+  border-style: dashed;
+  box-shadow: none;
+}
+
+.a11__shortcuts-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 8px;
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.a11__shortcuts-body {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--fg-muted);
+}
+
+.a11__see-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-block-start: 12px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.a11__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 11px;
+}

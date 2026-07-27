@@ -1,0 +1,175 @@
+/* screen-bundles.css — Bundle deals (§6.21). */
+
+.bundles-title {
+  margin: 0 0 8px;
+  font-size: clamp(24px, 3.4vw, 32px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+.bundles-lede {
+  margin: 0 0 22px;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  max-inline-size: 620px;
+}
+
+.bundles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: 14px;
+  margin-block-end: 24px;
+}
+.bundles-card {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(18px, 3vw, 24px);
+  border-radius: 18px;
+}
+.bundles-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+}
+.bundles-card__name {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+.bundles-card__blurb {
+  margin: 10px 0 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+
+.bundles-items {
+  flex: 1;
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.bundles-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 13.5px;
+}
+.bundles-item__qty {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--fg-subtle);
+}
+
+.bundles-card__pricerow {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-block: 18px 16px;
+}
+.bundles-card__now {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+.bundles-card__was {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--fg-subtle);
+  text-decoration: line-through;
+}
+
+.bundles-card__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--fg);
+  font-size: 13.5px;
+  font-weight: 700;
+  inline-size: 100%;
+  cursor: pointer;
+}
+
+/* -------------------------------------------------------------- BYO */
+
+.bundles-byo {
+  border-radius: 18px;
+  padding: clamp(18px, 3vw, 24px);
+}
+.bundles-byo__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block-end: 18px;
+}
+.bundles-byo__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+.bundles-byo__sub {
+  margin: 5px 0 0;
+  font-size: 13px;
+  color: var(--fg-muted);
+}
+.bundles-byo__note {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+}
+
+.bundles-byo__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 11px;
+}
+.bundles-byo__name {
+  font-size: 13px;
+  font-weight: 700;
+}
+.bundles-byo__price {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--fg-subtle);
+}
+
+.bundles-byo__total {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  border-block-start: 1px solid var(--border);
+  padding-block-start: 18px;
+  margin-block-start: 20px;
+}
+.bundles-byo__count {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.bundles-byo__sum {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+.bundles-byo__before {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--fg-subtle);
+  text-decoration: line-through;
+}
+.bundles-byo__add {
+  margin-inline-start: auto;
+}

@@ -1,28 +1,321 @@
 /*
- * Skeleton shell. This is a placeholder so the scaffold builds and runs; the
- * screen port replaces it with the real app — a state-based `view` switch
- * (no router) over the 39 screens, the Zustand store, and the DataSource seam
- * at src/data/source.ts.
+ * App — the whole portal.
+ *
+ * Routing is the `view` string on the Zustand store (house rule: no router).
+ * `renderView` is an exhaustive switch over all 39 ViewIds, so adding a view
+ * to the union without adding a screen here is a compile error rather than a
+ * blank page.
+ *
+ * Everything around the switch is the global chrome: the outage banner, the
+ * sticky header, the mobile sheet, the breadcrumb trail, the footer, and the
+ * four overlays (toast, command palette, shortcuts modal, chat widget).
+ *
+ * Ruling R5: nothing here measures the window. The 980 / 1120 switches are
+ * real CSS media queries in base.css.
  */
+
+import { useEffect, useRef } from "react";
+import {
+  Breadcrumbs,
+  ChatWidget,
+  CommandPalette,
+  Footer,
+  Header,
+  MobileSheet,
+  OutageBanner,
+  ShortcutsOverlay,
+  Toast,
+} from "../components";
+import { CHORD_MAP } from "../components/chrome";
+import { applyA11ySettings, watchReducedMotion } from "../lib/a11y";
+import { CHORD_MS, useAppStore } from "../state/store";
+import type { ViewId } from "../data/types";
+
+import A11y from "../screens/A11y";
+import About from "../screens/About";
+import Appts from "../screens/Appts";
+import Article from "../screens/Article";
+import Bundles from "../screens/Bundles";
+import Category from "../screens/Category";
+import Claim from "../screens/Claim";
+import Contact from "../screens/Contact";
+import Devices from "../screens/Devices";
+import Downloads from "../screens/Downloads";
+import Energy from "../screens/Energy";
+import Firmware from "../screens/Firmware";
+import Forum from "../screens/Forum";
+import Gift from "../screens/Gift";
+import Home from "../screens/Home";
+import Imprint from "../screens/Imprint";
+import Installers from "../screens/Installers";
+import Kb from "../screens/Kb";
+import Members from "../screens/Members";
+import MyTickets from "../screens/MyTickets";
+import NewTicket from "../screens/NewTicket";
+import NotFound from "../screens/NotFound";
+import Notifs from "../screens/Notifs";
+import Orders from "../screens/Orders";
+import Overview from "../screens/Overview";
+import Partner from "../screens/Partner";
+import Parts from "../screens/Parts";
+import Plans from "../screens/Plans";
+import Refer from "../screens/Refer";
+import Repair from "../screens/Repair";
+import Returns from "../screens/Returns";
+import Saved from "../screens/Saved";
+import Security from "../screens/Security";
+import Status from "../screens/Status";
+import Survey from "../screens/Survey";
+import Thread from "../screens/Thread";
+import Tour from "../screens/Tour";
+import TradeIn from "../screens/TradeIn";
+import Warranty from "../screens/Warranty";
+
+/* --------------------------------------------------------------- routing */
+
+/** Exhaustive over ViewId — TypeScript enforces the 39. */
+function renderView(view: ViewId) {
+  switch (view) {
+    case "home":
+      return <Home />;
+    case "kb":
+      return <Kb />;
+    case "category":
+      return <Category />;
+    case "article":
+      return <Article />;
+    case "newticket":
+      return <NewTicket />;
+    case "mytickets":
+      return <MyTickets />;
+    case "thread":
+      return <Thread />;
+    case "orders":
+      return <Orders />;
+    case "forum":
+      return <Forum />;
+    case "about":
+      return <About />;
+    case "contact":
+      return <Contact />;
+    case "imprint":
+      return <Imprint />;
+    case "warranty":
+      return <Warranty />;
+    case "claim":
+      return <Claim />;
+    case "returns":
+      return <Returns />;
+    case "appts":
+      return <Appts />;
+    case "firmware":
+      return <Firmware />;
+    case "repair":
+      return <Repair />;
+    case "refer":
+      return <Refer />;
+    case "downloads":
+      return <Downloads />;
+    case "status":
+      return <Status />;
+    case "tradein":
+      return <TradeIn />;
+    case "installers":
+      return <Installers />;
+    case "parts":
+      return <Parts />;
+    case "a11y":
+      return <A11y />;
+    case "overview":
+      return <Overview />;
+    case "gift":
+      return <Gift />;
+    case "plans":
+      return <Plans />;
+    case "security":
+      return <Security />;
+    case "survey":
+      return <Survey />;
+    case "devices":
+      return <Devices />;
+    case "energy":
+      return <Energy />;
+    case "saved":
+      return <Saved />;
+    case "tour":
+      return <Tour />;
+    case "bundles":
+      return <Bundles />;
+    case "members":
+      return <Members />;
+    case "notifs":
+      return <Notifs />;
+    case "partner":
+      return <Partner />;
+    case "404":
+      return <NotFound />;
+    default: {
+      /* Unreachable while the switch stays exhaustive. */
+      const never: never = view;
+      void never;
+      return <NotFound />;
+    }
+  }
+}
+
+/* ------------------------------------------------------------- the shell */
+
 export function App() {
+  const view = useAppStore((s) => s.view);
+  const theme = useAppStore((s) => s.theme);
+  const a11y = useAppStore((s) => s.a11y);
+
+  /* --- theme: an explicit stamp always beats prefers-color-scheme --- */
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+
+  /* --- accessibility: stamp on mount, and re-stamp when the OS flips --- */
+  useEffect(() => {
+    applyA11ySettings(a11y);
+  }, [a11y]);
+
+  useEffect(
+    () =>
+      watchReducedMotion(() => {
+        applyA11ySettings(useAppStore.getState().a11y);
+      }),
+    [],
+  );
+
+  useGlobalShortcuts();
+
   return (
-    <main
-      style={{
-        display: "grid",
-        placeItems: "center",
-        minBlockSize: "100vh",
-        padding: "2rem",
-        textAlign: "center",
-      }}
-    >
-      <div>
-        <h1 style={{ margin: 0, fontSize: "1.5rem", letterSpacing: "-0.02em" }}>
-          Support Desk
-        </h1>
-        <p style={{ color: "var(--fg-muted)" }}>
-          Scaffold ready — screens not ported yet.
-        </p>
+    <div className="app-root">
+      <OutageBanner />
+      <Header />
+      <MobileSheet />
+      <div className="app-main">
+        <Breadcrumbs />
+        {renderView(view)}
       </div>
-    </main>
+      <Footer />
+
+      <Toast />
+      <CommandPalette />
+      <ShortcutsOverlay />
+      <ChatWidget />
+    </div>
   );
 }
+
+/* --------------------------------------------------------- the key layer */
+
+/** True while the user is typing somewhere a bare letter must not be a hotkey. */
+function isTyping(): boolean {
+  const el = document.activeElement;
+  return (
+    el instanceof HTMLElement &&
+    (el.tagName === "INPUT" ||
+      el.tagName === "TEXTAREA" ||
+      el.tagName === "SELECT" ||
+      el.isContentEditable)
+  );
+}
+
+/**
+ * The document-level shortcuts (port spec §5.5).
+ *
+ * `/` belongs to the header, and Escape inside a trapped overlay belongs to
+ * that overlay; both are handled where they are owned. Everything else — the
+ * palette, the `g` chords and the four single-key actions — lives here.
+ */
+function useGlobalShortcuts(): void {
+  const chord = useRef<{ armed: boolean; timer: number | null }>({
+    armed: false,
+    timer: null,
+  });
+
+  useEffect(() => {
+    const held = chord.current;
+
+    const disarm = () => {
+      held.armed = false;
+      if (held.timer !== null) {
+        clearTimeout(held.timer);
+        held.timer = null;
+      }
+    };
+
+    const onKey = (e: KeyboardEvent) => {
+      const s = useAppStore.getState();
+
+      /* ⌘K / Ctrl+K works even inside a field. */
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        disarm();
+        s.cpToggle();
+        return;
+      }
+
+      if (e.key === "Escape") {
+        disarm();
+        /* The overlays that trap focus close themselves; this is the
+         * catch-all for when focus sits on the page behind them. */
+        if (s.cpOpen) s.cpClose();
+        else if (s.shortcuts) s.scClose();
+        else if (s.menu) s.closeMenu();
+        else if (s.chatOpen) s.closeChat();
+        return;
+      }
+
+      if (isTyping() || e.metaKey || e.ctrlKey || e.altKey) return;
+
+      /* Second half of a `g` chord. */
+      if (held.armed) {
+        const target = CHORD_MAP[e.key.toLowerCase()];
+        disarm();
+        if (target) {
+          e.preventDefault();
+          s.go(target);
+          return;
+        }
+      }
+
+      switch (e.key) {
+        case "g":
+          e.preventDefault();
+          disarm();
+          held.armed = true;
+          held.timer = window.setTimeout(disarm, CHORD_MS);
+          return;
+        case "?":
+          e.preventDefault();
+          s.scToggle();
+          return;
+        case "n":
+          e.preventDefault();
+          s.openTicket();
+          return;
+        case "c":
+          e.preventDefault();
+          s.openChat();
+          return;
+        case "t":
+          e.preventDefault();
+          s.toggleTheme();
+          return;
+        default:
+          return;
+      }
+    };
+
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      disarm();
+    };
+  }, []);
+}
+
+export default App;

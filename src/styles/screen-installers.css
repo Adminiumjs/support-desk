@@ -1,0 +1,202 @@
+/* `installers` — Installer finder (port spec §6.19). Scoped to `.in`. */
+
+.in .in__h1 {
+  margin: 0 0 6px;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.in .in__lede {
+  margin: 0 0 22px;
+  font-size: 15.5px;
+  color: var(--fg-muted);
+  line-height: 1.6;
+  max-inline-size: 580px;
+  text-wrap: pretty;
+}
+
+/* ---------------------------------------------------------- search card */
+
+.in .in__search {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  padding: clamp(16px, 3vw, 20px);
+  border-radius: 18px;
+}
+.in .in__field {
+  flex: 1 1 200px;
+  min-inline-size: 0;
+}
+.in .in__field--sm {
+  flex: 0 1 160px;
+}
+.in .in__postcode {
+  text-transform: uppercase;
+}
+.in .in__go {
+  padding: 12px 19px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------ map placeholder */
+
+.in .in__map {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 180px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  margin-block: 20px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 82% at 50% 0%, rgba(255, 255, 255, 0.28), transparent 58%),
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--accent) 20%, transparent),
+      color-mix(in srgb, var(--accent) 6%, transparent)
+    );
+}
+.in .in__map-ico {
+  color: color-mix(in srgb, var(--accent) 60%, transparent);
+}
+.in .in__map-name {
+  position: absolute;
+  inset-inline-start: 12px;
+  inset-block-end: 12px;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--fg-subtle);
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  border: 1px solid var(--border);
+  padding: 3px 8px;
+  border-radius: 7px;
+}
+
+/* ------------------------------------------------------------ meta row */
+
+.in .in__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-block-end: 14px;
+}
+.in .in__count {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.in .in__sorted {
+  font-size: 11.5px;
+  color: var(--fg-subtle);
+}
+
+/* ------------------------------------------------------ installer cards */
+
+.in .in__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.in .in__card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-start;
+  border-radius: 16px;
+  padding: clamp(16px, 3vw, 20px);
+}
+.in .in__body {
+  flex: 1 1 240px;
+  min-inline-size: 0;
+}
+.in .in__namerow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+}
+.in .in__name {
+  font-size: 15.5px;
+  font-weight: 700;
+}
+.in .in__approved {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.in .in__metarow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-block-start: 8px;
+  font-size: 12.5px;
+  color: var(--fg-muted);
+}
+.in .in__stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.in .in__skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-block-start: 11px;
+}
+.in .in__skill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--fg-muted);
+}
+.in .in__next {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 11px 0 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--pos);
+}
+.in .in__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  align-items: center;
+  margin-inline-start: auto;
+}
+.in .in__call {
+  padding: 10px 15px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.in .in__request {
+  border-radius: 11px;
+}
+
+.in .in__note {
+  margin-block-start: 22px;
+}

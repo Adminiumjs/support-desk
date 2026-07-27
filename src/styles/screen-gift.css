@@ -1,0 +1,186 @@
+/* screen-gift.css — Gift cards (§6.22). */
+
+.gift-title {
+  margin: 0 0 8px;
+  font-size: clamp(24px, 3.4vw, 32px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+.gift-lede {
+  margin: 0 0 22px;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  max-inline-size: 560px;
+}
+
+/* ------------------------------------------------------ confirmation */
+
+.gift-done {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-start;
+  margin-block-end: 22px;
+}
+.gift-done__tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 52px;
+  block-size: 52px;
+  border-radius: 15px;
+  background: var(--pos-soft);
+  color: var(--pos);
+}
+.gift-done__title {
+  margin: 0;
+  font-size: clamp(24px, 3.4vw, 32px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+.gift-done__body {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--fg-muted);
+  max-inline-size: 520px;
+}
+.gift-done__codes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.gift-done__code {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 9px 14px;
+  border-radius: 11px;
+}
+
+/* -------------------------------------------------------------- form */
+
+.gift-split {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  align-items: flex-start;
+}
+.gift-form {
+  flex: 1 1 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.gift-designs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 11px;
+}
+.gift-design__name {
+  font-size: 13px;
+  font-weight: 700;
+}
+.gift-custom {
+  margin-block-start: 11px;
+  font-family: var(--font-mono);
+}
+.gift-optional {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--fg-subtle);
+}
+.gift-submit {
+  align-self: flex-start;
+  padding: 13px 21px;
+  border-radius: 13px;
+  font-size: 14.5px;
+}
+
+/* ------------------------------------------------------------- aside */
+
+.gift-aside {
+  flex: 1 1 280px;
+  min-inline-size: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.gift-aside .sd-eyebrow {
+  margin: 0;
+}
+
+.gift-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+.gift-preview__brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-block-end: 6px;
+}
+.gift-preview__word {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  flex: 1;
+}
+.gift-preview__ico {
+  flex-shrink: 0;
+}
+.gift-preview__amount {
+  font-family: var(--font-mono);
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+.gift-preview__to {
+  font-size: 13px;
+  font-weight: 700;
+}
+.gift-preview__msg {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+.gift-preview__foot {
+  margin-block-start: 6px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--fg-subtle);
+}
+
+.gift-redeem {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  align-items: stretch;
+}
+.gift-redeem__field {
+  text-transform: uppercase;
+}
+.gift-redeem__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block-start: 12px;
+  border-block-start: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--fg-muted);
+}
+.gift-redeem__bal {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--fg);
+}

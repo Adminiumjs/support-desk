@@ -1,0 +1,213 @@
+/* screen-partner.css — Partner portal (§6.36). */
+
+.pt-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
+  margin-block-end: 22px;
+}
+.pt-head__titlerow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.pt-head__title {
+  margin: 0;
+  font-size: clamp(22px, 3.2vw, 30px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+.pt-head__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.pt-head__meta {
+  margin: 6px 0 0;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--fg-subtle);
+}
+
+.pt-kpis {
+  margin-block-end: 24px;
+}
+
+.pt-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  align-items: flex-start;
+}
+.pt-left {
+  flex: 1 1 420px;
+  min-inline-size: 0;
+}
+.pt-left__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block-end: 13px;
+}
+.pt-left__head .sd-eyebrow {
+  margin: 0;
+}
+.pt-queue {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--fg-subtle);
+}
+
+.pt-jobs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.pt-job {
+  border-radius: 16px;
+  padding: clamp(16px, 3vw, 20px);
+}
+.pt-job__top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 13px;
+}
+.pt-job__titlerow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+}
+.pt-job__title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.pt-job__detail {
+  margin: 7px 0 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+.pt-job__meta {
+  margin: 7px 0 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--fg-subtle);
+}
+.pt-job__fee {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  margin-inline-start: auto;
+}
+
+.pt-job__acts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-block-start: 16px;
+  padding-block-start: 14px;
+  border-block-start: 1px solid var(--border);
+}
+.pt-job__msg {
+  margin-inline-start: auto;
+}
+
+/* ------------------------------------------------------------- aside */
+
+.pt-aside {
+  flex: 1 1 260px;
+  min-inline-size: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.pt-card {
+  border-radius: 16px;
+  padding: 18px;
+}
+.pt-card__body {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+}
+
+.pt-cert__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-block: 12px 9px;
+}
+.pt-cert__name {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.pt-cert__pct {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.pt-cert__track {
+  block-size: 7px;
+  margin-block-end: 11px;
+}
+.pt-cert__cta {
+  inline-size: 100%;
+  justify-content: center;
+  margin-block-start: 13px;
+}
+
+.pt-links {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin-block-start: 13px;
+}
+.pt-link {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--fg-muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: start;
+  cursor: pointer;
+}
+
+.pt-payout {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 16px;
+  padding: 18px;
+}
+.pt-payout__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 700;
+}

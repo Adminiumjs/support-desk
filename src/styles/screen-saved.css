@@ -1,0 +1,95 @@
+/* screen-saved.css — `saved` (port spec §6.5). Imported by Saved.tsx only. */
+
+.svd__h1 {
+  margin: 0;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.svd__lede {
+  margin: 10px 0 22px;
+  max-inline-size: 62ch;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+
+/* --- saved rows --- */
+
+.svd__row {
+  gap: 13px;
+}
+.svd__open {
+  flex: 1 1 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: start;
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+}
+.svd__title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.svd__open:hover .svd__title {
+  color: var(--accent);
+}
+.svd__snippet {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+.svd__meta {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--fg-subtle);
+}
+.svd__rm {
+  block-size: 36px;
+  min-inline-size: 36px;
+}
+
+/* --- suggested next --- */
+
+.svd__h2 {
+  margin: 30px 0 13px;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+.svd__suggest {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.svd__sug {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  color: var(--fg-subtle);
+}
+.svd__sug-open {
+  flex: 1;
+  min-inline-size: 0;
+  text-align: start;
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: var(--fg);
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  cursor: pointer;
+}
+.svd__sug-open:hover {
+  color: var(--accent);
+}

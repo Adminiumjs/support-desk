@@ -1,0 +1,162 @@
+/*
+ * Knowledge-base search results — port spec §6.2. Content cap 820px.
+ */
+
+.kb__h1 {
+  margin: 0 0 18px;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+/* --- the query field --- */
+
+.kb__field {
+  position: relative;
+  margin-block-end: 20px;
+}
+
+.kb__input {
+  inline-size: 100%;
+  block-size: 56px;
+  padding-inline: 50px;
+  border-radius: 15px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--fg);
+  font-size: 15px;
+  font-weight: 500;
+  box-shadow: var(--shadow);
+}
+
+.kb__ico {
+  position: absolute;
+  inset-inline-start: 18px;
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+  color: var(--fg-subtle);
+  pointer-events: none;
+}
+
+.kb__clear {
+  position: absolute;
+  inset-inline-end: 14px;
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+  inline-size: 32px;
+  block-size: 32px;
+  border-radius: 9px;
+  border: none;
+  background: var(--surface-3);
+  color: var(--fg-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* --- facets + toolbar --- */
+
+.kb__facets {
+  margin-block-end: 16px;
+}
+
+.kb__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block-end: 14px;
+}
+
+.kb__count {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--fg-muted);
+}
+
+.kb__sort {
+  padding: 9px 12px;
+  border-radius: 11px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--fg);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* --- result rows --- */
+
+.kb__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 14px;
+  inline-size: 100%;
+  padding: 16px 18px;
+  border: none;
+  border-block-end: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.kb__row:last-child {
+  border-block-end: none;
+}
+
+.kb__row-text {
+  flex: 1 1 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-inline-size: 0;
+}
+
+.kb__row-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.kb__row-snippet {
+  font-size: 13.5px;
+  color: var(--fg-muted);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.kb__row-meta {
+  font-size: 11px;
+  color: var(--fg-subtle);
+}
+
+/* --- people also search --- */
+
+.kb__related {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-block-start: 26px;
+}
+
+.kb__related-label {
+  font-size: 12.5px;
+  color: var(--fg-muted);
+}
+
+.kb__related-link {
+  border: none;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--accent);
+  cursor: pointer;
+}

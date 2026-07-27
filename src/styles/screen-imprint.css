@@ -1,0 +1,96 @@
+/* screen-imprint.css — `imprint` (port spec §6.38). Imported by Imprint.tsx. */
+
+.imp__h1 {
+  margin: 0 0 10px;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.imp__lede {
+  margin: 0 0 10px;
+  max-inline-size: 540px;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+}
+
+.imp__date {
+  display: inline-block;
+  margin: 0 0 26px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--fg-subtle);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 5px 10px;
+  border-radius: 8px;
+}
+
+/* ---------------------------------------------------------- detail table */
+
+.imp__table {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.imp__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  padding: 16px clamp(16px, 3vw, 22px);
+  border-block-end: 1px solid var(--border);
+}
+
+.imp__row:last-child {
+  border-block-end: none;
+}
+
+.imp__term {
+  flex: 0 0 190px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--fg-subtle);
+}
+
+.imp__value {
+  flex: 1 1 220px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--fg);
+}
+
+.imp__value--mono {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+
+/* ----------------------------------------------------------- prose blocks */
+
+.imp__prose {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-block-start: 34px;
+}
+
+.imp__h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.imp__body {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}

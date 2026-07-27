@@ -1,0 +1,75 @@
+/*
+ * `mytickets` — My tickets (port spec §6.9). The rows themselves are the
+ * shared `.ticket-row` from components.css.
+ */
+
+.mt__title {
+  margin: 0 0 6px;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.mt__lede {
+  margin: 0 0 24px;
+  font-size: 15px;
+  color: var(--fg-muted);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.mt__lookup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 18px 20px;
+  margin-block-end: 14px;
+}
+
+.mt__field {
+  flex: 1;
+  min-inline-size: 220px;
+}
+
+.mt__label {
+  display: block;
+  margin-block-end: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--fg-muted);
+}
+
+.mt__input {
+  block-size: 46px;
+  border-radius: 11px;
+}
+
+.mt__go {
+  block-size: 46px;
+  padding: 0 20px;
+  border-radius: 11px;
+  font-size: 14px;
+}
+
+.mt__help {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 22px;
+  font-size: 12.5px;
+  color: var(--fg-subtle);
+}
+
+.mt__count {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--fg-muted);
+}
+
+.mt__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

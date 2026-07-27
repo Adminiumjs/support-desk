@@ -1,0 +1,192 @@
+/* `repair` — Repair booking (port spec §6.17). Scoped to `.rp`. */
+
+.rp .rp__h1 {
+  margin: 0 0 6px;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.rp .rp__lede {
+  margin: 0 0 26px;
+  font-size: 15.5px;
+  color: var(--fg-muted);
+  line-height: 1.6;
+  max-inline-size: 560px;
+  text-wrap: pretty;
+}
+
+/* ------------------------------------------------------- A. confirmation */
+
+.rp .rp__done {
+  border-radius: 18px;
+  padding: clamp(20px, 3vw, 28px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.rp .rp__done-ico {
+  inline-size: 52px;
+  block-size: 52px;
+  border-radius: 15px;
+  background: var(--pos-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.rp .rp__done-title {
+  margin: 0;
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.rp .rp__done-body {
+  margin: 0;
+  font-size: 15px;
+  color: var(--fg-muted);
+  line-height: 1.6;
+  max-inline-size: 480px;
+  text-wrap: pretty;
+}
+.rp .rp__codes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.rp .rp__code {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 9px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+.rp .rp__done-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+}
+
+/* --------------------------------------------------------------- B. form */
+
+.rp .rp__form {
+  border-radius: 18px;
+  padding: clamp(18px, 3vw, 26px);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.rp .rp__sec {
+  display: block;
+}
+.rp .rp__label {
+  display: block;
+  margin: 0 0 11px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.rp .rp__types {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rp .rp__type-ico {
+  inline-size: 38px;
+  block-size: 38px;
+  border-radius: 11px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--fg-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* day chips */
+
+.rp .rp__days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.rp .rp__day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 11px 16px;
+  border-radius: 13px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--fg);
+  text-align: center;
+  cursor: pointer;
+}
+.rp .rp__day--on {
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+.rp .rp__day-dow {
+  font-size: 11.5px;
+  font-weight: 600;
+  opacity: 0.75;
+}
+.rp .rp__day-num {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-block-start: 2px;
+}
+
+/* slot grid */
+
+.rp .rp__slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+  gap: 10px;
+}
+.rp .rp__slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 12px 10px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--fg);
+  cursor: pointer;
+}
+.rp .rp__slot--on {
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+.rp .rp__slot--taken {
+  background: var(--surface-2);
+  color: var(--fg-subtle);
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+.rp .rp__slot-label {
+  font-size: 13px;
+  font-weight: 600;
+}
+.rp .rp__slot-full {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.rp .rp__submit {
+  align-self: flex-start;
+  padding: 13px 22px;
+  border-radius: 13px;
+  font-size: 14.5px;
+  font-weight: 700;
+}

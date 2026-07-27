@@ -1,0 +1,186 @@
+/* screen-refer.css — Refer a friend (§6.24). */
+
+.refer-hero {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: clamp(24px, 4vw, 36px);
+  background:
+    radial-gradient(
+      120% 90% at 100% 0%,
+      color-mix(in srgb, var(--accent) 16%, transparent),
+      transparent 62%
+    ),
+    var(--surface);
+  box-shadow: var(--shadow);
+  margin-block-end: 22px;
+}
+.refer-hero__eyebrow {
+  margin: 0 0 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--fg-subtle);
+}
+.refer-hero__title {
+  margin: 0 0 12px;
+  font-size: clamp(28px, 4.4vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+  max-inline-size: 520px;
+  text-wrap: balance;
+}
+.refer-hero__lede {
+  margin: 0 0 22px;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--fg-muted);
+  max-inline-size: 480px;
+}
+.refer-hero__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+  align-items: center;
+}
+
+.refer-code {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  background: var(--surface-2);
+  border: 1.5px dashed var(--border-strong);
+  padding: 13px 20px;
+  border-radius: 12px;
+}
+.refer-copy {
+  padding: 13px 19px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+}
+.refer-copy--ghost {
+  border: 1px solid var(--border-strong);
+}
+
+/* ------------------------------------------------------------- two-up */
+
+.refer-two {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-block-end: 22px;
+}
+.refer-card {
+  flex: 1 1 260px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: clamp(18px, 3vw, 24px);
+  background: var(--surface);
+}
+.refer-card--progress {
+  flex: 1 1 300px;
+  box-shadow: var(--shadow);
+}
+
+.refer-progress__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-block-end: 12px;
+}
+.refer-progress__head .sd-eyebrow {
+  margin: 0;
+}
+.refer-progress__earned {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.refer-progress__track {
+  margin-block-end: 11px;
+}
+.refer-progress__note {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--fg-muted);
+}
+
+.refer-invite {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-block-start: 12px;
+}
+.refer-invite__field {
+  flex: 1 1 160px;
+  min-inline-size: 0;
+  block-size: 46px;
+  padding-inline: 14px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--fg);
+  font-size: 14px;
+  font-family: inherit;
+}
+.refer-invite__send {
+  padding: 12px 17px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.refer-invite__note {
+  margin: 11px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--fg-subtle);
+}
+
+/* -------------------------------------------------------------- rows */
+
+.refer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-block: 14px 22px;
+}
+.refer-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 13px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 17px;
+  background: var(--surface);
+}
+.refer-row__who {
+  flex: 1 1 160px;
+  min-inline-size: 0;
+}
+.refer-row__name {
+  font-size: 14.5px;
+  font-weight: 700;
+}
+.refer-row__when {
+  margin-block-start: 3px;
+  font-size: 12px;
+  color: var(--fg-subtle);
+}
+.refer-row__reward {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.refer-legal {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--fg-subtle);
+}

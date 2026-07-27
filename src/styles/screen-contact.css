@@ -1,0 +1,218 @@
+/* screen-contact.css — `contact` (port spec §6.11). Imported by Contact.tsx. */
+
+.con__h1 {
+  margin: 0 0 10px;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.con__lede {
+  margin: 0 0 26px;
+  max-inline-size: 580px;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+}
+
+/* ---------------------------------------------------------- channel grid */
+
+.con__channels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
+  margin-block-end: 34px;
+}
+
+.con__ch {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  text-align: start;
+  color: inherit;
+  font: inherit;
+}
+
+button.con__ch {
+  cursor: pointer;
+}
+
+.con__ch-tile {
+  inline-size: 42px;
+  block-size: 42px;
+  border-radius: 12px;
+}
+
+.con__ch-title {
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.con__ch-body {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+
+.con__ch-online {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--pos);
+}
+
+.con__dot {
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background: var(--pos);
+}
+
+.con__ch-chip {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--fg-muted);
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 5px 9px;
+}
+
+.con__ch-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* --------------------------------------------------------- lower two-col */
+
+.con__lower {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  align-items: flex-start;
+}
+
+.con__form {
+  flex: 1 1 380px;
+  border-radius: 18px;
+  padding: clamp(18px, 3vw, 26px);
+  box-shadow: var(--shadow);
+}
+
+.con__form-title {
+  margin: 0 0 5px;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.con__form-lede {
+  margin: 0 0 18px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+
+.con__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.con__label {
+  display: block;
+  margin-block-end: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.con__send {
+  align-self: flex-start;
+}
+
+/* ----------------------------------------------------------- right column */
+
+.con__aside {
+  flex: 1 1 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.con__map {
+  position: relative;
+  min-block-size: 170px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(120% 82% at 50% 0%, rgba(255, 255, 255, 0.28), transparent 58%),
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--accent) 20%, transparent),
+      color-mix(in srgb, var(--accent) 6%, transparent)
+    );
+}
+
+.con__map-icon {
+  color: color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.con__fname {
+  position: absolute;
+  inset-block-end: 10px;
+  inset-inline-start: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-subtle);
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 3px 7px;
+}
+
+.con__info {
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.con__info-name {
+  margin: 8px 0 6px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.con__info-body {
+  margin: 8px 0 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+}
+
+.con__returns {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-block-start: 12px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  cursor: pointer;
+}

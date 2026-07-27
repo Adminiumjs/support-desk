@@ -1,0 +1,185 @@
+/* `warranty` — Warranty registration (port spec §6.15). */
+
+.scr-warranty__h1 {
+  margin: 0 0 10px;
+  font-size: clamp(24px, 3.4vw, 30px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.scr-warranty__lede {
+  margin: 0 0 24px;
+  max-inline-size: 560px;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+}
+
+/* ---------------------------------------------------------- success panel */
+
+.wr-done {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-block-end: 22px;
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.wr-done__tile {
+  inline-size: 52px;
+  block-size: 52px;
+  border-radius: 15px;
+  background: var(--pos-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wr-done__title {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.wr-done__body {
+  margin: 0;
+  max-inline-size: 460px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+}
+
+.wr-done__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+  margin-block-start: 4px;
+}
+
+.wr-done__actions .sd-btn-ghost {
+  padding: 11px 17px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------ form */
+
+.wr-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  border-radius: 18px;
+  padding: clamp(18px, 3vw, 26px);
+  box-shadow: var(--shadow);
+}
+
+.wr-group__label {
+  display: block;
+  margin: 0 0 11px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.wr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.wr-serial {
+  font-family: var(--font-mono);
+}
+
+.wr-help {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 9px 0 0;
+  font-size: 12.5px;
+  color: var(--fg-subtle);
+}
+
+.wr-submit {
+  align-self: flex-start;
+  padding: 13px 22px;
+  border-radius: 13px;
+  font-size: 14.5px;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------- registered list */
+
+.wr-list__title {
+  margin: 34px 0 14px;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.wr-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wr-dev {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.wr-dev__id {
+  flex: 1 1 200px;
+}
+
+.wr-dev__model {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.wr-dev__serial {
+  margin: 4px 0 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--fg-subtle);
+}
+
+.wr-dev__cover {
+  flex: 1 1 180px;
+  min-inline-size: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.wr-dev__coverline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.wr-dev__left {
+  font-family: var(--font-mono);
+}
+
+.wr-dev__claim {
+  padding: 10px 15px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 700;
+}

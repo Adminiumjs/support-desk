@@ -1,0 +1,80 @@
+/*
+ * Home — the help-center landing page (port spec §6.1).
+ *
+ * Four stacked bands, each capped at 1120px: the search hero, the category
+ * grid, the popular-article list and the "open a ticket" CTA. No breadcrumbs.
+ */
+
+import {
+  ArticleRow,
+  ButtonPrimary,
+  CategoryTile,
+  ListCard,
+  SearchHero,
+} from "../components";
+import { dataSource } from "../data/source";
+import { useAppStore } from "../state/store";
+import "../styles/screen-home.css";
+
+export default function Home() {
+  const openCategory = useAppStore((s) => s.openCategory);
+  const openArticle = useAppStore((s) => s.openArticle);
+  const openTicket = useAppStore((s) => s.openTicket);
+
+  const categories = dataSource.categories();
+  const popular = dataSource.popularArticles();
+
+  return (
+    <main className="oh-screen home">
+      {/* A — search hero */}
+      <div className="home__band">
+        <SearchHero />
+      </div>
+
+      {/* B — browse by topic */}
+      <section className="home__band home__sec">
+        <h2 className="home__h2">Browse by topic</h2>
+        <div className="home__grid">
+          {categories.map((c) => (
+            <CategoryTile
+              key={c.slug}
+              category={c}
+              count={dataSource.articlesInCategory(c.slug).length}
+              onClick={() => openCategory(c.slug)}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* C — popular articles */}
+      <section className="home__band home__sec">
+        <h2 className="home__h2">Popular articles</h2>
+        <ListCard>
+          {popular.map((a) => (
+            <ArticleRow
+              key={a.id}
+              article={a}
+              onClick={() => openArticle(a.id)}
+            />
+          ))}
+        </ListCard>
+      </section>
+
+      {/* D — open a ticket */}
+      <section className="home__band home__cta">
+        <div className="home__cta-inner">
+          <div className="home__cta-copy">
+            <h3>Can't find what you need?</h3>
+            <p>
+              Open a ticket and we'll take it from here. Most replies land
+              within a day.
+            </p>
+          </div>
+          <ButtonPrimary icon="pen-line" iconSize={18} onClick={openTicket}>
+            Open a ticket
+          </ButtonPrimary>
+        </div>
+      </section>
+    </main>
+  );
+}

@@ -1,0 +1,153 @@
+/* screen-devices.css — `devices` (port spec §6.25). Imported by Devices.tsx. */
+
+.dv__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-block-end: 24px;
+}
+.dv__head-text {
+  flex: 1 1 260px;
+}
+.dv__h1 {
+  margin: 0;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.dv__lede {
+  margin: 9px 0 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+.dv__head-acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* --- device grid --- */
+
+.dv__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: 13px;
+}
+.dv__card {
+  padding: clamp(16px, 3vw, 20px);
+}
+.dv__card--off {
+  opacity: 0.82;
+}
+.dv__card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 11px;
+}
+.dv__id {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-inline-size: 0;
+}
+.dv__name {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.dv__room {
+  font-size: 12.5px;
+  color: var(--fg-muted);
+}
+
+.dv__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-block: 16px 14px;
+}
+.dv__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.dv__stat-val {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+}
+.dv__stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fg-subtle);
+}
+
+.dv__last {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--fg-muted);
+  padding-block-end: 14px;
+  border-block-end: 1px solid var(--border);
+}
+
+.dv__toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block-start: 14px;
+}
+.dv__toggle-label {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+/* --- shortcut cards --- */
+
+.dv__shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-block-start: 20px;
+}
+.dv__shortcut {
+  flex: 1 1 260px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: start;
+  cursor: pointer;
+  color: var(--fg-subtle);
+  font: inherit;
+}
+.dv__shortcut-text {
+  flex: 1;
+  min-inline-size: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.dv__shortcut-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--fg);
+}
+.dv__shortcut-sub {
+  font-size: 12.5px;
+  color: var(--fg-muted);
+}

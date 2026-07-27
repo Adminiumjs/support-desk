@@ -1,0 +1,153 @@
+/* screen-plans.css — Hearth Care plans (§6.23). */
+
+.plans-title {
+  margin: 0 0 8px;
+  font-size: clamp(24px, 3.4vw, 32px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+.plans-lede {
+  margin: 0 0 20px;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  max-inline-size: 620px;
+}
+
+.plans-cycle {
+  margin-block-end: 18px;
+  padding: 5px;
+  background: var(--surface-3);
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(270px, 100%), 1fr));
+  gap: 14px;
+  margin-block-end: 22px;
+}
+.plans-card {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(18px, 3vw, 24px);
+  border-radius: 18px;
+}
+.plans-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+  margin-block-end: 14px;
+}
+.plans-card__name {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+.plans-card__pricerow {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+.plans-card__price {
+  font-family: var(--font-mono);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+.plans-card__per {
+  font-size: 13px;
+  color: var(--fg-subtle);
+}
+.plans-card__billed {
+  margin: 4px 0 0;
+  min-block-size: 18px;
+  font-size: 12.5px;
+  color: var(--fg-subtle);
+}
+.plans-card__blurb {
+  margin: 14px 0 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+
+.plans-features {
+  flex: 1;
+  list-style: none;
+  margin: 16px 0 18px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.plans-feature {
+  display: flex;
+  gap: 9px;
+}
+.plans-feature__ico {
+  flex-shrink: 0;
+  margin-block-start: 3px;
+}
+.plans-feature__text {
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+.plans-card__btn {
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: 0;
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-size: 13.5px;
+  font-weight: 700;
+  inline-size: 100%;
+  cursor: pointer;
+}
+.plans-card__btn--cur {
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--fg-subtle);
+  cursor: default;
+}
+
+/* ------------------------------------------------------------- bottom */
+
+.plans-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.plans-billing {
+  flex: 1 1 320px;
+  border-radius: 18px;
+  padding: clamp(18px, 3vw, 24px);
+}
+.plans-never {
+  flex: 1 1 280px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 18px;
+  padding: clamp(18px, 3vw, 24px);
+}
+.plans-bottom__head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.plans-bottom__body {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+}
+.plans-billing__acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-block-start: 15px;
+}

@@ -1,0 +1,118 @@
+/* screen-energy.css — `energy` (port spec §6.26). Imported by Energy.tsx. */
+
+.en__h1 {
+  margin: 0;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.en__lede {
+  margin: 10px 0 0;
+  max-inline-size: 62ch;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+
+.en__periods {
+  margin-block: 20px;
+}
+.en__kpis {
+  margin-block-end: 20px;
+}
+
+/* --- bar chart --- */
+
+.en__chart-card {
+  margin-block-end: 14px;
+}
+.en__chart-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-block-end: 16px;
+}
+.en__chart-title {
+  margin: 0;
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.en__unit {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--fg-subtle);
+}
+
+/* --- bottom split --- */
+
+.en__split {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.en__rooms {
+  flex: 1 1 300px;
+}
+.en__room-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-block-start: 14px;
+}
+.en__room-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-block-end: 7px;
+}
+.en__room-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.en__room-val {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--fg-muted);
+}
+
+.en__tips {
+  flex: 1 1 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.en__tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 15px 17px;
+  border-radius: 14px;
+  background: var(--pos-soft);
+}
+.en__tip-body {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-inline-size: 0;
+}
+.en__tip-text {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--fg);
+  text-wrap: pretty;
+}
+.en__tip-saving {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--pos);
+}
