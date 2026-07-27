@@ -59,7 +59,7 @@ export default function TradeIn() {
 
   if (tiSent) {
     return (
-      <main className="oh-screen oh-page w-820 scr-tradein">
+      <main className="fx-screen fx-page w-820 scr-tradein">
         <Card variant="form" className="ti-done">
           <span className="ti-done__tile">
             <Icon name="package-check" size={26} color="var(--pos)" />
@@ -88,7 +88,7 @@ export default function TradeIn() {
   }
 
   return (
-    <main className="oh-screen oh-page w-820 scr-tradein">
+    <main className="fx-screen fx-page w-820 scr-tradein">
       <h1 className="scr-tradein__h1">What's your old Hearth worth?</h1>
       <p className="scr-tradein__lede">
         Trade any working Hearth device against your next one. We refurbish what
@@ -130,7 +130,7 @@ export default function TradeIn() {
           </label>
           <select
             id="ti-age"
-            className="sd-select oh-fld"
+            className="sd-select fx-fld"
             value={tiAge}
             onChange={(e) => set({ tiAge: e.target.value })}
           >

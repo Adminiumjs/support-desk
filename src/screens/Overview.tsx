@@ -30,7 +30,7 @@ export default function Overview() {
   const dark = theme === "dark";
 
   return (
-    <main className="oh-screen oh-page w-1120 ovw">
+    <main className="fx-screen fx-page w-1120 ovw">
       <header className="ovw__head">
         <div className="ovw__intro">
           <p className="ovw__eyebrow">OVERVIEW</p>
@@ -71,7 +71,7 @@ export default function Overview() {
                   <button
                     type="button"
                     key={id}
-                    className={`oh-card ovw__card${current ? " ovw__card--on" : ""}`}
+                    className={`fx-card ovw__card${current ? " ovw__card--on" : ""}`}
                     aria-current={current ? "page" : undefined}
                     onClick={() => ovGo(id)}
                   >

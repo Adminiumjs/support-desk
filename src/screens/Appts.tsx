@@ -83,7 +83,7 @@ export default function Appts() {
   }
 
   return (
-    <main className="oh-screen oh-page w-820 ap">
+    <main className="fx-screen fx-page w-820 ap">
       <div className="ap__head">
         <div className="ap__head-text">
           <h1 className="ap__h1">Service appointments</h1>
@@ -108,7 +108,7 @@ export default function Appts() {
             const prod = dataSource.product(a.prod);
             const meta = APPT_META[a.status];
             return (
-              <Card key={a.id} className="ap__card oh-card">
+              <Card key={a.id} className="ap__card fx-card">
                 <div className="ap__top">
                   <IconChip
                     tint={prod.tint}

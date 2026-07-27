@@ -57,7 +57,7 @@ export function EmptyState({
             <button
               key={s.label}
               type="button"
-              className="empty__chip oh-chip"
+              className="empty__chip fx-chip"
               onClick={s.onClick}
             >
               {s.label}

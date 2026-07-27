@@ -30,7 +30,7 @@ export default function MyTickets() {
   };
 
   return (
-    <main className="oh-screen oh-page w-820 mt">
+    <main className="fx-screen fx-page w-820 mt">
       <h1 className="mt__title">My tickets</h1>
       <p className="mt__lede">
         Look up your open and past conversations with us.

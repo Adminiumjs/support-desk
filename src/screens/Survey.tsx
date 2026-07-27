@@ -58,7 +58,7 @@ export default function Survey() {
 
   if (svDone) {
     return (
-      <main className="oh-screen oh-page w-760 svy">
+      <main className="fx-screen fx-page w-760 svy">
         <Card className="svy__done">
           <span className="svy__done-tile">
             <Icon name="heart" size={26} />
@@ -124,7 +124,7 @@ export default function Survey() {
     });
 
   return (
-    <main className="oh-screen oh-page w-760 svy">
+    <main className="fx-screen fx-page w-760 svy">
       <p className="svy__eyebrow">2 MINUTES, 4 QUESTIONS</p>
       <h1 className="svy__h1">How did we do?</h1>
       <p className="svy__lede">
@@ -159,7 +159,7 @@ export default function Survey() {
                 <button
                   type="button"
                   key={n}
-                  className={`sd-chip oh-chip svy__nps-btn${on ? " svy__nps-btn--on" : ""}`}
+                  className={`sd-chip fx-chip svy__nps-btn${on ? " svy__nps-btn--on" : ""}`}
                   aria-pressed={on}
                   style={
                     on
@@ -190,7 +190,7 @@ export default function Survey() {
                     <button
                       type="button"
                       key={o.v}
-                      className={`sd-chip oh-chip svy__scale-btn${on ? " svy__scale-btn--on" : ""}`}
+                      className={`sd-chip fx-chip svy__scale-btn${on ? " svy__scale-btn--on" : ""}`}
                       title={o.title}
                       aria-label={`${r.label}: ${o.title}`}
                       aria-pressed={on}

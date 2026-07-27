@@ -25,7 +25,7 @@ export default function Home() {
   const popular = dataSource.popularArticles();
 
   return (
-    <main className="oh-screen home">
+    <main className="fx-screen home">
       {/* A — search hero */}
       <div className="home__band">
         <SearchHero />

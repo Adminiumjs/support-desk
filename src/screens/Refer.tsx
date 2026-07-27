@@ -92,7 +92,7 @@ export default function Refer() {
   };
 
   return (
-    <main className="oh-screen oh-page w-820">
+    <main className="fx-screen fx-page w-820">
       <section className="refer-hero">
         <p className="refer-hero__eyebrow">REFER A FRIEND</p>
         <h1 className="refer-hero__title">Give £20, get £20.</h1>
@@ -137,7 +137,7 @@ export default function Refer() {
           <Eyebrow>Invite by email</Eyebrow>
           <div className="refer-invite">
             <input
-              className="oh-fld refer-invite__field"
+              className="fx-fld refer-invite__field"
               type="email"
               value={refEmail}
               placeholder="friend@example.com"

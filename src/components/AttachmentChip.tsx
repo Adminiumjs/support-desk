@@ -26,7 +26,7 @@ export function AttachmentChip({
       {onRemove ? (
         <button
           type="button"
-          className="sd-attach__x oh-gi"
+          className="sd-attach__x fx-gi"
           aria-label={`Remove ${name}`}
           onClick={() => onRemove(name)}
         >

@@ -90,7 +90,7 @@ export default function Parts() {
       : `£${(FREE_DELIVERY_FROM - total).toFixed(2)} more for free delivery`;
 
   return (
-    <main className="oh-screen oh-page w-900 scr-parts">
+    <main className="fx-screen fx-page w-900 scr-parts">
       <h1 className="scr-parts__h1">Spare parts</h1>
       <p className="scr-parts__lede">
         Every part we've ever shipped, available for at least seven years after

@@ -35,7 +35,7 @@ function KbResultRow({
 }) {
   const cat = dataSource.category(article.cat);
   return (
-    <button type="button" className="kb__row oh-res" onClick={onClick}>
+    <button type="button" className="kb__row fx-res" onClick={onClick}>
       <IconChip
         tint={cat?.tint ?? "#4f8bd6"}
         icon={cat?.icon ?? "file-text"}
@@ -75,7 +75,7 @@ export default function Kb() {
   const runSuggestion = (term: string) => set({ kbQ: term, kbFacet: "all" });
 
   return (
-    <main className="oh-screen oh-page w-820 kb">
+    <main className="fx-screen fx-page w-820 kb">
       <h1 className="kb__h1">Search the knowledge base</h1>
 
       <div className="kb__field">
@@ -83,7 +83,7 @@ export default function Kb() {
           <Icon name="search" size={18} />
         </span>
         <input
-          className="oh-fld kb__input"
+          className="fx-fld kb__input"
           type="text"
           value={kbQ}
           aria-label="Search the knowledge base"
@@ -93,7 +93,7 @@ export default function Kb() {
         {kbQ ? (
           <button
             type="button"
-            className="kb__clear oh-gi"
+            className="kb__clear fx-gi"
             title="Clear"
             aria-label="Clear"
             onClick={() => set({ kbQ: "" })}
@@ -119,7 +119,7 @@ export default function Kb() {
       <div className="kb__toolbar">
         <span className="kb__count">{countLabel}</span>
         <select
-          className="oh-fld kb__sort"
+          className="fx-fld kb__sort"
           value={kbSort}
           aria-label="Sort results"
           onChange={(e) => set({ kbSort: e.target.value as KbSort })}
@@ -163,7 +163,7 @@ export default function Kb() {
           <button
             key={term}
             type="button"
-            className="kb__related-link oh-nav"
+            className="kb__related-link fx-nav"
             onClick={() => runSuggestion(term)}
           >
             {term}

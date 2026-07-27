@@ -43,7 +43,7 @@ export function Tabs<T extends string = string>({
           type="button"
           role="tab"
           aria-selected={o.id === value}
-          className="sd-seg__item oh-chip"
+          className="sd-seg__item fx-chip"
           onClick={() => onChange(o.id)}
         >
           {o.label}

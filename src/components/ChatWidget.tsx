@@ -50,7 +50,7 @@ export function ChatWidget() {
 
   if (!open) {
     return (
-      <button type="button" className="chat__fab oh-btn" onClick={openChat}>
+      <button type="button" className="chat__fab fx-btn" onClick={openChat}>
         <Icon name="message-circle" size={19} />
         Chat with us
         <span className="chat__dot" />
@@ -89,7 +89,7 @@ export function ChatWidget() {
         />
       </div>
 
-      <div className="chat__log oh-scroll" ref={logRef}>
+      <div className="chat__log fx-scroll" ref={logRef}>
         {msgs.map((m) => (
           <div key={m.id} className="sd-col" style={{ gap: 8 }}>
             <div
@@ -100,7 +100,7 @@ export function ChatWidget() {
             {m.act ? (
               <button
                 type="button"
-                className="chat__act oh-gi"
+                className="chat__act fx-gi"
                 onClick={() => chatAct(m.act as string)}
               >
                 {m.actIcon ? <Icon name={m.actIcon} size={14} /> : null}
@@ -113,7 +113,7 @@ export function ChatWidget() {
         {typing ? <TypingDots variant="chat" bubble label="Maya is typing" /> : null}
 
         {canEscalate ? (
-          <button type="button" className="chat__escalate oh-gi" onClick={escalateChat}>
+          <button type="button" className="chat__escalate fx-gi" onClick={escalateChat}>
             <AccentIconTile icon="ticket" size={32} radius={10} iconSize={16} />
             <span className="sd-col">
               <span style={{ fontSize: 13, fontWeight: 700, letterSpacing: "-0.01em" }}>
@@ -133,7 +133,7 @@ export function ChatWidget() {
               <button
                 key={qr.label}
                 type="button"
-                className="oh-chip"
+                className="fx-chip"
                 onClick={() => chatAsk(i)}
               >
                 {qr.label}
@@ -145,7 +145,7 @@ export function ChatWidget() {
 
       <div className="chat__composer">
         <input
-          className="oh-fld"
+          className="fx-fld"
           value={input}
           aria-label="Type a message"
           placeholder="Type a message…"
@@ -159,7 +159,7 @@ export function ChatWidget() {
         />
         <button
           type="button"
-          className="chat__send oh-btn"
+          className="chat__send fx-btn"
           title="Send"
           aria-label="Send message"
           disabled={!input.trim()}

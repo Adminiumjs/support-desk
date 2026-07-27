@@ -4,7 +4,7 @@
  * Ruling R2: the comp moved the knob with `justify-content` and declared no
  * transition, so it snapped. Here the knob is translated with
  * `transform: translateX(19px)` and a real transition (see components.css);
- * `.oh-nomotion` still kills it for reduce-motion users.
+ * `.fx-nomotion` still kills it for reduce-motion users.
  */
 
 export interface ToggleProps {

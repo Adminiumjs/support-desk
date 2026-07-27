@@ -54,7 +54,7 @@ export default function Saved() {
     : "Nothing saved yet. Anything you bookmark shows up here and in the app.";
 
   return (
-    <main className="oh-screen oh-page w-820 svd">
+    <main className="fx-screen fx-page w-820 svd">
       <h1 className="svd__h1">Saved articles</h1>
       <p className="svd__lede">{intro}</p>
 
@@ -108,7 +108,7 @@ export default function Saved() {
       <h2 className="svd__h2">Suggested next</h2>
       <div className="svd__suggest">
         {suggestions.map((s) => (
-          <div className="sd-card oh-card svd__sug" key={s.id}>
+          <div className="sd-card fx-card svd__sug" key={s.id}>
             <Icon name="file-text" size={18} />
             <button
               type="button"

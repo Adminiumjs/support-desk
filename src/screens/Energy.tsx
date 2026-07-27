@@ -47,7 +47,7 @@ export default function Energy() {
   );
 
   return (
-    <main className="oh-screen oh-page w-900 en">
+    <main className="fx-screen fx-page w-900 en">
       <h1 className="en__h1">Energy insights</h1>
       <p className="en__lede">
         {

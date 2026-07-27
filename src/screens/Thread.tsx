@@ -41,7 +41,7 @@ export default function Thread() {
   const backTickets = () => go("mytickets");
 
   const back = (
-    <button type="button" className="th__back oh-nav" onClick={backTickets}>
+    <button type="button" className="th__back fx-nav" onClick={backTickets}>
       <Icon name="arrow-left" size={15} />
       All tickets
     </button>
@@ -54,7 +54,7 @@ export default function Thread() {
    */
   if (!ticket) {
     return (
-      <main className="oh-screen oh-page w-820 th">
+      <main className="fx-screen fx-page w-820 th">
         {back}
         <EmptyState
           icon="inbox"
@@ -74,7 +74,7 @@ export default function Thread() {
   const canSend = reply.trim().length > 0;
 
   return (
-    <main className="oh-screen oh-page w-820 th">
+    <main className="fx-screen fx-page w-820 th">
       {back}
 
       <div className="th__head">

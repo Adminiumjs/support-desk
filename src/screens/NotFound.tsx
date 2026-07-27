@@ -14,7 +14,7 @@ export default function NotFound() {
   const openTicket = useAppStore((s) => s.openTicket);
 
   return (
-    <main className="oh-screen oh-page w-620 nf">
+    <main className="fx-screen fx-page w-620 nf">
       <span className="nf__ico" aria-hidden="true">
         <Icon name="compass" size={38} />
       </span>

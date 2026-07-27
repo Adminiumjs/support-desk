@@ -61,7 +61,7 @@ export default function Installers() {
   }
 
   return (
-    <main className="oh-screen oh-page w-900 in">
+    <main className="fx-screen fx-page w-900 in">
       <h1 className="in__h1">Find an approved installer</h1>
       <p className="in__lede">
         Every installer here is trained on Hearth hardware, insured, and rated
@@ -83,7 +83,7 @@ export default function Installers() {
         <Field className="in__field in__field--sm" label="Within" htmlFor="in-radius">
           <select
             id="in-radius"
-            className="sd-select oh-fld"
+            className="sd-select fx-fld"
             value={inRadius}
             onChange={(e) => set({ inRadius: e.target.value })}
           >
@@ -115,7 +115,7 @@ export default function Installers() {
 
       <div className="in__list">
         {list.map((i) => (
-          <Card key={i.name} className="in__card oh-card">
+          <Card key={i.name} className="in__card fx-card">
             <Avatar initials={i.initials} tint={i.tint} size={50} fontSize={16} />
             <div className="in__body">
               <div className="in__namerow">

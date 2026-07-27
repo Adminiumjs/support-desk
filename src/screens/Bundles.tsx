@@ -58,7 +58,7 @@ export default function Bundles() {
   };
 
   return (
-    <main className="oh-screen oh-page w-1000">
+    <main className="fx-screen fx-page w-1000">
       <h1 className="bundles-title">Bundle deals</h1>
       <p className="bundles-lede">
         Buy devices together and the discount is applied at checkout — no codes.
@@ -107,7 +107,7 @@ export default function Bundles() {
 
             <button
               type="button"
-              className="oh-chip bundles-card__btn"
+              className="fx-chip bundles-card__btn"
               onClick={() =>
                 showToast(`${b.name} bundle added — saving ${b.save}`)
               }
@@ -146,7 +146,7 @@ export default function Bundles() {
               <button
                 key={p.id}
                 type="button"
-                className={`sd-tilesel oh-chip${on ? " sd-tilesel--on" : ""}`}
+                className={`sd-tilesel fx-chip${on ? " sd-tilesel--on" : ""}`}
                 aria-pressed={on}
                 onClick={() => toggle(p.id)}
               >

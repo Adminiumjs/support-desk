@@ -86,7 +86,7 @@ export default function Notifs() {
   };
 
   return (
-    <main className="oh-screen oh-page w-820 nt">
+    <main className="fx-screen fx-page w-820 nt">
       <div className="nt__head">
         <div className="nt__head-text">
           <h1 className="nt__h1">Notifications</h1>
@@ -138,7 +138,7 @@ export default function Notifs() {
                     <button
                       type="button"
                       key={n.id}
-                      className="oh-res nt__row"
+                      className="fx-res nt__row"
                       onClick={() => onRow(n)}
                     >
                       <span className="nt__chip">

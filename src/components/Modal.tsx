@@ -63,7 +63,7 @@ export function Modal({
     <div className="modal__scrim" onClick={onClose}>
       <div
         ref={cardRef}
-        className={`modal oh-scroll${className ? ` ${className}` : ""}`}
+        className={`modal fx-scroll${className ? ` ${className}` : ""}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

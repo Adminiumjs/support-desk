@@ -36,7 +36,7 @@ export default function Contact() {
   };
 
   return (
-    <main className="oh-screen oh-page w-900 con">
+    <main className="fx-screen fx-page w-900 con">
       <h1 className="con__h1">Contact us</h1>
       <p className="con__lede">
         Support is open Monday to Friday, 8am–7pm UK time, and Saturday 9am–2pm.
@@ -44,7 +44,7 @@ export default function Contact() {
       </p>
 
       <div className="con__channels">
-        <button type="button" className="sd-card oh-card con__ch" onClick={openChat}>
+        <button type="button" className="sd-card fx-card con__ch" onClick={openChat}>
           <span className="sd-accent-tile con__ch-tile">
             <Icon name="message-circle" size={21} />
           </span>
@@ -78,7 +78,7 @@ export default function Contact() {
           <span className="con__ch-chip">+44 117 496 0110</span>
         </div>
 
-        <button type="button" className="sd-card oh-card con__ch" onClick={openTicket}>
+        <button type="button" className="sd-card fx-card con__ch" onClick={openTicket}>
           <span className="sd-accent-tile con__ch-tile">
             <Icon name="pen-line" size={21} />
           </span>
@@ -179,7 +179,7 @@ export default function Contact() {
             {/* Ruling R2 (preserved): the article, not the wizard. */}
             <button
               type="button"
-              className="oh-nav con__returns"
+              className="fx-nav con__returns"
               onClick={() => openArticle("a_return")}
             >
               How returns work

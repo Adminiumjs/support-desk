@@ -40,7 +40,7 @@ export default function Firmware() {
   );
 
   return (
-    <main className="oh-screen oh-page w-820 fw">
+    <main className="fx-screen fx-page w-820 fw">
       <h1 className="fw__h1">Firmware release notes</h1>
       <p className="fw__lede">
         Updates install overnight on their own. You can always nudge one by hand
@@ -63,7 +63,7 @@ export default function Firmware() {
         {shown.map((r) => {
           const tone = TYPE_TONE[r.type] ?? TYPE_TONE.Stability;
           return (
-            <Card key={r.ver} className="fw__card oh-card">
+            <Card key={r.ver} className="fw__card fx-card">
               <div className="fw__head">
                 <span className="fw__ver sd-mono">{r.ver}</span>
                 <SoftPill fg={tone.fg} soft={tone.soft}>

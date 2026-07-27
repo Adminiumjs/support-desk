@@ -43,7 +43,7 @@ export default function Downloads() {
   }
 
   return (
-    <main className="oh-screen oh-page w-900 dl">
+    <main className="fx-screen fx-page w-900 dl">
       <h1 className="dl__h1">Downloads &amp; manuals</h1>
       <p className="dl__lede">
         Manuals, quick-start cards, wiring diagrams and installer tools.
@@ -65,7 +65,7 @@ export default function Downloads() {
 
       <ListCard>
         {shown.map((f) => (
-          <div key={f.file} className="sd-listrow oh-res dl__row">
+          <div key={f.file} className="sd-listrow fx-res dl__row">
             <span className="dl__tile">
               <Icon name={f.icon} size={20} />
             </span>
@@ -93,7 +93,7 @@ export default function Downloads() {
           <button
             key={a.title}
             type="button"
-            className="dl__app oh-card"
+            className="dl__app fx-card"
             onClick={appDownload}
           >
             <AccentIconTile icon={a.icon} size={44} radius={13} iconSize={21} />

@@ -59,7 +59,7 @@ export function MobileSheet() {
             <button
               key={l.view}
               type="button"
-              className="sheet__item oh-gi"
+              className="sheet__item fx-gi"
               onClick={() => go(l.view)}
             >
               <Icon name={l.icon} size={18} color="var(--fg-muted)" />
@@ -67,7 +67,7 @@ export function MobileSheet() {
             </button>
           ))}
 
-          <button type="button" className="sheet__item oh-gi" onClick={cpToggle}>
+          <button type="button" className="sheet__item fx-gi" onClick={cpToggle}>
             <Icon name="command" size={18} color="var(--fg-muted)" />
             <span className="sd-grow" style={{ textAlign: "start" }}>
               Command palette
@@ -78,7 +78,7 @@ export function MobileSheet() {
           </button>
 
           {chatEnabled ? (
-            <button type="button" className="sheet__item oh-gi" onClick={openChat}>
+            <button type="button" className="sheet__item fx-gi" onClick={openChat}>
               <Icon name="message-circle" size={18} color="var(--fg-muted)" />
               <span className="sd-grow" style={{ textAlign: "start" }}>
                 Live chat

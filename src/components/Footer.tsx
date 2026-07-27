@@ -44,7 +44,7 @@ export function Footer() {
           <div className="sd-row" style={{ gap: 16 }}>
             <button
               type="button"
-              className="ftr__link oh-nav sd-row"
+              className="ftr__link fx-nav sd-row"
               style={{ color: "var(--accent)", fontSize: 13, fontWeight: 700 }}
               onClick={gotoOverview}
             >
@@ -53,7 +53,7 @@ export function Footer() {
             </button>
             <button
               type="button"
-              className="ftr__link oh-nav sd-row"
+              className="ftr__link fx-nav sd-row"
               style={{ fontSize: 13, fontWeight: 700 }}
               onClick={scToggle}
             >
@@ -71,7 +71,7 @@ export function Footer() {
                 <button
                   key={`${col.name}-${l.label}-${i}`}
                   type="button"
-                  className="ftr__link oh-nav"
+                  className="ftr__link fx-nav"
                   onClick={() => activate(l.to)}
                 >
                   {l.label}

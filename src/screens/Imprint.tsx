@@ -65,7 +65,7 @@ const PROSE: Prose[] = [
 
 export default function Imprint() {
   return (
-    <main className="oh-screen oh-page w-760 imp">
+    <main className="fx-screen fx-page w-760 imp">
       <h1 className="imp__h1">Imprint</h1>
       <p className="imp__lede">
         Legally required company information for Hearth Home Ltd. and this

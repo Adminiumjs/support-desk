@@ -45,7 +45,7 @@ export default function Article() {
     .slice(0, 3);
 
   return (
-    <main className="oh-screen oh-page w-820 art">
+    <main className="fx-screen fx-page w-820 art">
       <div className="art__meta">
         <span className="art__cat">
           <Icon name={icon} size={13} />
@@ -67,7 +67,7 @@ export default function Article() {
       <div className="art__actions">
         <button
           type="button"
-          className={`art__save oh-chip${saved ? " art__save--on" : ""}`}
+          className={`art__save fx-chip${saved ? " art__save--on" : ""}`}
           aria-pressed={saved}
           onClick={() => toggleSave(article.id)}
         >

@@ -188,7 +188,7 @@ export function ButtonPrimary({
 }: ButtonProps) {
   const cls = [
     "sd-btn",
-    "oh-btn",
+    "fx-btn",
     size === "sm" ? "sd-btn--sm" : "",
     size === "md" ? "sd-btn--md" : "",
     block ? "sd-btn--block" : "",
@@ -227,7 +227,7 @@ export function ButtonSecondary({
 }: ButtonSecondaryProps) {
   const cls = [
     "sd-btn-ghost",
-    "oh-gi",
+    "fx-gi",
     dashed ? "sd-btn-ghost--dashed" : "",
     className ?? "",
   ]
@@ -269,7 +269,7 @@ export function IconButton({
 }: IconButtonProps) {
   const cls = [
     "sd-iconbtn",
-    "oh-gi",
+    "fx-gi",
     small ? "sd-iconbtn--sm" : "",
     showLabel ? "sd-iconbtn--labelled" : "",
     className ?? "",

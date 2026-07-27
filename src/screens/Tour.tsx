@@ -47,7 +47,7 @@ export default function Tour() {
   };
 
   return (
-    <main className="oh-screen oh-page w-720 tur">
+    <main className="fx-screen fx-page w-720 tur">
       <div className="tur__card">
         <PlaceholderTile
           tint={step.tint}
@@ -93,7 +93,7 @@ export default function Tour() {
           </div>
 
           <div className="tur__actions">
-            <button type="button" className="oh-nav tur__skip" onClick={skip}>
+            <button type="button" className="fx-nav tur__skip" onClick={skip}>
               Skip tour
             </button>
             {canBack ? (

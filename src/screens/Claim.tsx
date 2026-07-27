@@ -66,7 +66,7 @@ export default function Claim() {
 
   if (clRef) {
     return (
-      <main className="oh-screen oh-page w-820 scr-claim">
+      <main className="fx-screen fx-page w-820 scr-claim">
         <div className="cl-done">
           <div className="cl-done__head">
             <span className="cl-done__tile">
@@ -119,7 +119,7 @@ export default function Claim() {
   }
 
   return (
-    <main className="oh-screen oh-page w-820 scr-claim">
+    <main className="fx-screen fx-page w-820 scr-claim">
       <h1 className="scr-claim__h1">Make a warranty claim</h1>
       <p className="scr-claim__lede">
         Two-year cover as standard, three if you registered. Faults from normal
@@ -182,7 +182,7 @@ export default function Claim() {
                   type="button"
                   role="radio"
                   aria-checked={on}
-                  className={`cl-outcome oh-chip${on ? " cl-outcome--on" : ""}`}
+                  className={`cl-outcome fx-chip${on ? " cl-outcome--on" : ""}`}
                   onClick={() => set({ clOutcome: o.id })}
                 >
                   <Icon name={o.icon} size={19} />
@@ -203,7 +203,7 @@ export default function Claim() {
                 {photo}
               </span>
             ))}
-            <button type="button" className="cl-addphoto oh-gi" onClick={addPhoto}>
+            <button type="button" className="cl-addphoto fx-gi" onClick={addPhoto}>
               <Icon name="paperclip" size={14} />
               Add photo
             </button>

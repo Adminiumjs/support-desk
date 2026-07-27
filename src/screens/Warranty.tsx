@@ -84,7 +84,7 @@ export default function Warranty() {
   }
 
   return (
-    <main className="oh-screen oh-page w-820 scr-warranty">
+    <main className="fx-screen fx-page w-820 scr-warranty">
       <h1 className="scr-warranty__h1">Register your warranty</h1>
       <p className="scr-warranty__lede">
         Registering takes a minute and adds a third year of cover for free.
@@ -152,7 +152,7 @@ export default function Warranty() {
               <input
                 id="w-date"
                 type="date"
-                className="sd-input oh-fld"
+                className="sd-input fx-fld"
                 value={wDate}
                 onChange={(e) => set({ wDate: e.target.value })}
               />
@@ -193,7 +193,7 @@ export default function Warranty() {
         {registered.map((device) => {
           const product = dataSource.product(device.prod);
           return (
-            <div className="wr-dev oh-card" key={device.id}>
+            <div className="wr-dev fx-card" key={device.id}>
               <IconChip
                 tint={product.tint}
                 icon={product.icon}

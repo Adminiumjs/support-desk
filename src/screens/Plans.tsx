@@ -80,7 +80,7 @@ export default function Plans() {
   };
 
   return (
-    <main className="oh-screen oh-page w-1000">
+    <main className="fx-screen fx-page w-1000">
       <h1 className="plans-title">Hearth Care plans</h1>
       <p className="plans-lede">
         Clip history, priority support and free out-of-warranty repairs. Every
@@ -152,7 +152,7 @@ export default function Plans() {
 
               <button
                 type="button"
-                className={`oh-chip plans-card__btn${
+                className={`fx-chip plans-card__btn${
                   cur ? " plans-card__btn--cur" : ""
                 }`}
                 aria-disabled={cur}

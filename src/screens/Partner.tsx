@@ -64,7 +64,7 @@ export default function Partner() {
   };
 
   return (
-    <main className="oh-screen oh-page w-1000">
+    <main className="fx-screen fx-page w-1000">
       <div className="pt-head">
         <Avatar
           initials={PARTNER.initials}
@@ -142,7 +142,7 @@ export default function Partner() {
                 const prod = dataSource.product(j.prod);
                 const pay = PAY[j.pay];
                 return (
-                  <Card key={j.id} className="oh-card pt-job">
+                  <Card key={j.id} className="fx-card pt-job">
                     <div className="pt-job__top">
                       <IconChip
                         tint={prod.tint}
@@ -235,7 +235,7 @@ export default function Partner() {
                 <button
                   key={label}
                   type="button"
-                  className="oh-nav pt-link"
+                  className="fx-nav pt-link"
                   onClick={() =>
                     showToast("Partner resources aren't in this demo", "info")
                   }

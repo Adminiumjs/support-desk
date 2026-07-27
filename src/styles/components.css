@@ -613,7 +613,7 @@
   border-radius: 14px;
   box-shadow: 0 24px 60px -24px rgba(20, 20, 40, 0.4);
   overflow: hidden;
-  animation: oh-drop 0.16s ease;
+  animation: fx-drop 0.16s ease;
 }
 .sd-drop__row {
   display: flex;
@@ -665,7 +665,7 @@
   background: var(--surface);
   border-block-end: 1px solid var(--border);
   padding: 16px clamp(16px, 5vw, 24px) 22px;
-  animation: oh-sheet 0.22s ease;
+  animation: fx-sheet 0.22s ease;
 }
 .sheet__head {
   display: flex;
@@ -877,7 +877,7 @@
   font-size: 13px;
   font-weight: 700;
   box-shadow: 0 12px 34px rgba(10, 10, 20, 0.32);
-  animation: oh-pop 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: fx-pop 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* ================================================================== modal */
@@ -892,7 +892,7 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
-  animation: oh-scrim 0.16s ease;
+  animation: fx-scrim 0.16s ease;
 }
 .modal {
   inline-size: min(600px, 100%);
@@ -902,7 +902,7 @@
   border: 1px solid var(--border);
   border-radius: 20px;
   box-shadow: 0 40px 90px -30px rgba(10, 10, 25, 0.6);
-  animation: oh-pop 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: fx-pop 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .modal__head {
   display: flex;
@@ -996,7 +996,7 @@
   align-items: flex-start;
   justify-content: center;
   padding: clamp(16px, 10vh, 120px) 16px 16px;
-  animation: oh-scrim 0.14s ease;
+  animation: fx-scrim 0.14s ease;
 }
 .cp {
   inline-size: min(620px, 100%);
@@ -1005,7 +1005,7 @@
   border-radius: 18px;
   box-shadow: 0 40px 90px -30px rgba(10, 10, 25, 0.6);
   overflow: hidden;
-  animation: oh-pop 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: fx-pop 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .cp__inputrow {
   display: flex;
@@ -1152,7 +1152,7 @@
   border-radius: 20px;
   box-shadow: 0 30px 70px -22px rgba(10, 10, 25, 0.5);
   overflow: hidden;
-  animation: oh-pop 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: fx-pop 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .chat__head {
   display: flex;
@@ -1357,7 +1357,7 @@
   block-size: 7px;
   border-radius: 50%;
   background: var(--fg-subtle);
-  animation: oh-blink 1.3s infinite;
+  animation: fx-blink 1.3s infinite;
 }
 .dots--sm span {
   inline-size: 6px;
@@ -1955,7 +1955,7 @@
   text-align: start;
   max-block-size: 400px;
   overflow: auto;
-  animation: oh-drop 0.16s ease;
+  animation: fx-drop 0.16s ease;
 }
 .hero__res {
   display: flex;

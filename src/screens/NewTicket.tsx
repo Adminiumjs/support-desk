@@ -35,7 +35,7 @@ export default function NewTicket() {
   const submitTicket = useAppStore((s) => s.submitTicket);
 
   return (
-    <main className="oh-screen oh-page w-720 nt">
+    <main className="fx-screen fx-page w-720 nt">
       <h1 className="nt__title">Open a ticket</h1>
       <p className="nt__lede">
         Tell us what's going on and we'll get back to you. The more detail, the

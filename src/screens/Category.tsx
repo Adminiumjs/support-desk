@@ -18,7 +18,7 @@ export default function Category() {
   const articles = dataSource.articlesInCategory(category.slug);
 
   return (
-    <main className="oh-screen oh-page w-1120 cat">
+    <main className="fx-screen fx-page w-1120 cat">
       <header className="cat__head">
         <IconChip
           tint={category.tint}

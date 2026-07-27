@@ -1,7 +1,7 @@
 /*
  * ArticleCard — the two article list shapes.
  *
- * `<ArticleRow>` is the flat `.oh-res` row inside a `<ListCard>` (home
+ * `<ArticleRow>` is the flat `.fx-res` row inside a `<ListCard>` (home
  * "Popular articles", category listings, KB results, saved articles).
  * `<ArticleCard>` is the standalone bordered card used by "Related articles".
  */
@@ -26,7 +26,7 @@ export function ArticleRow({ article, onClick, sub, className }: ArticleRowProps
   return (
     <button
       type="button"
-      className={`art-row oh-res${className ? ` ${className}` : ""}`}
+      className={`art-row fx-res${className ? ` ${className}` : ""}`}
       onClick={onClick}
     >
       <IconChip
@@ -57,7 +57,7 @@ export function ArticleCard({ article, onClick, className }: ArticleCardProps) {
   return (
     <button
       type="button"
-      className={`art-card oh-card${className ? ` ${className}` : ""}`}
+      className={`art-card fx-card${className ? ` ${className}` : ""}`}
       onClick={onClick}
     >
       <Icon name="file-text" size={17} color="var(--fg-subtle)" />

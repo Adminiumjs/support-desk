@@ -129,7 +129,7 @@ export default function Orders() {
   const meta = order ? ORDER_STATUS[order.status] : null;
 
   return (
-    <main className="oh-screen oh-page w-820 scr-orders">
+    <main className="fx-screen fx-page w-820 scr-orders">
       <h1 className="scr-orders__h1">Order status</h1>
       <p className="scr-orders__lede">
         Enter your order number and the email you ordered with. Tracking updates
@@ -173,7 +173,7 @@ export default function Orders() {
             <button
               key={demo.id}
               type="button"
-              className="ord-lookup__demo oh-gi"
+              className="ord-lookup__demo fx-gi"
               onClick={() => fillDemo(demo)}
             >
               {demo.id}
@@ -227,7 +227,7 @@ export default function Orders() {
                 <p className="ord-carrier__name">{order.carrier}</p>
                 <button
                   type="button"
-                  className="ord-carrier__copy oh-gi"
+                  className="ord-carrier__copy fx-gi"
                   onClick={copyTracking}
                   title="Copy tracking number"
                 >

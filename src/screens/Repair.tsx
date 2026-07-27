@@ -95,7 +95,7 @@ export default function Repair() {
 
   if (rpRef) {
     return (
-      <main className="oh-screen oh-page w-820 rp">
+      <main className="fx-screen fx-page w-820 rp">
         <Card className="rp__done">
           <span className="rp__done-ico">
             <Icon name="calendar-check" size={26} color="var(--pos)" />
@@ -129,7 +129,7 @@ export default function Repair() {
   /* -------------------------------------------------------------- B. form */
 
   return (
-    <main className="oh-screen oh-page w-820 rp">
+    <main className="fx-screen fx-page w-820 rp">
       <h1 className="rp__h1">Book a repair</h1>
       <p className="rp__lede">
         Repairs under warranty are free, including collection. Out of warranty
@@ -197,7 +197,7 @@ export default function Repair() {
                   type="button"
                   role="radio"
                   aria-checked={on}
-                  className={`rp__day oh-chip${on ? " rp__day--on" : ""}`}
+                  className={`rp__day fx-chip${on ? " rp__day--on" : ""}`}
                   onClick={() => set({ rpDate: d.id, rpSlot: null })}
                 >
                   <span className="rp__day-dow">{d.dow}</span>
@@ -222,7 +222,7 @@ export default function Repair() {
                   role="radio"
                   aria-checked={on}
                   aria-disabled={s.taken || undefined}
-                  className={`rp__slot oh-chip${on ? " rp__slot--on" : ""}${
+                  className={`rp__slot fx-chip${on ? " rp__slot--on" : ""}${
                     s.taken ? " rp__slot--taken" : ""
                   }`}
                   onClick={() => pickSlot(s.label, s.taken)}

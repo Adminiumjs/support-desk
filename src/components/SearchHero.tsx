@@ -58,7 +58,7 @@ export function SearchHero() {
             <Icon name="search" size={20} />
           </span>
           <input
-            className="oh-fld"
+            className="fx-fld"
             value={q}
             aria-label="Search help articles"
             placeholder={'Try "doorbell wifi" or "factory reset"'}
@@ -78,7 +78,7 @@ export function SearchHero() {
           {q ? (
             <button
               type="button"
-              className="hero__clear oh-gi"
+              className="hero__clear fx-gi"
               aria-label="Clear search"
               onMouseDown={(e) => {
                 e.preventDefault();
@@ -90,7 +90,7 @@ export function SearchHero() {
           ) : null}
 
           {open ? (
-            <div className="hero__drop oh-scroll">
+            <div className="hero__drop fx-scroll">
               {results.length === 0 ? (
                 <div
                   style={{
@@ -134,7 +134,7 @@ export function SearchHero() {
                     <button
                       key={a.id}
                       type="button"
-                      className="hero__res oh-res"
+                      className="hero__res fx-res"
                       onMouseDown={(e) => {
                         e.preventDefault();
                         openArticle(a.id);

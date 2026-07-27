@@ -98,7 +98,7 @@ export function TextInput({
     <input
       id={id}
       type={type}
-      className={`sd-input oh-fld${invalid ? " sd-input--err" : ""}${
+      className={`sd-input fx-fld${invalid ? " sd-input--err" : ""}${
         className ? ` ${className}` : ""
       }`}
       value={value}
@@ -139,7 +139,7 @@ export function TextArea({
   return (
     <textarea
       id={id}
-      className={`sd-textarea oh-fld${invalid ? " sd-textarea--err" : ""}${
+      className={`sd-textarea fx-fld${invalid ? " sd-textarea--err" : ""}${
         className ? ` ${className}` : ""
       }`}
       style={minHeight ? { minBlockSize: minHeight } : undefined}
@@ -184,7 +184,7 @@ export function SelectField({
   return (
     <select
       id={id}
-      className={`sd-select oh-fld${invalid ? " sd-select--err" : ""}${
+      className={`sd-select fx-fld${invalid ? " sd-select--err" : ""}${
         className ? ` ${className}` : ""
       }`}
       value={value}
@@ -240,7 +240,7 @@ export function ProductPicker({
             type="button"
             role="radio"
             aria-checked={on}
-            className={`sd-tilesel oh-chip${on ? " sd-tilesel--on" : ""}`}
+            className={`sd-tilesel fx-chip${on ? " sd-tilesel--on" : ""}`}
             onClick={() => onChange(p.id)}
           >
             {on ? (

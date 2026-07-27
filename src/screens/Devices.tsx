@@ -84,7 +84,7 @@ export default function Devices() {
   };
 
   return (
-    <main className="oh-screen oh-page w-1000 dv">
+    <main className="fx-screen fx-page w-1000 dv">
       <div className="dv__head">
         <div className="dv__head-text">
           <h1 className="dv__h1">{HOUSEHOLD_NAME}</h1>
@@ -113,7 +113,7 @@ export default function Devices() {
           return (
             <Card
               key={d.id}
-              className={`oh-card dv__card${
+              className={`fx-card dv__card${
                 d.st === "off" ? " dv__card--off" : ""
               }`}
             >
@@ -164,7 +164,7 @@ export default function Devices() {
       <div className="dv__shortcuts">
         <button
           type="button"
-          className="sd-card oh-card dv__shortcut"
+          className="sd-card fx-card dv__shortcut"
           onClick={() => go("notifs")}
         >
           <AccentIconTile icon="bell" size={42} radius={13} iconSize={20} />
@@ -177,7 +177,7 @@ export default function Devices() {
 
         <button
           type="button"
-          className="sd-card oh-card dv__shortcut"
+          className="sd-card fx-card dv__shortcut"
           onClick={() => go("members")}
         >
           <AccentIconTile icon="users" size={42} radius={13} iconSize={20} />

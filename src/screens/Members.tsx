@@ -104,7 +104,7 @@ export default function Members() {
   };
 
   return (
-    <main className="oh-screen oh-page w-820 mb">
+    <main className="fx-screen fx-page w-820 mb">
       <h1 className="mb__h1">Household members</h1>
       <p className="mb__lede">
         Share the home without sharing your password. Guests never see clip
@@ -128,7 +128,7 @@ export default function Members() {
         <Field label="Role" htmlFor="mb-role" className="mb__invite-role">
           <select
             id="mb-role"
-            className="sd-select oh-fld"
+            className="sd-select fx-fld"
             value={mbRole}
             onChange={(e) =>
               set({ mbRole: e.target.value as "adult" | "guest" })
@@ -180,7 +180,7 @@ export default function Members() {
               ) : (
                 <div className="mb__acts">
                   <select
-                    className="sd-select oh-fld mb__role"
+                    className="sd-select fx-fld mb__role"
                     aria-label={`Role for ${m.name}`}
                     value={role}
                     onChange={(e) =>

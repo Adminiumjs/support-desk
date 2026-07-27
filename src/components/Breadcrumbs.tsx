@@ -66,7 +66,7 @@ export function Breadcrumbs() {
         <span className="sd-row" style={{ gap: 8 }} key={`${c.label}-${i}`}>
           {i > 0 ? <Icon name="chevron-right" size={14} /> : null}
           {c.onClick ? (
-            <button type="button" className="crumbs__link oh-nav" onClick={c.onClick}>
+            <button type="button" className="crumbs__link fx-nav" onClick={c.onClick}>
               {c.label}
             </button>
           ) : (

@@ -104,7 +104,7 @@ export default function Gift() {
 
   if (gcBought) {
     return (
-      <main className="oh-screen oh-page w-900">
+      <main className="fx-screen fx-page w-900">
         <Card variant="form" className="gift-done">
           <span className="gift-done__tile">
             <Icon name="gift" size={24} />
@@ -131,7 +131,7 @@ export default function Gift() {
   /* ------------------------------------------------- B. purchase form */
 
   return (
-    <main className="oh-screen oh-page w-900">
+    <main className="fx-screen fx-page w-900">
       <h1 className="gift-title">Gift cards</h1>
       <p className="gift-lede">
         Spendable on any Hearth device, spare part or Hearth Care plan. No
@@ -146,7 +146,7 @@ export default function Gift() {
                 <button
                   key={d.id}
                   type="button"
-                  className={`sd-tilesel oh-chip${
+                  className={`sd-tilesel fx-chip${
                     gcDesign === d.id ? " sd-tilesel--on" : ""
                   }`}
                   aria-pressed={gcDesign === d.id}

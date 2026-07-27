@@ -26,7 +26,7 @@ export function CategoryTile({
   return (
     <button
       type="button"
-      className={`cat-tile oh-card${className ? ` ${className}` : ""}`}
+      className={`cat-tile fx-card${className ? ` ${className}` : ""}`}
       onClick={onClick}
     >
       <IconChip

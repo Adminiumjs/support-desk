@@ -79,7 +79,7 @@ export default function Status() {
   }
 
   return (
-    <main className="oh-screen oh-page w-820 st">
+    <main className="fx-screen fx-page w-820 st">
       <h1 className="st__h1">Service status</h1>
       <p className="st__lede">
         Live health of the Hearth app, cloud and website. Your devices keep
@@ -101,7 +101,7 @@ export default function Status() {
         {comps.map((c) => {
           const m = HEALTH[c.st];
           return (
-            <div key={c.name} className="sd-listrow oh-res">
+            <div key={c.name} className="sd-listrow fx-res">
               <div className="st__comp">
                 <p className="st__comp-name">{c.name}</p>
                 <p className="st__comp-note">{c.note}</p>

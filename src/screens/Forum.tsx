@@ -49,7 +49,7 @@ export default function Forum() {
   const toggle = (id: string) => set({ fopen: fopen === id ? null : id });
 
   return (
-    <main className="oh-screen oh-page w-1120">
+    <main className="fx-screen fx-page w-1120">
       <div className="forum-head">
         <div className="forum-head__text">
           <h1 className="forum-head__title">Community forum</h1>
@@ -82,7 +82,7 @@ export default function Forum() {
           {list.map((t) => {
             const open = fopen === t.id;
             return (
-              <div key={t.id} className="oh-card forum-thread">
+              <div key={t.id} className="fx-card forum-thread">
                 <button
                   type="button"
                   className="forum-thread__head"

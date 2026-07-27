@@ -7,7 +7,11 @@
  * Ruling R5: the 980 / 1120 switches are real CSS media queries. The nav and
  * the CTA carry `.hdr-nav` / `.hdr-cta`, the hamburger `.hdr-menu-btn`, the
  * inline field `.hdr-search-field` and the fallback button `.hdr-search-btn`;
- * base.css decides which of each pair is visible.
+ * the responsive block at the END of components.css decides which of each pair
+ * is visible. It has to live there, not in base.css: these rules toggle
+ * `display` on elements that also carry `.sd-iconbtn` / `.sd-btn`, and
+ * components.css is imported after base.css — at equal specificity the later
+ * sheet wins.
  */
 
 import { useEffect, useMemo, useRef } from "react";
@@ -82,7 +86,7 @@ export function Header() {
   return (
     <header className="hdr">
       <div className="hdr__bar">
-        <button type="button" className="hdr__logo oh-nav" onClick={goHome}>
+        <button type="button" className="hdr__logo fx-nav" onClick={goHome}>
           <span className="hdr__mark">
             <Icon name="life-buoy" size={19} />
           </span>
@@ -96,7 +100,7 @@ export function Header() {
             <button
               key={l.view}
               type="button"
-              className="hdr__navitem oh-nav"
+              className="hdr__navitem fx-nav"
               aria-current={l.active.includes(view) ? "page" : undefined}
               onClick={() => go(l.view)}
             >
@@ -113,7 +117,7 @@ export function Header() {
             </span>
             <input
               ref={inputRef}
-              className="oh-fld"
+              className="fx-fld"
               value={hq}
               aria-label="Search help"
               placeholder="Search help…"
@@ -152,7 +156,7 @@ export function Header() {
                         <button
                           key={a.id}
                           type="button"
-                          className="sd-drop__row oh-res"
+                          className="sd-drop__row fx-res"
                           onMouseDown={(e) => {
                             e.preventDefault();
                             openArticle(a.id);
@@ -181,7 +185,7 @@ export function Header() {
                     })}
                     <button
                       type="button"
-                      className="sd-drop__all oh-res"
+                      className="sd-drop__all fx-res"
                       onMouseDown={(e) => {
                         e.preventDefault();
                         gotoKb(hq);

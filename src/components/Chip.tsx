@@ -36,7 +36,7 @@ export function Chip({
   return (
     <button
       type="button"
-      className={`sd-chip oh-chip${className ? ` ${className}` : ""}`}
+      className={`sd-chip fx-chip${className ? ` ${className}` : ""}`}
       aria-pressed={active}
       onClick={onClick}
       style={style}

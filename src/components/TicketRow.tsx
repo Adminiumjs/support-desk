@@ -21,7 +21,7 @@ export function TicketRow({ ticket, onClick, className }: TicketRowProps) {
   return (
     <button
       type="button"
-      className={`ticket-row oh-card${className ? ` ${className}` : ""}`}
+      className={`ticket-row fx-card${className ? ` ${className}` : ""}`}
       onClick={onClick}
     >
       <IconChip

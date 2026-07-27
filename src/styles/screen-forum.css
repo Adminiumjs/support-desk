@@ -138,7 +138,7 @@
   flex-direction: column;
   gap: 14px;
   padding: 0 18px 18px;
-  animation: oh-drop 0.2s ease;
+  animation: fx-drop 0.2s ease;
 }
 .forum-thread__first {
   margin: 0;

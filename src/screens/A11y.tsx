@@ -56,7 +56,7 @@ export default function A11y() {
   const previewBorder = hc ? 2 : 1;
 
   return (
-    <main className="oh-screen oh-page w-900 a11">
+    <main className="fx-screen fx-page w-900 a11">
       <h1 className="a11__h1">Accessibility settings</h1>
       <p className="a11__lede">
         These apply across the help center and the Hearth app on this account.
@@ -169,7 +169,7 @@ export default function A11y() {
               anywhere, <span className="sd-kbd sd-kbd--sm">Esc</span> to close
               any panel.
             </p>
-            <button type="button" className="oh-nav a11__see-all" onClick={scToggle}>
+            <button type="button" className="fx-nav a11__see-all" onClick={scToggle}>
               See all shortcuts
               <Icon name="arrow-right" size={13} />
             </button>

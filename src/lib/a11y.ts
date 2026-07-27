@@ -62,9 +62,9 @@ export function watchReducedMotion(cb: (reduced: boolean) => void): () => void {
   return () => mq.removeEventListener("change", handler);
 }
 
-/** `oh-nomotion` when motion is suppressed, otherwise an empty string. */
+/** `fx-nomotion` when motion is suppressed, otherwise an empty string. */
 export function rootMotionClass(settings: A11ySettings): string {
-  return motionReduced(settings) ? "oh-nomotion" : "";
+  return motionReduced(settings) ? "fx-nomotion" : "";
 }
 
 /* ----------------------------------------------------------- application */
@@ -74,7 +74,7 @@ export function rootMotionClass(settings: A11ySettings): string {
  *   `data-a11y-contrast="on"` — the high-contrast token block
  *   `data-a11y-palette="deuter" | "mono"` — the semantic-hue overrides
  *   `--a11y-scale` — the display-size multiplier, consumed by `:root`
- *   `.oh-nomotion` — the motion kill switch
+ *   `.fx-nomotion` — the motion kill switch
  */
 export function applyA11ySettings(
   settings: A11ySettings,
@@ -91,7 +91,7 @@ export function applyA11ySettings(
   else root.setAttribute("data-a11y-palette", settings.palette);
 
   root.style.setProperty("--a11y-scale", String(settings.size));
-  root.classList.toggle("oh-nomotion", motionReduced(settings));
+  root.classList.toggle("fx-nomotion", motionReduced(settings));
 }
 
 /* -------------------------------------------------------- palette tables */

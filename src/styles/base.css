@@ -225,7 +225,7 @@ svg {
 
 /* --- the six keyframes, verbatim from the comp --- */
 
-@keyframes oh-fade {
+@keyframes fx-fade {
   from {
     opacity: 0;
     transform: translateY(10px);
@@ -235,7 +235,7 @@ svg {
     transform: none;
   }
 }
-@keyframes oh-pop {
+@keyframes fx-pop {
   from {
     opacity: 0;
     transform: translateY(10px) scale(0.98);
@@ -245,7 +245,7 @@ svg {
     transform: none;
   }
 }
-@keyframes oh-scrim {
+@keyframes fx-scrim {
   from {
     opacity: 0;
   }
@@ -253,7 +253,7 @@ svg {
     opacity: 1;
   }
 }
-@keyframes oh-sheet {
+@keyframes fx-sheet {
   from {
     opacity: 0;
     transform: translateY(-14px);
@@ -263,7 +263,7 @@ svg {
     transform: none;
   }
 }
-@keyframes oh-drop {
+@keyframes fx-drop {
   from {
     opacity: 0;
     transform: translateY(-6px);
@@ -273,7 +273,7 @@ svg {
     transform: none;
   }
 }
-@keyframes oh-blink {
+@keyframes fx-blink {
   0%,
   80%,
   100% {
@@ -288,104 +288,104 @@ svg {
 
 /* --- the eleven interaction classes, verbatim from the comp --- */
 
-.oh-screen {
-  animation: oh-fade 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
+.fx-screen {
+  animation: fx-fade 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 
-.oh-card {
+.fx-card {
   transition:
     box-shadow 0.18s ease,
     border-color 0.18s ease,
     transform 0.16s ease;
 }
-.oh-card:hover {
+.fx-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 16px 34px -18px rgba(20, 20, 40, 0.32) !important;
   border-color: var(--border-strong) !important;
 }
 
-.oh-btn {
+.fx-btn {
   transition:
     filter 0.13s ease,
     transform 0.1s ease;
 }
-.oh-btn:hover {
+.fx-btn:hover {
   filter: brightness(1.08);
 }
-.oh-btn:active {
+.fx-btn:active {
   transform: scale(0.97);
 }
 
-.oh-gi {
+.fx-gi {
   transition:
     background 0.13s ease,
     color 0.13s ease,
     border-color 0.13s ease;
 }
-.oh-gi:hover {
+.fx-gi:hover {
   background: var(--surface-2) !important;
   color: var(--fg) !important;
 }
 
-.oh-nav:hover {
+.fx-nav:hover {
   color: var(--accent) !important;
 }
 
-.oh-fld {
+.fx-fld {
   transition:
     border-color 0.14s ease,
     box-shadow 0.14s ease;
 }
-.oh-fld:focus {
+.fx-fld:focus {
   border-color: var(--accent) !important;
   box-shadow: 0 0 0 3px var(--accent-soft) !important;
   outline: none;
 }
 
-.oh-chip {
+.fx-chip {
   transition:
     background 0.12s ease,
     color 0.12s ease,
     border-color 0.12s ease,
     transform 0.1s ease;
 }
-.oh-chip:active {
+.fx-chip:active {
   transform: scale(0.96);
 }
 
-.oh-res:hover {
+.fx-res:hover {
   background: var(--surface-2) !important;
 }
 
-.oh-scroll::-webkit-scrollbar {
+.fx-scroll::-webkit-scrollbar {
   inline-size: 10px;
   block-size: 10px;
 }
-.oh-scroll::-webkit-scrollbar-thumb {
+.fx-scroll::-webkit-scrollbar-thumb {
   background: var(--border-strong);
   border-radius: 8px;
   border: 3px solid transparent;
   background-clip: padding-box;
 }
-.oh-scroll::-webkit-scrollbar-track {
+.fx-scroll::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.oh-blink {
-  animation: oh-blink 1.3s infinite;
+.fx-blink {
+  animation: fx-blink 1.3s infinite;
 }
 
-.oh-nomotion *,
-.oh-nomotion *::before,
-.oh-nomotion *::after {
+.fx-nomotion *,
+.fx-nomotion *::before,
+.fx-nomotion *::after {
   animation: none !important;
   transition: none !important;
 }
-.oh-nomotion .oh-card:hover {
+.fx-nomotion .fx-card:hover {
   transform: none !important;
 }
-.oh-nomotion .oh-btn:active,
-.oh-nomotion .oh-chip:active {
+.fx-nomotion .fx-btn:active,
+.fx-nomotion .fx-chip:active {
   transform: none !important;
 }
 
@@ -399,7 +399,7 @@ svg {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-  .oh-card:hover {
+  .fx-card:hover {
     transform: none !important;
   }
 }
@@ -418,10 +418,10 @@ svg {
 }
 
 /* Page gutter and vertical rhythm — 44 uses in the comp. */
-.oh-gutter {
+.fx-gutter {
   padding-inline: clamp(16px, 4vw, 32px);
 }
-.oh-page {
+.fx-page {
   margin: 0 auto;
   padding: clamp(24px, 4vw, 44px) clamp(16px, 4vw, 32px) clamp(40px, 6vw, 72px);
 }
@@ -444,7 +444,7 @@ svg {
  * the mobile menu button would stay visible on desktop. */
 
 /* Wide content never scrolls the page sideways. */
-.oh-xscroll {
+.fx-xscroll {
   overflow-x: auto;
   max-inline-size: 100%;
 }

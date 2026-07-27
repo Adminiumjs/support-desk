@@ -49,7 +49,7 @@
   transition: inline-size 0.25s ease;
 }
 
-.oh-nomotion .svy__fill {
+.fx-nomotion .svy__fill {
   transition: none;
 }
 

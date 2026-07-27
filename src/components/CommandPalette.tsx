@@ -90,14 +90,14 @@ export function CommandPalette() {
           <kbd className="sd-kbd sd-kbd--sm">esc</kbd>
         </div>
 
-        <div className="cp__list oh-scroll" role="listbox" aria-label="Results">
+        <div className="cp__list fx-scroll" role="listbox" aria-label="Results">
           {rows.length === 0 ? (
             <div className="cp__empty">
               <Icon name="search-x" size={24} />
               <span style={{ fontSize: 14, fontWeight: 700 }}>
                 No matches for “{q}”
               </span>
-              <button type="button" className="sd-btn-ghost oh-gi" onClick={ask}>
+              <button type="button" className="sd-btn-ghost fx-gi" onClick={ask}>
                 <Icon name="pen-line" size={14} />
                 Open a ticket instead
               </button>

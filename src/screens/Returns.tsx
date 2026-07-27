@@ -81,7 +81,7 @@ export default function Returns() {
     rStep === 1 ? "Continue" : rStep === 2 ? "Get my label" : "Email me the label";
 
   return (
-    <main className="oh-screen oh-page w-760 scr-returns">
+    <main className="fx-screen fx-page w-760 scr-returns">
       <h1 className="scr-returns__h1">Start a return</h1>
       <p className="scr-returns__lede">
         30 days from delivery, no questions asked. Refunds land back on your

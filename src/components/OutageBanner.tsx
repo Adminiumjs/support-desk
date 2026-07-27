@@ -37,7 +37,7 @@ export function OutageBanner() {
       <span className="outage__time">{OUTAGE_TIME}</span>
       <button
         type="button"
-        className="outage__cta oh-btn"
+        className="outage__cta fx-btn"
         onClick={() => go("status")}
       >
         Live status

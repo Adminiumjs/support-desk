@@ -54,7 +54,7 @@ export default function Security() {
   };
 
   return (
-    <main className="oh-screen oh-page w-820 sec">
+    <main className="fx-screen fx-page w-820 sec">
       <h1 className="sec__h1">Security &amp; privacy</h1>
       <p className="sec__lede">
         {
@@ -89,7 +89,7 @@ export default function Security() {
               key={t.id}
               role="switch"
               aria-checked={on}
-              className="oh-res sec__row"
+              className="fx-res sec__row"
               onClick={() => flip(t.id, t.label, on)}
             >
               <span className="sec__row-text">
@@ -137,7 +137,7 @@ export default function Security() {
 
       <div className="sec__sessions-head">
         <Eyebrow>{"Where you're signed in"}</Eyebrow>
-        <button type="button" className="oh-nav sec__revoke-all" onClick={revokeAll}>
+        <button type="button" className="fx-nav sec__revoke-all" onClick={revokeAll}>
           Sign out everywhere else
         </button>
       </div>
