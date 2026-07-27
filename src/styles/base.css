@@ -86,3 +86,406 @@ select,
 button {
   font-family: inherit;
 }
+
+/* ---------------------------------------------------------------------------
+ * App-level additions on top of the canonical tokens.
+ *
+ * tokens.css is @adminium/tokens verbatim plus the blue accent pair. The comp
+ * needs two things it does not ship — a translucent sticky-header surface and
+ * a display-size multiplier — plus the three accessibility palettes, which
+ * layer ON TOP of the canonical tokens rather than replacing them.
+ * ------------------------------------------------------------------------- */
+
+:root {
+  --surface-header: rgba(255, 255, 255, 0.82);
+  /* Set by lib/a11y.ts applyA11ySettings(). 1 = default display size. */
+  --a11y-scale: 1;
+  font-size: calc(100% * var(--a11y-scale));
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface-header: rgba(20, 20, 25, 0.8);
+  }
+}
+:root[data-theme="dark"] {
+  --surface-header: rgba(20, 20, 25, 0.8);
+}
+
+/* --- accessibility layer 1: higher contrast --- */
+
+:root[data-a11y-contrast="on"] {
+  --fg: #000000;
+  --fg-muted: #1e1e26;
+  --fg-subtle: #32323c;
+  --border: #c6c6d0;
+  --border-strong: #96969f;
+  --surface-3: #e5e5eb;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-a11y-contrast="on"]:not([data-theme="light"]) {
+    --fg: #ffffff;
+    --fg-muted: #ededf3;
+    --fg-subtle: #d6d6e0;
+    --border: rgba(255, 255, 255, 0.3);
+    --border-strong: rgba(255, 255, 255, 0.48);
+    --surface-3: #32323c;
+  }
+}
+:root[data-theme="dark"][data-a11y-contrast="on"] {
+  --fg: #ffffff;
+  --fg-muted: #ededf3;
+  --fg-subtle: #d6d6e0;
+  --border: rgba(255, 255, 255, 0.3);
+  --border-strong: rgba(255, 255, 255, 0.48);
+  --surface-3: #32323c;
+}
+
+/* --- accessibility layer 2: red-green friendly (deuteranopia) ---
+ * --warn / --warn-soft are deliberately untouched. */
+
+:root[data-a11y-palette="deuter"] {
+  --pos: #1c59e0;
+  --pos-soft: #e7edfd;
+  --danger: #7a1fa2;
+  --danger-soft: #f4e9fa;
+  --info: #0e7490;
+  --info-soft: #e2f4f7;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-a11y-palette="deuter"]:not([data-theme="light"]) {
+    --pos: #7fa7ff;
+    --pos-soft: rgba(127, 167, 255, 0.16);
+    --danger: #d9a2ff;
+    --danger-soft: rgba(217, 162, 255, 0.16);
+    --info: #5eead4;
+    --info-soft: rgba(94, 234, 212, 0.14);
+  }
+}
+:root[data-theme="dark"][data-a11y-palette="deuter"] {
+  --pos: #7fa7ff;
+  --pos-soft: rgba(127, 167, 255, 0.16);
+  --danger: #d9a2ff;
+  --danger-soft: rgba(217, 162, 255, 0.16);
+  --info: #5eead4;
+  --info-soft: rgba(94, 234, 212, 0.14);
+}
+
+/* --- accessibility layer 3: monochrome --- */
+
+:root[data-a11y-palette="mono"] {
+  --pos: #26262e;
+  --warn: #26262e;
+  --danger: #26262e;
+  --info: #26262e;
+  --pos-soft: #ededf1;
+  --warn-soft: #ededf1;
+  --danger-soft: #ededf1;
+  --info-soft: #ededf1;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-a11y-palette="mono"]:not([data-theme="light"]) {
+    --pos: #e8e8ee;
+    --warn: #e8e8ee;
+    --danger: #e8e8ee;
+    --info: #e8e8ee;
+    --pos-soft: rgba(255, 255, 255, 0.1);
+    --warn-soft: rgba(255, 255, 255, 0.1);
+    --danger-soft: rgba(255, 255, 255, 0.1);
+    --info-soft: rgba(255, 255, 255, 0.1);
+  }
+}
+:root[data-theme="dark"][data-a11y-palette="mono"] {
+  --pos: #e8e8ee;
+  --warn: #e8e8ee;
+  --danger: #e8e8ee;
+  --info: #e8e8ee;
+  --pos-soft: rgba(255, 255, 255, 0.1);
+  --warn-soft: rgba(255, 255, 255, 0.1);
+  --danger-soft: rgba(255, 255, 255, 0.1);
+  --info-soft: rgba(255, 255, 255, 0.1);
+}
+
+/* --- reset tail (the comp's own rules) --- */
+
+textarea {
+  resize: vertical;
+}
+button {
+  cursor: pointer;
+}
+img,
+svg {
+  max-inline-size: 100%;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* --- the six keyframes, verbatim from the comp --- */
+
+@keyframes oh-fade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes oh-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes oh-scrim {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes oh-sheet {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes oh-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes oh-blink {
+  0%,
+  80%,
+  100% {
+    opacity: 0.2;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+/* --- the eleven interaction classes, verbatim from the comp --- */
+
+.oh-screen {
+  animation: oh-fade 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.oh-card {
+  transition:
+    box-shadow 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.16s ease;
+}
+.oh-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 34px -18px rgba(20, 20, 40, 0.32) !important;
+  border-color: var(--border-strong) !important;
+}
+
+.oh-btn {
+  transition:
+    filter 0.13s ease,
+    transform 0.1s ease;
+}
+.oh-btn:hover {
+  filter: brightness(1.08);
+}
+.oh-btn:active {
+  transform: scale(0.97);
+}
+
+.oh-gi {
+  transition:
+    background 0.13s ease,
+    color 0.13s ease,
+    border-color 0.13s ease;
+}
+.oh-gi:hover {
+  background: var(--surface-2) !important;
+  color: var(--fg) !important;
+}
+
+.oh-nav:hover {
+  color: var(--accent) !important;
+}
+
+.oh-fld {
+  transition:
+    border-color 0.14s ease,
+    box-shadow 0.14s ease;
+}
+.oh-fld:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-soft) !important;
+  outline: none;
+}
+
+.oh-chip {
+  transition:
+    background 0.12s ease,
+    color 0.12s ease,
+    border-color 0.12s ease,
+    transform 0.1s ease;
+}
+.oh-chip:active {
+  transform: scale(0.96);
+}
+
+.oh-res:hover {
+  background: var(--surface-2) !important;
+}
+
+.oh-scroll::-webkit-scrollbar {
+  inline-size: 10px;
+  block-size: 10px;
+}
+.oh-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 8px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+.oh-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.oh-blink {
+  animation: oh-blink 1.3s infinite;
+}
+
+.oh-nomotion *,
+.oh-nomotion *::before,
+.oh-nomotion *::after {
+  animation: none !important;
+  transition: none !important;
+}
+.oh-nomotion .oh-card:hover {
+  transform: none !important;
+}
+.oh-nomotion .oh-btn:active,
+.oh-nomotion .oh-chip:active {
+  transform: none !important;
+}
+
+/* The OS preference backs the in-app setting (ruling R6). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .oh-card:hover {
+    transform: none !important;
+  }
+}
+
+/* --- the layout shell every screen shares --- */
+
+.app-root {
+  min-block-size: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--fg);
+}
+.app-main {
+  flex: 1;
+}
+
+/* Page gutter and vertical rhythm — 44 uses in the comp. */
+.oh-gutter {
+  padding-inline: clamp(16px, 4vw, 32px);
+}
+.oh-page {
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 44px) clamp(16px, 4vw, 32px) clamp(40px, 6vw, 72px);
+}
+
+/* Content max-widths, mirroring CRUMB_W. */
+.w-1120 { max-inline-size: 1120px; }
+.w-1000 { max-inline-size: 1000px; }
+.w-900  { max-inline-size: 900px; }
+.w-820  { max-inline-size: 820px; }
+.w-760  { max-inline-size: 760px; }
+.w-720  { max-inline-size: 720px; }
+.w-620  { max-inline-size: 620px; }
+
+/* --- the two real breakpoints (ruling R5) --- */
+
+.hdr-nav,
+.hdr-cta {
+  display: none;
+}
+.hdr-menu-btn {
+  display: inline-flex;
+}
+.hdr-search-field {
+  display: none;
+}
+.hdr-search-btn {
+  display: inline-flex;
+}
+
+@media (min-width: 980px) {
+  .hdr-nav {
+    display: flex;
+  }
+  .hdr-cta {
+    display: inline-flex;
+  }
+  .hdr-menu-btn {
+    display: none;
+  }
+}
+
+@media (min-width: 1120px) {
+  .hdr-search-field {
+    display: block;
+  }
+  .hdr-search-btn {
+    display: none;
+  }
+}
+
+/* Wide content never scrolls the page sideways. */
+.oh-xscroll {
+  overflow-x: auto;
+  max-inline-size: 100%;
+}
+
+.sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
