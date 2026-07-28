@@ -2461,7 +2461,10 @@ export const PLANS: Plan[] = [
   },
 ];
 
-export const PLAN_BILLING_SUFFIX = "· Visa ending 4417 · next charge 12 Aug 2026";
+/* Card only. The next-charge date varies by cycle and is derived by
+ * `nextChargeDate` in lib/derive.ts — authoring it here too made Plans and
+ * Billing disagree on the annual cycle. */
+export const PLAN_BILLING_SUFFIX = "· Visa ending 4417";
 export const PLAN_ANNUAL_LABEL = "Annual · 2 months free";
 
 /* -------------------------------------------------------------- security */

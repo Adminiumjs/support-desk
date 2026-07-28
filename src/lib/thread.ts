@@ -308,9 +308,28 @@ export function threadReducer(
     case "markSolved": {
       const prev = state.tickets[action.id];
       if (!prev) return result(state, null, { noop: true });
-      const next: Ticket = { ...prev, status: "solved", updated: NOW_STAMP };
+      /*
+       * Solving is activity, so it bumps `rank` as well as the stamp.
+       *
+       * `updated` and `rank` are two views of the same fact — the stamp is
+       * what the row says, `rank` is what `ticketList` sorts on. Refreshing
+       * only the stamp made a ticket read "Updated Just now" while sitting
+       * below one reading "Updated 2h ago", in a list documented as
+       * newest-activity-first. The `reply` branch above already does this.
+       */
+      const rank = state.maxRank + 1;
+      const next: Ticket = {
+        ...prev,
+        status: "solved",
+        updated: NOW_STAMP,
+        rank,
+      };
       return result(
-        { ...state, tickets: { ...state.tickets, [action.id]: next } },
+        {
+          ...state,
+          maxRank: rank,
+          tickets: { ...state.tickets, [action.id]: next },
+        },
         action.id,
       );
     }

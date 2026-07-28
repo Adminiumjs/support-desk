@@ -143,10 +143,21 @@ export function planPriceLine(monthly: number, cycle: string): string {
     : `£${monthly} / month`;
 }
 
+/**
+ * When the next payment falls, for a given cycle.
+ *
+ * The single source of this fact. Plans and Billing both quote it, and they
+ * used to derive it independently — Billing from the cycle, Plans from a
+ * hard-coded suffix in `demo.ts` — so switching to annual made the same
+ * account show 12 Aug 2026 on one screen and 12 Aug 2027 on the other.
+ */
+export function nextChargeDate(cycle: string): string {
+  return cycle === "annual" ? "12 Aug 2027" : "12 Aug 2026";
+}
+
 export function nextChargeLine(monthly: number, cycle: string): string {
   if (monthly === 0) return "Nothing to bill — the free tier has no charges.";
-  const year = cycle === "annual" ? "2027" : "2026";
-  return `Next charge 12 Aug ${year}, taken from the card below.`;
+  return `Next charge ${nextChargeDate(cycle)}, taken from the card below.`;
 }
 
 export function invoiceDownloadToast(invoice: Invoice): string {
@@ -240,8 +251,11 @@ export function groupRecent(entries: RecentEntry[]): RecentGroup[] {
 }
 
 export function recentIntro(count: number): string {
+  /* Every other count in this module goes through `pluralise`; this one
+   * interpolated a hard-coded plural, so forgetting all but one row left the
+   * lede reading "1 things you've looked at recently". */
   return count
-    ? `${count} things you've looked at recently, newest first. Stored on this device only.`
+    ? `${pluralise(count, "thing")} you've looked at recently, newest first. Stored on this device only.`
     : "Nothing here — your history is empty.";
 }
 

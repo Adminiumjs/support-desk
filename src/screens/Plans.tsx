@@ -16,6 +16,7 @@ import {
   Tabs,
 } from "../components";
 import { PLAN_ANNUAL_LABEL, PLAN_BILLING_SUFFIX } from "../data/demo";
+import { nextChargeDate } from "../lib/derive.ts";
 import { dataSource } from "../data/source";
 import type { Plan, PlanCycle } from "../data/types";
 import { planPrice } from "../lib/format";
@@ -63,7 +64,7 @@ export default function Plans() {
           planCycle === "annual"
             ? `£${(current.mo * 10).toFixed(2)} a year`
             : `£${current.mo.toFixed(2)} a month`
-        } ${PLAN_BILLING_SUFFIX}`;
+        } ${PLAN_BILLING_SUFFIX} · next charge ${nextChargeDate(planCycle)}`;
 
   const choose = (plan: Plan) => {
     if (plan.id === planCurrent) return;
