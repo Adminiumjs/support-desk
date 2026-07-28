@@ -114,7 +114,7 @@
 }
 
 .a11__row[aria-checked="true"] .sd-toggle__knob {
-  transform: translateX(19px);
+  transform: translateX(var(--sd-knob-travel));
   background: var(--accent-fg);
 }
 

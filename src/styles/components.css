@@ -225,7 +225,8 @@
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  padding: 8px 8px 8px 12px;
+  padding-block: 8px;
+  padding-inline: 12px 8px;
   border-radius: 10px;
   border: 1px solid var(--border-strong);
   background: var(--surface-2);
@@ -297,11 +298,21 @@
   border-radius: 50%;
   background: var(--surface);
   box-shadow: 0 1px 3px rgba(10, 10, 25, 0.3);
+  /*
+   * The knob slides along the inline axis. `transform` has no logical form,
+   * so the travel is a custom property that flips sign under [dir="rtl"] —
+   * without it a checked toggle in RTL slides its knob to the inline START,
+   * i.e. an "on" switch reads as "off".
+   */
+  --sd-knob-travel: 19px;
   transform: translateX(0);
   transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.18s ease;
 }
+[dir="rtl"] .sd-toggle__knob {
+  --sd-knob-travel: -19px;
+}
 .sd-toggle[aria-checked="true"] .sd-toggle__knob {
-  transform: translateX(19px);
+  transform: translateX(var(--sd-knob-travel));
   background: var(--accent-fg);
 }
 
