@@ -1,0 +1,191 @@
+/* screen-wish.css — `wish` (delta spec A §5). Imported by Wish.tsx. */
+
+.wl__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-block-end: 20px;
+}
+.wl__head-text {
+  flex: 1 1 280px;
+}
+.wl__h1 {
+  margin: 0;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.wl__lede {
+  margin: 9px 0 0;
+  max-inline-size: 56ch;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+.wl__head-acts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.wl__alert {
+  margin-block-end: 20px;
+}
+
+/* ----------------------------------------------------------- item cards */
+
+.wl-list {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+.wl-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  border-radius: 16px;
+  padding: clamp(14px, 2.5vw, 18px);
+}
+.wl-item__tile {
+  inline-size: 86px;
+  border-radius: 13px;
+  flex-shrink: 0;
+}
+.wl-item__body {
+  flex: 1 1 220px;
+  min-inline-size: 0;
+}
+.wl-item__name {
+  margin: 0;
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.wl-item__pills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-block-start: 7px;
+}
+.wl-item__drop {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--pos-soft);
+  color: var(--pos);
+  border-radius: 999px;
+  padding: 3px 9px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.wl-item__blurb {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+.wl-item__added {
+  margin: 7px 0 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-subtle);
+}
+.wl-item__price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.wl-item__now {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  font-weight: 700;
+}
+.wl-item__was {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--fg-subtle);
+  text-decoration: line-through;
+}
+.wl-item__acts {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.wl-item__add {
+  padding: 11px 16px;
+  border-radius: 11px;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.wl-item__acts .sd-iconbtn {
+  inline-size: 36px;
+  block-size: 36px;
+  border-radius: 10px;
+}
+
+/* --------------------------------------------------------- empty state */
+
+.wl-empty__acts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-block-start: 8px;
+}
+
+/* --------------------------------------------------------- suggestions */
+
+.wl__h2 {
+  margin: 32px 0 14px;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+.wl-suggest {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: 13px;
+}
+.wl-sug {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  border-radius: 16px;
+  padding: 16px;
+}
+.wl-sug__tile {
+  border-radius: 13px;
+}
+.wl-sug__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.wl-sug__name {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+.wl-sug__price {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+}
+.wl-sug__save {
+  inline-size: 100%;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 11px;
+  font-size: 12.5px;
+}

@@ -154,4 +154,30 @@ export function PlaceholderTile({
   );
 }
 
+/* ------------------------------------------------------ MapPlaceholder */
+
+export interface MapPlaceholderProps {
+  /** Mono file-name chip, bottom-start, e.g. `map-stores-bristol.png`. */
+  filename: string;
+  /** Mono count chip, top-end, e.g. `3 shown`. */
+  count?: string;
+  className?: string;
+}
+
+/**
+ * The accent-washed map stand-in on the store locator. Unlike
+ * `<PlaceholderTile>` it is not tinted from a record — the wash is the accent.
+ *
+ * `<MapPlaceholder filename={storeMapFile(stQ)} count={`${n} shown`} />`
+ */
+export function MapPlaceholder({ filename, count, className }: MapPlaceholderProps) {
+  return (
+    <div className={`sd-map${className ? ` ${className}` : ""}`}>
+      <Icon name="map" size={58} color="color-mix(in srgb, var(--accent) 60%, transparent)" />
+      <span className="sd-map__file">{filename}</span>
+      {count ? <span className="sd-map__count">{count}</span> : null}
+    </div>
+  );
+}
+
 export default PlaceholderTile;

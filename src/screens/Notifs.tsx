@@ -6,6 +6,10 @@
  * `n.unread && !ntRead.includes(n.id)`. Category counts are taken over the
  * FULL list, not the filtered one; the filtered list is grouped by `n.day`
  * preserving first-seen day order.
+ *
+ * Delta §6.5: "Mark all read" is undoable, its toast copy shortened, and it
+ * raises a success banner. The command palette's twin action deliberately
+ * keeps the old plain toast.
  */
 
 import { useMemo } from "react";
@@ -39,6 +43,8 @@ export default function Notifs() {
   const go = useAppStore((s) => s.go);
   const openThread = useAppStore((s) => s.openThread);
   const showToast = useAppStore((s) => s.showToast);
+  const undoToast = useAppStore((s) => s.undoToast);
+  const succeed = useAppStore((s) => s.succeed);
 
   const all = dataSource.notifications();
   const cats = dataSource.notifCategories();
@@ -70,8 +76,14 @@ export default function Notifs() {
     : "All caught up — we keep 90 days of history.";
 
   const markAll = () => {
+    const prev = ntRead.slice();
     set({ ntRead: all.map((n) => n.id) });
-    showToast("All notifications marked read");
+    undoToast("All marked read", () => set({ ntRead: prev }));
+    succeed(
+      "Inbox cleared",
+      "Nothing unread left. New alerts will appear at the top as they arrive.",
+      { label: "Alert settings", icon: "settings", fn: () => go("a11y") },
+    );
   };
 
   const openSettings = () => {

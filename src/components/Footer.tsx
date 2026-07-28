@@ -1,6 +1,6 @@
 /*
  * Footer — on every view (port spec §5.11): a brand column plus 8 link
- * columns carrying 36 label → handler pairs.
+ * columns carrying 51 label → handler pairs.
  *
  * Store-connected: takes no props.
  */
@@ -29,7 +29,7 @@ export function Footer() {
 
   return (
     <footer className="ftr">
-      <div className="ftr__inner">
+      <div className="ftr__inner w-1120 fx-wide">
         <div className="ftr__brand">
           <div className="sd-row" style={{ gap: 11 }}>
             <span className="ftr__mark">

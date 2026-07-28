@@ -54,6 +54,7 @@ export default function Appts() {
   const set = useAppStore((s) => s.set);
   const go = useAppStore((s) => s.go);
   const showToast = useAppStore((s) => s.showToast);
+  const undoToast = useAppStore((s) => s.undoToast);
 
   const live = useMemo(
     () => appts.filter((a) => !apptCancelled.includes(a.id)),
@@ -73,9 +74,16 @@ export default function Appts() {
     go("repair");
   }
 
+  /* Delta §6.3: same copy, now undoable. */
   function onCancel(a: Appointment) {
     set({ apptCancelled: [...apptCancelled, a.id] });
-    showToast(`Appointment ${a.id} cancelled`);
+    undoToast(`Appointment ${a.id} cancelled`, () =>
+      set({
+        apptCancelled: useAppStore
+          .getState()
+          .apptCancelled.filter((id) => id !== a.id),
+      }),
+    );
   }
 
   function onReport() {

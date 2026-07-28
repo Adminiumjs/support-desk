@@ -1,0 +1,258 @@
+/* screen-recycle.css — Recycling drop-off (delta B §6). */
+
+/* ---------------------------------------------------------- confirmation */
+
+.rc-done {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-start;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: clamp(20px, 3vw, 28px);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  margin-block-end: 22px;
+}
+.rc-done__ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 52px;
+  block-size: 52px;
+  border-radius: 15px;
+  background: var(--pos-soft);
+}
+.rc-done__title {
+  margin: 0;
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.rc-done__text {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--fg-muted);
+  max-inline-size: 480px;
+}
+.rc-done__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.rc-chip {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  padding: 7px 12px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.rc-done__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+}
+.rc-done__cta {
+  padding: 13px 20px;
+  border-radius: 13px;
+}
+
+/* ------------------------------------------------------------------ form */
+
+.rc-h1 {
+  margin: 0 0 12px;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+.rc-lede {
+  margin: 0 0 22px;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--fg-muted);
+  max-inline-size: 580px;
+  text-wrap: pretty;
+}
+.rc-stats {
+  margin-block-end: 22px;
+}
+
+.rc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  border-radius: 18px;
+  padding: clamp(18px, 3vw, 26px);
+}
+.rc-label {
+  display: block;
+  margin: 0 0 11px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.rc-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rc-method__ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 38px;
+  block-size: 38px;
+  border-radius: 11px;
+  background: var(--surface-2);
+  color: var(--fg-muted);
+  flex-shrink: 0;
+}
+
+.rc-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 11px;
+}
+.rc-item__name {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.rc-postcode {
+  inline-size: 100%;
+  block-size: 48px;
+  padding-inline: 15px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: 14.5px;
+  text-transform: uppercase;
+}
+.rc-submit {
+  align-self: flex-start;
+  padding: 13px 22px;
+  border-radius: 13px;
+}
+
+/* ------------------------------------------------------- drop-off points */
+
+.rc-h2 {
+  margin: 32px 0 14px;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.rc-points {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.rc-point {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  padding: 15px 17px;
+}
+.rc-point__ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 42px;
+  block-size: 42px;
+  border-radius: 12px;
+  background: var(--pos-soft);
+  color: var(--pos);
+  flex-shrink: 0;
+}
+.rc-point__body {
+  flex: 1 1 200px;
+  min-inline-size: 0;
+}
+.rc-point__name {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 700;
+}
+.rc-point__address {
+  margin: 3px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+.rc-point__hours {
+  margin: 3px 0 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-subtle);
+}
+.rc-point__distance {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.rc-alllocations {
+  margin-block-start: 12px;
+}
+
+/* --------------------------------------------------------- accept/reject */
+
+.rc-pair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-block-start: 24px;
+}
+.rc-rules {
+  flex: 1 1 280px;
+  padding: 20px;
+}
+.rc-rules__head {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-block-end: 13px;
+}
+.rc-rules__title {
+  font-size: 14.5px;
+  font-weight: 700;
+}
+.rc-rules__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rc-rule {
+  display: flex;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+.rc-rule__dot {
+  inline-size: 5px;
+  block-size: 5px;
+  border-radius: 50%;
+  margin-block-start: 7px;
+  flex-shrink: 0;
+}
+.rc-rule__dot--pos {
+  background: var(--pos);
+}
+.rc-rule__dot--danger {
+  background: var(--danger);
+}
+
+.rc-warning {
+  margin-block-start: 18px;
+}

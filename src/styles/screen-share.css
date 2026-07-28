@@ -1,0 +1,193 @@
+/* screen-share.css — `share` (delta spec B §9). Imported by Share.tsx. */
+
+.sh__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-block-end: 22px;
+}
+.sh__head-text {
+  flex: 1 1 260px;
+  max-inline-size: 540px;
+}
+.sh__h1 {
+  margin: 0 0 6px;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.sh__lede {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+
+/* ------------------------------------------------------------- composer */
+
+.sh__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-radius: 18px;
+  margin-block-end: 18px;
+  animation: fx-drop 0.2s ease;
+}
+.sh__panel-h {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.sh__label {
+  display: block;
+  margin-block-end: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.sh__clips {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.sh__thumb {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.sh__thumb--pick {
+  inline-size: 62px;
+  block-size: 44px;
+  border-radius: 10px;
+}
+.sh__thumb--link {
+  inline-size: 92px;
+  block-size: 62px;
+  border-radius: 12px;
+}
+.sh__selects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+}
+.sh__opts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.sh__panel-acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ------------------------------------------------------------ link cards */
+
+.sh__links {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+.sh-link {
+  border-radius: 16px;
+  padding: clamp(16px, 3vw, 20px);
+}
+.sh-link__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 15px;
+}
+.sh-link__body {
+  flex: 1 1 220px;
+  min-inline-size: 0;
+}
+.sh-link__title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+}
+.sh-link__title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+.sh-link__aud {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--fg-muted);
+}
+.sh-link__url {
+  margin: 7px 0 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--fg-subtle);
+  overflow-wrap: anywhere;
+}
+.sh-link__views {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+}
+.sh-link__views-n {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+}
+.sh-link__views-l {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fg-subtle);
+}
+
+.sh-link__watchers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-block-start: 14px;
+}
+.sh-watcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 11px 5px 5px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--fg-muted);
+}
+
+.sh-link__acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-block-start: 16px;
+  padding-block-start: 14px;
+  border-block-start: 1px solid var(--border);
+}
+.sh-link__act {
+  padding: 10px 15px;
+  border-radius: 11px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.sh-link__act--revoke {
+  margin-inline-start: auto;
+}
+
+.sh__note {
+  margin-block-start: 22px;
+}

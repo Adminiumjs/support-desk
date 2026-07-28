@@ -68,6 +68,50 @@ import type {
   TourStep,
   TradeInAge,
   TradeInCondition,
+  /* --- delta --- */
+  Automation,
+  AutomationOption,
+  BillingFilterOption,
+  BillingPeriodOption,
+  BreachEvent,
+  BreachItem,
+  BreachStep,
+  Camera,
+  DeleteAlternative,
+  Clip,
+  ClipTypeOption,
+  DeleteCheck,
+  DeleteItem,
+  GiftDate,
+  GiftFilterOption,
+  GiftPick,
+  InsuranceClaim,
+  InsuranceKindOption,
+  InsuranceWindow,
+  Invoice,
+  Leader,
+  LeaderPeriod,
+  LeaderPrize,
+  RecentEntry,
+  RecentFilterOption,
+  RecycleItem,
+  RecycleMethod,
+  RecyclePoint,
+  RecycleRule,
+  RecycleStat,
+  ShareLink,
+  ShareOption,
+  ShareToggleOption,
+  StoreFilterOption,
+  StoreLocation,
+  TradeCheck,
+  TradePerk,
+  TradeSkill,
+  TradeTier,
+  TradeVolume,
+  TransferCheck,
+  WishItem,
+  WishSuggestion,
 } from "./types";
 
 export interface DataSource {
@@ -177,6 +221,91 @@ export interface DataSource {
   accessibilitySizes(): A11ySize[];
   accessibilityPalettes(): A11yPaletteOption[];
   accessibilityToggles(): A11yToggle[];
+
+  /* ------------------------------------------------------------- delta -- */
+
+  /* live view + clips */
+  cameras(): Camera[];
+  /** Never throws — falls back to the first camera. */
+  camera(id: string | null | undefined): Camera;
+  clipTypes(): ClipTypeOption[];
+  clips(): Clip[];
+  clip(id: string | null | undefined): Clip | undefined;
+
+  /* automations */
+  automationTriggers(): AutomationOption[];
+  automationActions(): AutomationOption[];
+  seedAutomations(): Automation[];
+
+  /* billing */
+  invoices(): Invoice[];
+  billingFilters(): BillingFilterOption[];
+  billingPeriods(): BillingPeriodOption[];
+
+  /* warranty transfer */
+  transferReasons(): string[];
+  transferChecks(): TransferCheck[];
+
+  /* wishlist — nothing mutates it; removal is the `wlOut` id list */
+  wishlist(): WishItem[];
+  wishSuggestions(): WishSuggestion[];
+
+  /* recently viewed */
+  recentlyViewed(): RecentEntry[];
+  recentFilters(): RecentFilterOption[];
+
+  /* store locator */
+  stores(): StoreLocation[];
+  storeFilters(): StoreFilterOption[];
+
+  /* referral leaderboard */
+  leaders(period: LeaderPeriod): Leader[];
+  leaderPrizes(): LeaderPrize[];
+
+  /* breach notice */
+  breachItems(): BreachItem[];
+  breachTimeline(): BreachEvent[];
+  breachSteps(): BreachStep[];
+
+  /* recycling */
+  recycleMethods(): RecycleMethod[];
+  recycleStats(): RecycleStat[];
+  recyclePoints(): RecyclePoint[];
+  recycleAccepted(): RecycleRule[];
+  recycleRejected(): RecycleRule[];
+  /** `products()` plus the two synthetic rows (`other`, `cables`). */
+  recycleItems(): RecycleItem[];
+
+  /* trade account */
+  tradePerks(): TradePerk[];
+  tradeTiers(): TradeTier[];
+  tradeTier(id: string | null | undefined): TradeTier;
+  tradeTypes(): string[];
+  tradeVolumes(): TradeVolume[];
+  tradeSkills(): TradeSkill[];
+  tradeChecks(): TradeCheck[];
+
+  /* shared clips */
+  seedShareLinks(): ShareLink[];
+  shareAudiences(): ShareOption[];
+  shareExpiries(): ShareOption[];
+  shareOptions(): ShareToggleOption[];
+
+  /* insurance claims */
+  insuranceClaims(): InsuranceClaim[];
+  insuranceKinds(): InsuranceKindOption[];
+  insuranceWindows(): InsuranceWindow[];
+
+  /* gift guide */
+  giftPicks(): GiftPick[];
+  giftFilters(): GiftFilterOption[];
+  giftDates(): GiftDate[];
+
+  /* account deletion */
+  deleteItems(): DeleteItem[];
+  deleteReasons(): string[];
+  deleteChecks(): DeleteCheck[];
+  deleteAlternatives(): DeleteAlternative[];
 }
 
 /** Deep-ish clone so seeded collections handed to the store are never shared. */
@@ -280,6 +409,84 @@ export const demoDataSource: DataSource = {
   accessibilitySizes: () => demo.A11Y_SIZES,
   accessibilityPalettes: () => demo.A11Y_PALETTES,
   accessibilityToggles: () => demo.A11Y_TOGGLES,
+
+  /* ------------------------------------------------------------- delta -- */
+
+  cameras: () => demo.CAMS,
+  camera: (id) => demo.CAMS.find((c) => c.id === id) ?? demo.CAMS[0],
+  clipTypes: () => demo.CLIP_TYPES,
+  clips: () => demo.CLIPS,
+  clip: (id) => (id ? demo.CLIPS.find((c) => c.id === id) : undefined),
+
+  automationTriggers: () => demo.AU_TRIGGERS,
+  automationActions: () => demo.AU_ACTIONS,
+  seedAutomations: () => clone(demo.AUTOMATIONS),
+
+  invoices: () => demo.INVOICES,
+  billingFilters: () => demo.BL_FILTERS,
+  billingPeriods: () => demo.BL_PERIODS,
+
+  transferReasons: () => demo.TR_REASONS,
+  transferChecks: () => demo.TR_CHECKS,
+
+  wishlist: () => demo.WISH,
+  wishSuggestions: () => demo.WISH_SUGGEST,
+
+  recentlyViewed: () => demo.RECENT,
+  recentFilters: () => demo.RV_CATS,
+
+  stores: () => demo.STORES,
+  storeFilters: () => demo.ST_FILTERS,
+
+  leaders: (period) => demo.LEADERS[period],
+  leaderPrizes: () => demo.LB_PRIZES,
+
+  breachItems: () => demo.BREACH_ITEMS,
+  breachTimeline: () => demo.BREACH_TIMELINE,
+  breachSteps: () => demo.BR_STEPS,
+
+  recycleMethods: () => demo.RC_METHODS,
+  recycleStats: () => demo.RC_STATS,
+  recyclePoints: () => demo.RC_POINTS,
+  recycleAccepted: () => demo.RC_ACCEPT,
+  recycleRejected: () => demo.RC_REJECT,
+  recycleItems: () => [
+    ...demo.PRODUCTS.map((p) => ({
+      id: p.id as string,
+      name: p.name,
+      model: p.model,
+      icon: p.icon,
+      tint: p.tint,
+    })),
+    { id: "other", name: "Other brand", model: "Other brand device", icon: "boxes", tint: "#7a7a86" },
+    { id: "cables", name: "Cables & mounts", model: "Cables and mounts", icon: "cable", tint: "#5f9e6b" },
+  ],
+
+  tradePerks: () => demo.TD_PERKS,
+  tradeTiers: () => demo.TD_TIERS,
+  tradeTier: (id) => demo.TD_TIERS.find((t) => t.id === id) ?? demo.TD_TIERS[1],
+  tradeTypes: () => demo.TD_TYPES,
+  tradeVolumes: () => demo.TD_VOLUMES,
+  tradeSkills: () => demo.TD_SKILLS,
+  tradeChecks: () => demo.TD_CHECKS,
+
+  seedShareLinks: () => clone(demo.SH_LINKS),
+  shareAudiences: () => demo.SH_AUDIENCES,
+  shareExpiries: () => demo.SH_EXPIRIES,
+  shareOptions: () => demo.SH_OPTS,
+
+  insuranceClaims: () => demo.IN_CLAIMS,
+  insuranceKinds: () => demo.IN_KINDS,
+  insuranceWindows: () => demo.IN_WINDOWS,
+
+  giftPicks: () => demo.GG_PICKS,
+  giftFilters: () => demo.GG_FILTERS,
+  giftDates: () => demo.GG_DATES,
+
+  deleteItems: () => demo.DL_ITEMS,
+  deleteReasons: () => demo.DL_REASONS,
+  deleteChecks: () => demo.DL_CHECKS,
+  deleteAlternatives: () => demo.DL_ALTS,
 };
 
 let active: DataSource = demoDataSource;

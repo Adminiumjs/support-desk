@@ -5,6 +5,9 @@
  * callout. Out-of-stock parts swap "Add" for "Notify me" and never enter the
  * basket. Chip-filtered, never paginated (ruling R3).
  *
+ * Delta §6.8: a category with no parts shows an empty state in place of the
+ * list.
+ *
  * Max-width 900.
  */
 
@@ -14,6 +17,7 @@ import {
   Callout,
   Chip,
   ChipRow,
+  EmptyState,
   IconButton,
   IconChip,
   ListCard,
@@ -59,6 +63,7 @@ export default function Parts() {
   const basket = useAppStore((s) => s.basket);
   const set = useAppStore((s) => s.set);
   const showToast = useAppStore((s) => s.showToast);
+  const openTicket = useAppStore((s) => s.openTicket);
 
   const parts = dataSource.parts();
   const cats = dataSource.partCategories();
@@ -110,76 +115,89 @@ export default function Parts() {
         ))}
       </ChipRow>
 
-      <ListCard className="pt-list">
-        {rows.map((part) => {
-          const stock = STOCK[part.stock];
-          const tint = part.fits[0]
-            ? dataSource.product(part.fits[0]).tint
-            : FALLBACK_TINT;
-          const fits = part.fits
-            .map((id) => dataSource.product(id).name)
-            .join(", ");
-          const qty = basket[part.sku] ?? 0;
-          const out = part.stock === "out";
+      {rows.length === 0 ? (
+        <EmptyState
+          icon="package-search"
+          title="No parts for that device"
+          body="We keep parts for at least seven years after launch, so if something is missing here it is worth asking us directly."
+          action={{
+            label: "Open a ticket",
+            icon: "pen-line",
+            onClick: openTicket,
+          }}
+        />
+      ) : (
+        <ListCard className="pt-list">
+          {rows.map((part) => {
+            const stock = STOCK[part.stock];
+            const tint = part.fits[0]
+              ? dataSource.product(part.fits[0]).tint
+              : FALLBACK_TINT;
+            const fits = part.fits
+              .map((id) => dataSource.product(id).name)
+              .join(", ");
+            const qty = basket[part.sku] ?? 0;
+            const out = part.stock === "out";
 
-          return (
-            <div className="sd-listrow pt-row" key={part.sku}>
-              <IconChip
-                tint={tint}
-                icon={part.icon}
-                size={42}
-                radius={12}
-                iconSize={21}
-              />
+            return (
+              <div className="sd-listrow pt-row" key={part.sku}>
+                <IconChip
+                  tint={tint}
+                  icon={part.icon}
+                  size={42}
+                  radius={12}
+                  iconSize={21}
+                />
 
-              <div className="pt-row__col">
-                <p className="pt-row__name">{part.name}</p>
-                <p className="pt-row__sku">
-                  {part.sku} · fits {fits}
-                </p>
-                <SoftPill fg={stock.fg} soft={stock.soft} icon={stock.icon}>
-                  {stock.label}
-                </SoftPill>
-              </div>
-
-              <span className="pt-row__price">{money(part.price)}</span>
-
-              {qty > 0 ? (
-                <div className="pt-step">
-                  <IconButton
-                    icon="minus"
-                    label={`Remove one ${part.name}`}
-                    small
-                    iconSize={15}
-                    onClick={() => setQty(part.sku, qty - 1)}
-                  />
-                  <span className="pt-step__qty">{qty}</span>
-                  <IconButton
-                    icon="plus"
-                    label={`Add another ${part.name}`}
-                    small
-                    iconSize={15}
-                    onClick={() => setQty(part.sku, qty + 1)}
-                  />
+                <div className="pt-row__col">
+                  <p className="pt-row__name">{part.name}</p>
+                  <p className="pt-row__sku">
+                    {part.sku} · fits {fits}
+                  </p>
+                  <SoftPill fg={stock.fg} soft={stock.soft} icon={stock.icon}>
+                    {stock.label}
+                  </SoftPill>
                 </div>
-              ) : (
-                <ButtonSecondary
-                  className="pt-add"
-                  icon={out ? "bell" : "plus"}
-                  iconSize={15}
-                  onClick={() =>
-                    out
-                      ? showToast("We'll email you when it's back")
-                      : setQty(part.sku, 1)
-                  }
-                >
-                  {out ? "Notify me" : "Add"}
-                </ButtonSecondary>
-              )}
-            </div>
-          );
-        })}
-      </ListCard>
+
+                <span className="pt-row__price">{money(part.price)}</span>
+
+                {qty > 0 ? (
+                  <div className="pt-step">
+                    <IconButton
+                      icon="minus"
+                      label={`Remove one ${part.name}`}
+                      small
+                      iconSize={15}
+                      onClick={() => setQty(part.sku, qty - 1)}
+                    />
+                    <span className="pt-step__qty">{qty}</span>
+                    <IconButton
+                      icon="plus"
+                      label={`Add another ${part.name}`}
+                      small
+                      iconSize={15}
+                      onClick={() => setQty(part.sku, qty + 1)}
+                    />
+                  </div>
+                ) : (
+                  <ButtonSecondary
+                    className="pt-add"
+                    icon={out ? "bell" : "plus"}
+                    iconSize={15}
+                    onClick={() =>
+                      out
+                        ? showToast("We'll email you when it's back")
+                        : setQty(part.sku, 1)
+                    }
+                  >
+                    {out ? "Notify me" : "Add"}
+                  </ButtonSecondary>
+                )}
+              </div>
+            );
+          })}
+        </ListCard>
+      )}
 
       {count > 0 ? (
         <div className="pt-basket">

@@ -112,3 +112,8 @@
 .mb__note {
   margin-block-start: 20px;
 }
+
+/* "Just you in this household" (delta §6.4). */
+.mb__empty {
+  margin-block-start: 12px;
+}

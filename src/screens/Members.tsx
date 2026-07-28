@@ -4,6 +4,10 @@
  * The seeded list lives in the store (`members`); removals are tracked in
  * `mbOut` and role changes in `mbRoles`, so the effective role of a row is
  * `mbRoles[id] ?? member.role`.
+ *
+ * Delta §6.4: the invite toast is now the short "Invite sent" with the address
+ * in a success banner, removing a member is undoable, and an empty state
+ * appears once the owner is the only one left.
  */
 
 import { useMemo } from "react";
@@ -12,6 +16,7 @@ import {
   ButtonPrimary,
   Callout,
   Card,
+  EmptyState,
   Field,
   Icon,
   IconButton,
@@ -64,11 +69,16 @@ export default function Members() {
   const mbRoles = useAppStore((s) => s.mbRoles);
   const set = useAppStore((s) => s.set);
   const showToast = useAppStore((s) => s.showToast);
+  const undoToast = useAppStore((s) => s.undoToast);
+  const succeed = useAppStore((s) => s.succeed);
 
   const list = useMemo(
     () => members.filter((m) => !mbOut.includes(m.id)),
     [members, mbOut],
   );
+
+  /* Nobody but the owner is left (delta §6.4). */
+  const alone = list.every((m) => (mbRoles[m.id] ?? m.role) === "owner");
 
   const invite = () => {
     const email = mbEmail.trim();
@@ -90,7 +100,11 @@ export default function Members() {
           : [["All devices", "cpu"]],
     };
     set({ members: [...members, member], mbEmail: "" });
-    showToast(`Invite sent to ${email}`);
+    showToast("Invite sent");
+    succeed(
+      `Invite sent to ${email}`,
+      "It expires in 14 days. They'll appear below as pending until they accept.",
+    );
   };
 
   const changeRole = (m: Member, role: MemberRole) => {
@@ -100,7 +114,11 @@ export default function Members() {
 
   const remove = (m: Member) => {
     set({ mbOut: [...mbOut, m.id] });
-    showToast(`${m.name} removed from the household`);
+    undoToast(`${m.name} removed`, () =>
+      set({
+        mbOut: useAppStore.getState().mbOut.filter((id) => id !== m.id),
+      }),
+    );
   };
 
   return (
@@ -203,6 +221,16 @@ export default function Members() {
           );
         })}
       </ListCard>
+
+      {alone ? (
+        <EmptyState
+          compact
+          className="mb__empty"
+          icon="users"
+          title="Just you in this household"
+          body="Nobody else has access. Invite someone above and they can use live view and unlocking without ever seeing your password."
+        />
+      ) : null}
 
       <Callout tone="info" icon="info" className="mb__note">
         Only the owner can add or remove devices, see billing, or close the

@@ -58,7 +58,7 @@ export default function Bundles() {
   };
 
   return (
-    <main className="fx-screen fx-page w-1000">
+    <main className="fx-screen fx-page w-1000 fx-wide">
       <h1 className="bundles-title">Bundle deals</h1>
       <p className="bundles-lede">
         Buy devices together and the discount is applied at checkout — no codes.

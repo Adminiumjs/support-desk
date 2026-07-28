@@ -1,0 +1,170 @@
+/* screen-billing.css — `billing` (delta spec A §3). Imported by Billing.tsx. */
+
+.bl__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-block-end: 22px;
+}
+.bl__head-text {
+  flex: 1 1 300px;
+}
+.bl__h1 {
+  margin: 0;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.bl__lede {
+  margin: 9px 0 0;
+  max-inline-size: 56ch;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+
+/* --------------------------------------------------------- summary cards */
+
+.bl__cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-block-end: 22px;
+}
+.bl-sum {
+  padding: clamp(18px, 3vw, 22px);
+}
+.bl-sum--plan {
+  flex: 1 1 300px;
+}
+.bl-sum--card {
+  flex: 1 1 260px;
+}
+
+.bl-sum__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+  margin-block: 12px 6px;
+}
+.bl-sum__plan {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.bl-sum__price {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+.bl-sum__next {
+  margin: 0 0 14px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+.bl-sum__acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.bl-sum__btn {
+  padding: 10px 15px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.bl-card__row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-block: 14px;
+}
+.bl-card__tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 46px;
+  block-size: 32px;
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--fg-muted);
+  flex-shrink: 0;
+}
+.bl-card__id {
+  display: flex;
+  flex-direction: column;
+}
+.bl-card__num {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.bl-card__exp {
+  margin-block-start: 3px;
+  font-size: 12px;
+  color: var(--fg-subtle);
+}
+.bl-card__credit {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block-start: 13px;
+  border-block-start: 1px solid var(--border);
+}
+.bl-card__credit-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+.bl-card__credit-value {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--fg-muted);
+}
+.bl-card__update {
+  inline-size: 100%;
+  justify-content: center;
+  margin-block-start: 13px;
+}
+
+/* -------------------------------------------------------------- toolbar */
+
+.bl__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.bl__h2 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+.bl__filters {
+  margin-block: 14px 16px;
+}
+
+/* ------------------------------------------------------------ the table */
+
+.bl-table {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.bl__note {
+  margin-block-start: 22px;
+}

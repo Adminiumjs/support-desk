@@ -5,6 +5,9 @@
  * exactly one open thread at a time (`fopen`, seeded to `f2`). Ruling R2:
  * the sidebar "This week" numbers are hard-coded in the markup as authored —
  * they are NOT derived from the thread data.
+ *
+ * Delta §6.1: a category with no threads now shows an empty state instead of a
+ * blank column.
  */
 
 import { useMemo } from "react";
@@ -15,6 +18,7 @@ import {
   Card,
   Chip,
   ChipRow,
+  EmptyState,
   Eyebrow,
   Icon,
 } from "../components";
@@ -49,7 +53,7 @@ export default function Forum() {
   const toggle = (id: string) => set({ fopen: fopen === id ? null : id });
 
   return (
-    <main className="fx-screen fx-page w-1120">
+    <main className="fx-screen fx-page w-1120 fx-wide">
       <div className="forum-head">
         <div className="forum-head__text">
           <h1 className="forum-head__title">Community forum</h1>
@@ -174,6 +178,19 @@ export default function Forum() {
               </div>
             );
           })}
+
+          {list.length === 0 ? (
+            <EmptyState
+              icon="messages-square"
+              title="No discussions here yet"
+              body="Nothing in this category so far. Start the first thread and it will sit at the top for everyone."
+              action={{
+                label: "Start a discussion",
+                icon: "pen-line",
+                onClick: newPost,
+              }}
+            />
+          ) : null}
         </div>
 
         <aside className="forum-side">

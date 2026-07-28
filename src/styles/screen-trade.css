@@ -1,0 +1,241 @@
+/* screen-trade.css — Trade account signup (delta spec B §7). */
+
+/* ------------------------------------------------------ confirmation */
+
+.td-done {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: clamp(20px, 3vw, 28px);
+  box-shadow: var(--shadow);
+}
+.td-done__tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 52px;
+  block-size: 52px;
+  border-radius: 15px;
+  background: var(--pos-soft);
+  color: var(--pos);
+}
+.td-done__title {
+  margin: 0;
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.td-done__body {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--fg-muted);
+  max-inline-size: 490px;
+}
+.td-done__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.td-chip {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--fg-muted);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 7px 12px;
+}
+.td-done__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* --------------------------------------------------------------- head */
+
+.td-eyebrow {
+  margin: 0 0 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--fg-subtle);
+}
+.td-h1 {
+  margin: 0 0 12px;
+  font-size: clamp(28px, 4.2vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  max-inline-size: 620px;
+  text-wrap: balance;
+}
+.td-lede {
+  margin: 0 0 24px;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  max-inline-size: 560px;
+}
+
+/* -------------------------------------------------------------- perks */
+
+.td-perks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: 13px;
+  margin-block-end: 24px;
+}
+.td-perk {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+.td-perk__title {
+  font-size: 15.5px;
+  font-weight: 700;
+}
+.td-perk__text {
+  font-size: 13.5px;
+  line-height: 1.62;
+  color: var(--fg-muted);
+}
+
+/* --------------------------------------------------------------- tiers */
+
+.td-h2 {
+  margin: 0 0 13px;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+.td-tiers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
+  gap: 13px;
+  margin-block-end: 24px;
+}
+.td-tier {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 18px;
+  border-radius: 16px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--fg);
+  text-align: start;
+  cursor: pointer;
+}
+.td-tier--on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.td-tier__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.td-tier__name {
+  font-size: 16px;
+  font-weight: 800;
+}
+.td-tier__discount {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 19px;
+  font-weight: 700;
+}
+.td-tier__req {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--fg-subtle);
+}
+
+/* -------------------------------------------------------------- fields */
+
+.sd-card.td-card {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  border-radius: 18px;
+  padding: clamp(18px, 3vw, 26px);
+}
+.td-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-block-start: 14px;
+}
+.td-optional {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--fg-subtle);
+}
+.td-hint {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--fg-subtle);
+}
+
+.td-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.td-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.td-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  text-align: start;
+  cursor: pointer;
+}
+.td-check__label {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+
+.sd-btn.td-submit {
+  align-self: flex-start;
+  padding: 13px 22px;
+  border-radius: 13px;
+}
+
+/* --------------------------------------------------------------- foot */
+
+.sd-callout.td-foot {
+  margin-block-start: 22px;
+  padding: 15px 17px;
+  border-radius: 14px;
+}
+.td-link {
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  cursor: pointer;
+}

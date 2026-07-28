@@ -51,6 +51,7 @@ export default function Plans() {
   const planCurrent = useAppStore((s) => s.planCurrent);
   const set = useAppStore((s) => s.set);
   const showToast = useAppStore((s) => s.showToast);
+  const gotoBilling = useAppStore((s) => s.gotoBilling);
 
   const plans = dataSource.plans();
   const current = plans.find((p) => p.id === planCurrent) ?? plans[0];
@@ -80,7 +81,7 @@ export default function Plans() {
   };
 
   return (
-    <main className="fx-screen fx-page w-1000">
+    <main className="fx-screen fx-page w-1000 fx-wide">
       <h1 className="plans-title">Hearth Care plans</h1>
       <p className="plans-lede">
         Clip history, priority support and free out-of-warranty repairs. Every
@@ -177,12 +178,8 @@ export default function Plans() {
           </p>
           <p className="plans-bottom__body">{billingLine}</p>
           <div className="plans-billing__acts">
-            <ButtonSecondary
-              icon="file-text"
-              onClick={() =>
-                showToast("Invoices aren't available in this demo", "info")
-              }
-            >
+            {/* Delta §6.13 — the real invoice history now exists. */}
+            <ButtonSecondary icon="file-text" onClick={gotoBilling}>
               Invoices
             </ButtonSecondary>
             <ButtonSecondary

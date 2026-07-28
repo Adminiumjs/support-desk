@@ -65,6 +65,48 @@ import type {
   TourStep,
   TradeInAge,
   TradeInCondition,
+  /* --- the delta datasets --- */
+  Automation,
+  AutomationOption,
+  BillingFilterOption,
+  BillingPeriodOption,
+  BreachEvent,
+  BreachItem,
+  BreachStep,
+  DeleteAlternative,
+  Camera,
+  Clip,
+  ClipTypeOption,
+  DeleteCheck,
+  DeleteItem,
+  GiftDate,
+  GiftFilterOption,
+  GiftPick,
+  InsuranceClaim,
+  InsuranceKindOption,
+  InsuranceWindow,
+  Invoice,
+  LeaderBoard,
+  LeaderPrize,
+  RecentEntry,
+  RecentFilterOption,
+  RecycleMethod,
+  RecyclePoint,
+  RecycleRule,
+  RecycleStat,
+  ShareLink,
+  ShareOption,
+  ShareToggleOption,
+  StoreFilterOption,
+  StoreLocation,
+  TradeCheck,
+  TradePerk,
+  TradeSkill,
+  TradeTier,
+  TradeVolume,
+  TransferCheck,
+  WishItem,
+  WishSuggestion,
 } from "./types";
 
 /* ------------------------------------------------------------- identity */
@@ -2629,6 +2671,12 @@ export const OV_GROUPS: OverviewGroup[] = [
       ["parts", "Spare parts", "box", "Stock states, quantity steppers and a live basket."],
       ["bundles", "Bundle deals", "boxes", "Three bundles plus a build-your-own discount."],
       ["gift", "Gift cards", "gift", "Design, amount and message with a live card preview."],
+      ["guide", "Seasonal gift guide", "sparkles", "Curated picks, delivery cut-offs, gift wrapping."],
+      ["wish", "Wishlist", "heart", "Price-drop badges, stock states, share and add all."],
+      ["recent", "Recently viewed", "history", "Articles and products by day, with clear history."],
+      ["stores", "Store locator", "store", "Search, filters, opening state, walk-in booking."],
+      ["board", "Referral leaderboard", "trophy", "Ranked table with your position and prizes."],
+      ["recycle", "Recycling drop-off", "recycle", "Free label, drop-off or collection, with an accept list."],
       ["plans", "Subscription plans", "layers", "Hearth Care tiers with monthly / annual pricing."],
       ["refer", "Refer a friend", "users", "Referral code, progress, and email invites."],
     ],
@@ -2641,6 +2689,11 @@ export const OV_GROUPS: OverviewGroup[] = [
       ["status", "Service status", "activity", "Component health, live incident, past incidents."],
       ["a11y", "Accessibility settings", "accessibility", "Display size, contrast, motion and palette — all live."],
       ["security", "Security & privacy", "lock", "Two-factor, sessions, clip retention, data export."],
+      ["billing", "Billing & invoices", "receipt", "Invoice history, payment method, account credit."],
+      ["transfer", "Warranty transfer", "repeat", "Hand cover to a new owner, with confirmations."],
+      ["breach", "Data breach notice", "shield-alert", "Incident disclosure with an exposure checker."],
+      ["deleteacct", "Account deletion", "user-x", "Three-step flow with a 30-day grace period."],
+      ["insurance", "Insurance claims", "file-archive", "Evidence packs with clips and timestamp logs."],
       ["survey", "Feedback survey", "clipboard-check", "NPS, rating scales and a thank-you state."],
     ],
   },
@@ -2648,6 +2701,9 @@ export const OV_GROUPS: OverviewGroup[] = [
     name: "Your home",
     items: [
       ["devices", "Device dashboard", "cpu", "Five devices with live stats and working toggles."],
+      ["live", "Live view & clips", "video", "Camera stage plus a filterable clip history."],
+      ["share", "Group video sharing", "share-2", "Expiring links, viewer list, instant revoke."],
+      ["auto", "Automations builder", "workflow", "WHEN/THEN rules you can add, pause and delete."],
       ["energy", "Energy insights", "leaf", "Bar chart, room split and tips, by week/month/year."],
       ["members", "Household members", "users", "Roles, permissions, invites and removal."],
       ["notifs", "Notifications history", "bell", "Grouped by day, filterable, unread tracking."],
@@ -2657,6 +2713,7 @@ export const OV_GROUPS: OverviewGroup[] = [
     name: "Company",
     items: [
       ["partner", "Partner portal", "hard-hat", "Installer view: KPIs, job queue, certification."],
+      ["trade", "Trade account signup", "percent", "Tier picker, business details and validation."],
       ["forum", "Community forum", "users", "Threads that expand to show accepted answers."],
       ["about", "About us", "building-2", "Story, numbers, values and the support team."],
       ["imprint", "Imprint", "scale", "Company details and legal notices."],
@@ -2664,7 +2721,10 @@ export const OV_GROUPS: OverviewGroup[] = [
   },
 ];
 
-/** 39 — the overview lede renders this. */
+/**
+ * 54 — the overview lede renders this: the 53 real views (every ViewId except
+ * `overview` itself) plus the `chat` pseudo-screen.
+ */
 export const OV_COUNT = OV_GROUPS.reduce((n, g) => n + g.items.length, 0);
 
 /* ---------------------------------------------------------------- chrome */
@@ -2672,3 +2732,843 @@ export const OV_COUNT = OV_GROUPS.reduce((n, g) => n + g.items.length, 0);
 export const FOOTER_URL = "adminium.dev/demo/support-desk";
 export const FOOTER_COPYRIGHT =
   "© 2026 Hearth. A demo support portal shipped with Adminium.";
+
+/* ========================================================== delta data ===
+ *
+ * The 26 datasets the revised comp added, carrying the Hearth brand and
+ * otherwise verbatim. Reference prefixes minted by these views — AD-, WT-,
+ * TA-, RC-, IC-, INV-, CRN- — are already brand-free and stay as authored.
+ * ======================================================================== */
+
+/* ---------------------------------------------------- live view + clips */
+
+export const CAMS: Camera[] = [
+  { id: "front", name: "Front door", tint: "#4f8bd6", icon: "bell-ring", signal: "-52 dBm" },
+  { id: "garage", name: "Garage", tint: "#8a6fb0", icon: "video", signal: "-64 dBm" },
+  {
+    id: "garden",
+    name: "Back garden",
+    tint: "#5f9e6b",
+    icon: "video-off",
+    signal: "—",
+    offline: true,
+    since: "offline since Thursday, 21:14",
+  },
+];
+
+export const CLIP_TYPES: ClipTypeOption[] = [
+  ["all", "Everything", "layers"],
+  ["person", "People", "user-round"],
+  ["parcel", "Parcels", "package"],
+  ["press", "Doorbell", "bell-ring"],
+  ["motion", "Other motion", "radar"],
+];
+
+/** The Back garden camera has zero clips — it is the seeded empty state. */
+export const CLIPS: Clip[] = [
+  {
+    id: "c1",
+    cam: "front",
+    day: "Today",
+    time: "14:12",
+    dur: "0:06",
+    type: "person",
+    title: "Person at the door",
+    text: "Waited 4 seconds, then walked away. No press.",
+  },
+  {
+    id: "c2",
+    cam: "front",
+    day: "Today",
+    time: "11:48",
+    dur: "0:12",
+    type: "parcel",
+    title: "Parcel left",
+    text: "Courier placed a box behind the planter.",
+  },
+  {
+    id: "c3",
+    cam: "garage",
+    day: "Today",
+    time: "09:31",
+    dur: "0:04",
+    type: "motion",
+    title: "Motion in the drive",
+    text: "Matched the recycling lorry pattern.",
+  },
+  {
+    id: "c4",
+    cam: "front",
+    day: "Yesterday",
+    time: "19:26",
+    dur: "0:21",
+    type: "press",
+    title: "Doorbell pressed",
+    text: "Answered on the app in 9 seconds.",
+  },
+  {
+    id: "c5",
+    cam: "front",
+    day: "Yesterday",
+    time: "16:03",
+    dur: "0:08",
+    type: "person",
+    title: "Two people at the gate",
+    text: "Both left after the porch light came on.",
+  },
+  {
+    id: "c6",
+    cam: "garage",
+    day: "Yesterday",
+    time: "07:55",
+    dur: "0:05",
+    type: "motion",
+    title: "Car leaving",
+    text: "Recorded because Away mode was on.",
+  },
+  {
+    id: "c7",
+    cam: "front",
+    day: "Earlier this week",
+    time: "Fri 13:47",
+    dur: "0:14",
+    type: "parcel",
+    title: "Parcel left with neighbour",
+    text: "Courier walked next door after knocking.",
+  },
+  {
+    id: "c8",
+    cam: "front",
+    day: "Earlier this week",
+    time: "Thu 20:11",
+    dur: "0:19",
+    type: "press",
+    title: "Doorbell pressed",
+    text: "Missed — quiet hours were on.",
+  },
+];
+
+/* -------------------------------------------------------- automations */
+
+export const AU_TRIGGERS: AutomationOption[] = [
+  { value: "press", label: "Doorbell is pressed", icon: "bell-ring" },
+  { value: "person", label: "Doorbell sees a person", icon: "user-round" },
+  { value: "sensor", label: "Back door opens", icon: "door-open" },
+  { value: "away", label: "Everyone leaves home", icon: "log-out" },
+  { value: "home", label: "First person arrives home", icon: "log-in" },
+  { value: "sunset", label: "The sun sets", icon: "sunset" },
+  { value: "cold", label: "Hallway drops below 17°", icon: "thermometer-snowflake" },
+];
+
+export const AU_ACTIONS: AutomationOption[] = [
+  { value: "lamp", label: "Turn on the porch light", icon: "lightbulb" },
+  { value: "kitchen", label: "Turn on the kitchen lamp", icon: "lamp" },
+  { value: "eco", label: "Set the thermostat to Eco", icon: "leaf" },
+  { value: "warm", label: "Warm the house to 20°", icon: "flame" },
+  { value: "notify", label: "Send everyone a notification", icon: "bell" },
+  { value: "record", label: "Record a 30-second clip", icon: "video" },
+  { value: "arm", label: "Arm every sensor", icon: "shield-check" },
+];
+
+export const AUTOMATIONS: Automation[] = [
+  {
+    id: "r1",
+    name: "Porch light on arrival",
+    on: true,
+    when: "the doorbell sees a person after sunset",
+    whenIcon: "user-round",
+    then: [
+      { text: "turn on the porch light for 3 minutes", icon: "lightbulb" },
+      { text: "record a 30-second clip", icon: "video" },
+    ],
+    last: "ran yesterday, 19:26",
+  },
+  {
+    id: "r2",
+    name: "Away means Eco",
+    on: true,
+    when: "everyone leaves home",
+    whenIcon: "log-out",
+    then: [
+      { text: "set the thermostat to Eco", icon: "leaf" },
+      { text: "arm every sensor", icon: "shield-check" },
+    ],
+    last: "ran today, 08:12",
+  },
+  {
+    id: "r3",
+    name: "Warm before we’re back",
+    on: true,
+    when: "the first person is 15 minutes from home",
+    whenIcon: "log-in",
+    then: [{ text: "warm the house to 20°", icon: "flame" }],
+    last: "ran yesterday, 17:40",
+  },
+  {
+    id: "r4",
+    name: "Overnight back door watch",
+    on: false,
+    when: "the back door opens between 11pm and 6am",
+    whenIcon: "door-open",
+    then: [
+      { text: "send everyone a notification", icon: "bell" },
+      { text: "turn on the kitchen lamp", icon: "lamp" },
+    ],
+    last: "paused since 12 Jul",
+  },
+];
+
+/* ------------------------------------------------------------- billing */
+
+export const INVOICES: Invoice[] = [
+  { id: "INV-24817", desc: "Hearth Plus — Jul 2026", date: "12 Jul 2026", amount: 3.99, kind: "plan", status: "paid" },
+  { id: "INV-24655", desc: "Spare parts — chime adapter", date: "04 Jul 2026", amount: 18.0, kind: "hardware", status: "paid" },
+  { id: "INV-24402", desc: "Hearth Plus — Jun 2026", date: "12 Jun 2026", amount: 3.99, kind: "plan", status: "paid" },
+  { id: "CRN-00318", desc: "Refund — returned doorbell", date: "09 Jun 2026", amount: -129.0, kind: "refund", status: "refunded" },
+  { id: "INV-24190", desc: "Hearth Video Doorbell", date: "02 Jun 2026", amount: 129.0, kind: "hardware", status: "paid" },
+  { id: "INV-24021", desc: "Hearth Plus — May 2026", date: "12 May 2026", amount: 3.99, kind: "plan", status: "paid" },
+  { id: "INV-23884", desc: "Hearth Plus — Apr 2026", date: "12 Apr 2026", amount: 3.99, kind: "plan", status: "failed" },
+  { id: "INV-23610", desc: "Hearth Thermostat + install", date: "14 Mar 2026", amount: 269.0, kind: "hardware", status: "paid" },
+];
+
+export const BL_FILTERS: BillingFilterOption[] = [
+  ["all", "All"],
+  ["plan", "Plan"],
+  ["hardware", "Hardware"],
+  ["refund", "Refunds"],
+];
+
+export const BL_PERIODS: BillingPeriodOption[] = [
+  ["2026", "2026"],
+  ["2025", "2025"],
+  ["month", "This month"],
+];
+
+/** The CSV the "Export all" button pretends to download. */
+export const INVOICE_EXPORT_FILE = "hearth-invoices-2026.csv";
+
+/* ------------------------------------------------------------ transfer */
+
+export const TR_REASONS: string[] = [
+  "Sold the device",
+  "Moving home, leaving it behind",
+  "Gift to family or a friend",
+  "Landlord handover",
+  "Other reason",
+];
+
+export const TR_CHECKS: TransferCheck[] = [
+  { id: "reset", label: "I’ve factory reset the device, or I’ll do it before handing it over." },
+  { id: "confirm", label: "I understand I’ll lose access to this device and its clip history straight away." },
+];
+
+/* ------------------------------------------------------------ wishlist */
+
+export const WISH: WishItem[] = [
+  {
+    id: "w1",
+    prod: "thermostat",
+    name: "Hearth Thermostat",
+    blurb: "The one you keep coming back to. Works with combi and system boilers.",
+    price: 129,
+    was: 149,
+    added: "saved 12 Jul",
+    stock: "in",
+  },
+  {
+    id: "w2",
+    prod: "sensor",
+    name: "Hearth Sensor (4-pack)",
+    blurb: "Doors, windows and the shed. Adhesive mounts, no drilling.",
+    price: 119,
+    was: 119,
+    added: "saved 04 Jul",
+    stock: "in",
+  },
+  {
+    id: "w3",
+    prod: "plug",
+    name: "Hearth Smart Plug (2-pack)",
+    blurb: "Energy monitoring on both, plus schedules that survive a power cut.",
+    price: 52,
+    was: 58,
+    added: "saved 28 Jun",
+    stock: "low",
+  },
+  {
+    id: "w4",
+    prod: "doorbell",
+    name: "Hearth Doorbell chime kit",
+    blurb: "Mains chime for rooms out of earshot of your phone.",
+    price: 39,
+    was: 39,
+    added: "saved 21 Jun",
+    stock: "out",
+  },
+];
+
+export const WISH_SUGGEST: WishSuggestion[] = [
+  { id: "g1", prod: "sensor", name: "Window sensor pack", price: 34 },
+  { id: "g2", prod: "doorbell", name: "Angled wedge mount", price: 8 },
+  { id: "g3", prod: "plug", name: "Outdoor smart plug", price: 36 },
+];
+
+/* ----------------------------------------------------- recently viewed */
+
+export const RECENT: RecentEntry[] = [
+  { id: "v1", kind: "article", ref: "a_doorbell_wifi", when: "Today", time: "14:20" },
+  { id: "v2", kind: "product", name: "Hearth Thermostat", prod: "thermostat", price: 149, when: "Today", time: "14:02" },
+  { id: "v3", kind: "article", ref: "a_factory_reset", when: "Today", time: "11:36" },
+  { id: "v4", kind: "product", name: "Digital chime adapter", prod: "doorbell", price: 18, when: "Yesterday", time: "19:44" },
+  { id: "v5", kind: "article", ref: "a_motion_zones", when: "Yesterday", time: "19:10" },
+  { id: "v6", kind: "product", name: "Hearth Sensor (2-pack)", prod: "sensor", price: 59, when: "Earlier this week", time: "Fri 09:22" },
+  { id: "v7", kind: "article", ref: "a_return", when: "Earlier this week", time: "Thu 16:58" },
+];
+
+export const RV_CATS: RecentFilterOption[] = [
+  ["all", "Everything", "layers"],
+  ["article", "Articles", "file-text"],
+  ["product", "Products", "box"],
+];
+
+/* ------------------------------------------------------- store locator */
+
+export const STORES: StoreLocation[] = [
+  {
+    id: "s1",
+    name: "Hearth Bristol",
+    kind: "flagship",
+    address: "Unit 4, Ellery Works, 24 Ellery Lane, Bristol BS1 4TR",
+    distance: "0.4 mi",
+    phone: "0117 496 0110",
+    open: true,
+    hours: "Mon–Sat 9–6, Sun 11–5",
+    tint: "#4f8bd6",
+    services: [
+      ["Walk-in repairs", "wrench"],
+      ["Returns", "package"],
+      ["Trade counter", "hard-hat"],
+    ],
+  },
+  {
+    id: "s2",
+    name: "Hearth Bath",
+    kind: "flagship",
+    address: "12 Green Street, Bath BA1 2JZ",
+    distance: "11.8 mi",
+    phone: "01225 445 210",
+    open: true,
+    hours: "Mon–Sat 9:30–5:30",
+    tint: "#5f9e6b",
+    services: [
+      ["Walk-in repairs", "wrench"],
+      ["Returns", "package"],
+    ],
+  },
+  {
+    id: "s3",
+    name: "Broadmead Electrical",
+    kind: "stockist",
+    address: "88 Broadmead, Bristol BS1 3DX",
+    distance: "1.1 mi",
+    phone: "0117 922 4418",
+    open: false,
+    hours: "Mon–Fri 8–5:30",
+    tint: "#8a6fb0",
+    services: [
+      ["Full range", "boxes"],
+      ["Returns", "package"],
+    ],
+  },
+  {
+    id: "s4",
+    name: "Keynsham Hardware",
+    kind: "stockist",
+    address: "3 High Street, Keynsham BS31 1DP",
+    distance: "6.2 mi",
+    phone: "0117 986 7712",
+    open: true,
+    hours: "Mon–Sat 8:30–5",
+    tint: "#c0865f",
+    services: [["Spare parts", "wrench"]],
+  },
+  {
+    id: "s5",
+    name: "Hearth recycling point — Avonmouth",
+    kind: "recycling",
+    address: "Gate 6, Avonmouth Depot, Bristol BS11 9YW",
+    distance: "7.9 mi",
+    phone: "0117 496 0142",
+    open: true,
+    hours: "Mon–Fri 7–4",
+    tint: "#3f9e78",
+    services: [
+      ["Drop-off", "recycle"],
+      ["Trade-in", "banknote"],
+    ],
+  },
+];
+
+export const ST_FILTERS: StoreFilterOption[] = [
+  ["all", "Everything", "layers"],
+  ["flagship", "Hearth stores", "store"],
+  ["stockist", "Stockists", "shopping-bag"],
+  ["recycling", "Recycling", "recycle"],
+];
+
+/* ------------------------------------------------ referral leaderboard */
+
+export const LEADERS: LeaderBoard = {
+  quarter: [
+    { name: "Rowan H.", initials: "RH", tint: "#5f9e6b", place: "Bristol", count: 14 },
+    { name: "Mira K.", initials: "MK", tint: "#8a6fb0", place: "Manchester", count: 11 },
+    { name: "Dee A.", initials: "DA", tint: "#c0865f", place: "Cardiff", count: 9 },
+    { name: "You", initials: "SA", tint: "#4f8bd6", place: "Bristol", count: 2, you: true },
+    { name: "Sanjay P.", initials: "SP", tint: "#4f8bd6", place: "Leeds", count: 2 },
+    { name: "Ines B.", initials: "IB", tint: "#b06f8f", place: "Bath", count: 1 },
+  ],
+  alltime: [
+    { name: "Rowan H.", initials: "RH", tint: "#5f9e6b", place: "Bristol", count: 63 },
+    { name: "Tomas R.", initials: "TR", tint: "#4f8bd6", place: "Bristol", count: 41 },
+    { name: "Mira K.", initials: "MK", tint: "#8a6fb0", place: "Manchester", count: 38 },
+    { name: "Dee A.", initials: "DA", tint: "#c0865f", place: "Cardiff", count: 22 },
+    { name: "Sanjay P.", initials: "SP", tint: "#4f8bd6", place: "Leeds", count: 16 },
+    { name: "You", initials: "SA", tint: "#4f8bd6", place: "Bristol", count: 7, you: true },
+  ],
+};
+
+export const LB_PRIZES: LeaderPrize[] = [
+  { place: "1st place", prize: "£250", icon: "trophy", note: "Credit, plus a device of your choice from the current range." },
+  { place: "2nd place", prize: "£120", icon: "medal", note: "Credit against anything in the store, including plans." },
+  { place: "3rd place", prize: "£60", icon: "award", note: "Credit, and a year of Hearth Plus on the house." },
+];
+
+/* -------------------------------------------------------- breach notice */
+
+export const BREACH_ITEMS: BreachItem[] = [
+  { label: "Email addresses", state: "Exposed", bad: true, icon: "mail" },
+  { label: "Order reference numbers", state: "Exposed", bad: true, icon: "hash" },
+  { label: "Passwords", state: "Not affected", bad: false, icon: "key-round" },
+  { label: "Payment details", state: "Not affected", bad: false, icon: "credit-card" },
+  { label: "Video clips and live view", state: "Not affected", bad: false, icon: "video" },
+  { label: "Home addresses and phone numbers", state: "Not affected", bad: false, icon: "map-pin" },
+];
+
+export const BREACH_TIMELINE: BreachEvent[] = [
+  {
+    when: "22 Jul, 16:40",
+    text: "Our supplier’s automated backup was written to storage without access controls.",
+    st: "done",
+  },
+  {
+    when: "22 Jul, 21:05",
+    text: "Our monitoring flagged an unexpected public bucket in the supplier’s account.",
+    st: "done",
+  },
+  {
+    when: "22 Jul, 23:12",
+    text: "Access removed and the backup deleted. Exposure window: about 40 hours.",
+    st: "done",
+  },
+  { when: "23 Jul, 10:30", text: "Reported to the ICO with an initial assessment.", st: "done" },
+  { when: "24 Jul, 08:00", text: "Everyone affected emailed directly, and this notice published.", st: "done" },
+  {
+    when: "27 Jul",
+    text: "Supplier audit complete. The affected system has been retired for good.",
+    st: "current",
+  },
+];
+
+/* ------------------------------------------------------------ recycling */
+
+export const RC_METHODS: RecycleMethod[] = [
+  {
+    id: "post",
+    label: "Free postal label",
+    icon: "mail",
+    note: "We email a prepaid label. Any box will do.",
+    done: "Label emailed — print it, tape it on, post it whenever suits.",
+  },
+  {
+    id: "drop",
+    label: "Drop it at a point near you",
+    icon: "map-pin",
+    note: "Nine locations, no appointment needed.",
+    done: "Take it to any drop-off point below — show the reference at the desk.",
+  },
+  {
+    id: "collect",
+    label: "Collection with your next delivery",
+    icon: "truck",
+    note: "The courier takes the old one when the new one arrives.",
+    done: "Your courier will take it on your next Hearth delivery.",
+  },
+];
+
+export const RC_STATS: RecycleStat[] = [
+  { label: "Recycled so far", value: "41,880", icon: "recycle", note: "Hearth devices given a second life or stripped for parts." },
+  { label: "Diverted from landfill", value: "96%", icon: "leaf", note: "By weight, across everything we take back." },
+  { label: "Cost to you", value: "£0", icon: "wallet", note: "Postage, collection and processing all covered." },
+];
+
+export const RC_POINTS: RecyclePoint[] = [
+  {
+    name: "Hearth Bristol",
+    address: "Unit 4, Ellery Works, 24 Ellery Lane, Bristol BS1 4TR",
+    hours: "Mon–Sat 9–6",
+    distance: "0.4 mi",
+  },
+  {
+    name: "Avonmouth recycling point",
+    address: "Gate 6, Avonmouth Depot, Bristol BS11 9YW",
+    hours: "Mon–Fri 7–4",
+    distance: "7.9 mi",
+  },
+  {
+    name: "Hearth Bath",
+    address: "12 Green Street, Bath BA1 2JZ",
+    hours: "Mon–Sat 9:30–5:30",
+    distance: "11.8 mi",
+  },
+];
+
+export const RC_ACCEPT: RecycleRule[] = [
+  { text: "Any Hearth device, working or not, whatever its age" },
+  { text: "Cables, mounts, chime adapters and wall plates" },
+  { text: "Batteries removed from Hearth sensors and doorbells" },
+  { text: "Other brands’ smart home kit — we sort it for you" },
+];
+
+export const RC_REJECT: RecycleRule[] = [
+  { text: "Anything visibly leaking or swollen — call us first" },
+  { text: "Mains appliances and lightbulbs (your council takes these)" },
+  { text: "Devices still registered to someone else’s account" },
+];
+
+/* -------------------------------------------------------- trade account */
+
+export const TD_PERKS: TradePerk[] = [
+  {
+    title: "Trade pricing on everything",
+    icon: "percent",
+    text: "Between 15% and 25% off list, applied automatically at checkout — no codes, no minimum order.",
+  },
+  {
+    title: "30-day terms",
+    icon: "calendar-clock",
+    text: "Invoice monthly once your first three orders have settled. No fee, no interest.",
+  },
+  {
+    title: "A named contact",
+    icon: "headset",
+    text: "One person who knows your jobs, on a direct line, plus priority stock on new launches.",
+  },
+];
+
+export const TD_TIERS: TradeTier[] = [
+  { id: "bronze", name: "Bronze", discount: "15% off", req: "No minimum. Ideal if Hearth is one of several brands you fit." },
+  { id: "silver", name: "Silver", discount: "20% off", req: "From about 5 installs a month. Includes the training course." },
+  { id: "gold", name: "Gold", discount: "25% off", req: "From about 15 installs a month. Adds listing on the installer finder." },
+];
+
+export const TD_TYPES: string[] = [
+  "Sole trader",
+  "Limited company",
+  "Partnership",
+  "Letting or managing agent",
+  "Housing association",
+];
+
+export const TD_VOLUMES: TradeVolume[] = [
+  { value: "1", label: "Just getting started" },
+  { value: "5", label: "Around 5 a month" },
+  { value: "15", label: "Around 15 a month" },
+  { value: "30", label: "30 or more a month" },
+];
+
+export const TD_SKILLS: TradeSkill[] = [
+  ["Doorbell wiring", "bell-ring"],
+  ["Thermostats", "thermometer"],
+  ["Sensors", "radar"],
+  ["Smart plugs", "plug-zap"],
+  ["Full-home installs", "home"],
+  ["Chime adapters", "zap"],
+];
+
+export const TD_CHECKS: TradeCheck[] = [
+  { id: "insured", label: "I hold public liability insurance of at least £2m and can provide a certificate." },
+  {
+    id: "terms",
+    label:
+      "I’ve read the trade terms, including the two-year installation guarantee we ask partners to honour.",
+  },
+];
+
+/* ------------------------------------------------------- shared clips */
+
+export const SH_LINKS: ShareLink[] = [
+  {
+    id: "sl1",
+    title: "Person at the door",
+    cam: "front",
+    audience: "Anyone with the link",
+    url: "hearth.example/s/9f4c2a",
+    views: 14,
+    expires: "expires in 5 days",
+    state: "live",
+    watchers: [
+      ["Nadia A.", "NA", "#4f8bd6"],
+      ["Rowan H.", "RH", "#5f9e6b"],
+      ["PC 4412", "PC", "#8a6fb0"],
+    ],
+  },
+  {
+    id: "sl2",
+    title: "Parcel left behind the planter",
+    cam: "front",
+    audience: "Neighbourhood group (7 people)",
+    url: "hearth.example/s/2b81de",
+    views: 31,
+    expires: "expires tomorrow",
+    state: "expiring",
+    watchers: [
+      ["Ines B.", "IB", "#b06f8f"],
+      ["Dee A.", "DA", "#c0865f"],
+    ],
+  },
+  {
+    id: "sl3",
+    title: "Car leaving the drive",
+    cam: "garage",
+    audience: "Insurer — Aviva",
+    url: "hearth.example/s/7c30f1",
+    views: 2,
+    expires: "expired",
+    state: "expired",
+    watchers: [],
+  },
+];
+
+export const SH_AUDIENCES: ShareOption[] = [
+  { value: "link", label: "Anyone with the link" },
+  { value: "group", label: "Neighbourhood group" },
+  { value: "named", label: "Named people only" },
+  { value: "insurer", label: "Insurer or police" },
+];
+
+export const SH_EXPIRIES: ShareOption[] = [
+  { value: "24h", label: "24 hours" },
+  { value: "7d", label: "7 days" },
+  { value: "30d", label: "30 days" },
+  { value: "never", label: "No expiry" },
+];
+
+export const SH_OPTS: ShareToggleOption[] = [
+  { id: "download", label: "Allow downloads", note: "Off means viewers can only stream it in the browser." },
+  { id: "faces", label: "Blur faces automatically", note: "Applied on the viewer’s device before playback." },
+  { id: "notify", label: "Tell me when someone watches", note: "One notification per viewer, not per view." },
+];
+
+/** Share links are minted on this host. */
+export const SHARE_HOST = "hearth.example/s/";
+
+/* ----------------------------------------------------- insurance claims */
+
+export const IN_CLAIMS: InsuranceClaim[] = [
+  {
+    id: "ic1",
+    kind: "theft",
+    title: "Bike taken from the drive",
+    state: "ready",
+    text: "Pack built from 3 clips across 11 minutes, with device status either side.",
+    meta: "IC-4471 · 14 Jul · 84 MB · Aviva",
+  },
+  {
+    id: "ic2",
+    kind: "damage",
+    title: "Storm damage to the porch",
+    state: "building",
+    text: "Collecting clips and signing the timestamp log. We’ll email you the moment it’s ready.",
+    meta: "IC-4392 · 02 Jul · about 4 minutes left",
+  },
+];
+
+export const IN_KINDS: InsuranceKindOption[] = [
+  ["theft", "Theft", "user-x"],
+  ["damage", "Damage", "cloud-lightning"],
+  ["delivery", "Missing delivery", "package-x"],
+  ["other", "Something else", "circle-help"],
+];
+
+export const IN_WINDOWS: InsuranceWindow[] = [
+  { value: "15", label: "15 minutes either side" },
+  { value: "60", label: "1 hour either side" },
+  { value: "day", label: "The whole day" },
+  { value: "range", label: "A date range" },
+];
+
+/* ----------------------------------------------------------- gift guide */
+
+export const GG_PICKS: GiftPick[] = [
+  {
+    id: "gg1",
+    prod: "doorbell",
+    forWho: "For the worrier",
+    name: "Hearth Video Doorbell",
+    price: 109,
+    was: 129,
+    badge: "Best seller",
+    tag: "popular",
+    blurb: "Answers the door from anywhere, and finally settles who keeps leaving the gate open.",
+  },
+  {
+    id: "gg2",
+    prod: "thermostat",
+    forWho: "For the bill-watcher",
+    name: "Hearth Thermostat",
+    price: 129,
+    was: 149,
+    badge: "Save £20",
+    tag: "popular",
+    blurb: "Pays for itself over a winter in most homes, and looks like it belongs on the wall.",
+  },
+  {
+    id: "gg3",
+    prod: "plug",
+    forWho: "For the first-timer",
+    name: "Smart Plug duo",
+    price: 49,
+    was: 58,
+    badge: "Under £50",
+    tag: "budget",
+    blurb: "The easiest way in — a lamp on a schedule, then they are hooked by February.",
+  },
+  {
+    id: "gg4",
+    prod: "sensor",
+    forWho: "For the new home",
+    name: "Sensor four-pack",
+    price: 109,
+    was: 119,
+    badge: null,
+    tag: "newhome",
+    blurb: "Doors, windows and the shed. Adhesive mounts, so nothing needs drilling.",
+  },
+  {
+    id: "gg5",
+    prod: "doorbell",
+    forWho: "For the whole house",
+    name: "Whole-home bundle",
+    price: 429,
+    was: 509,
+    badge: "Save £80",
+    tag: "splurge",
+    blurb: "Thermostat, doorbell, four sensors and two plugs — our biggest saving of the year.",
+  },
+  {
+    id: "gg6",
+    prod: "plug",
+    forWho: "For the stocking",
+    name: "Hearth gift card",
+    price: 25,
+    was: 25,
+    badge: null,
+    tag: "budget",
+    blurb: "From £10. No expiry, spendable on devices, parts or a Care plan.",
+  },
+];
+
+export const GG_FILTERS: GiftFilterOption[] = [
+  ["all", "Everything", "sparkles"],
+  ["budget", "Under £50", "wallet"],
+  ["popular", "Most gifted", "trending-up"],
+  ["newhome", "New homes", "home"],
+  ["splurge", "Big gestures", "gem"],
+];
+
+/** `late` marks "still fine to order late" and renders `--pos`. */
+export const GG_DATES: GiftDate[] = [
+  { label: "Standard delivery, free", date: "order by 19 Dec", late: false },
+  { label: "Next-day delivery", date: "order by 22 Dec, 4pm", late: false },
+  { label: "Gift cards, emailed", date: "any time on 25 Dec", late: true },
+];
+
+/* ----------------------------------------------------- account deletion */
+
+export const DL_ITEMS: DeleteItem[] = [
+  { label: "Cloud clip history", fate: "Deleted", bad: true, icon: "video" },
+  { label: "Schedules and automations", fate: "Deleted", bad: true, icon: "workflow" },
+  { label: "Household members and invites", fate: "Removed", bad: true, icon: "users" },
+  { label: "Your devices", fate: "Keep working locally", bad: false, icon: "cpu" },
+  { label: "Order and invoice records", fate: "Kept 7 years by law", bad: false, icon: "receipt" },
+  { label: "Warranty cover", fate: "Stays with the device", bad: false, icon: "shield-check" },
+];
+
+export const DL_REASONS: string[] = [
+  "Moving to another system",
+  "Too expensive",
+  "Missing a feature I need",
+  "Privacy concerns",
+  "Sold or gave away my devices",
+  "Something went wrong with support",
+];
+
+export const DL_CHECKS: DeleteCheck[] = [
+  { id: "data", label: "I’ve downloaded anything I want to keep, or I don’t need a copy." },
+  { id: "members", label: "I understand everyone in my household loses access on the same day." },
+  { id: "final", label: "I understand this is permanent after 30 days and cannot be reversed." },
+];
+
+/** Step 2's three retention offers. The CTA targets live in the store. */
+export const DL_ALTS: DeleteAlternative[] = [
+  {
+    icon: "pause",
+    title: "Pause your plan instead",
+    text: "Keeps the account and clips, stops the billing.",
+    cta: "See plans",
+  },
+  {
+    icon: "lock",
+    title: "Turn off cloud clips",
+    text: "Local recording only — nothing of yours leaves the house.",
+    cta: "Privacy settings",
+  },
+  {
+    icon: "message-circle",
+    title: "Talk to us first",
+    text: "If something went wrong, we’d genuinely like the chance to fix it.",
+    cta: "Open chat",
+  },
+];
+
+export const DL_SCHEDULED_TEXT =
+  "Your account closes on 26 August 2026. Until then everything works exactly as it does now, and one click brings it all back — after that date nobody can recover it.";
+
+/** The date chip on the scheduled card. */
+export const DL_SCHEDULED_DATE = "deletes 26 Aug 2026";
+
+/* ------------------------------------------------- breach + insurance copy */
+
+/** "What we'd suggest doing" — the action targets live in the store. */
+export const BR_STEPS: BreachStep[] = [
+  {
+    title: "Watch for emails pretending to be us",
+    text: "Whoever holds an address and an order number can write a convincing email. We never ask for your password, and we never ask you to pay by bank transfer.",
+  },
+  {
+    title: "Turn on two-factor authentication",
+    text: "It takes a minute and means a leaked address on its own can never get into your account.",
+    action: { label: "Open security settings", icon: "key-round" },
+  },
+  {
+    title: "Forward anything suspicious",
+    text: "Send it to phishing@hearth.example and we’ll confirm within a day whether it came from us.",
+    action: { label: "Report a suspicious email", icon: "flag" },
+  },
+];
+
+/** The address the checker treats as exposed, plus its prefix shortcut. */
+export const BREACH_HIT_EMAIL = "sam@example.com";
+
+export const IN_RETENTION_WARNING =
+  "Your plan keeps clips for 90 days, so anything before 28 April 2026 has already gone. Ask us as early as you can — once a clip expires we can't recover it.";

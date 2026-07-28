@@ -1,0 +1,237 @@
+/* screen-guide.css — Seasonal gift guide (delta spec B §11). */
+
+/* ---------------------------------------------------------------- hero */
+
+.gg-hero {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: clamp(24px, 4vw, 36px);
+  background:
+    radial-gradient(
+      120% 90% at 100% 0%,
+      color-mix(in srgb, var(--accent) 18%, transparent),
+      transparent 62%
+    ),
+    var(--surface);
+  box-shadow: var(--shadow);
+}
+.gg-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+}
+.gg-hero__season {
+  margin: 0 0 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--fg-subtle);
+}
+.gg-hero__title {
+  margin: 0 0 12px;
+  font-size: clamp(28px, 4.4vw, 42px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+  max-inline-size: 560px;
+  text-wrap: balance;
+}
+.gg-hero__blurb {
+  margin: 0 0 20px;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--fg-muted);
+  max-inline-size: 500px;
+  text-wrap: pretty;
+}
+.gg-cutoff {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--warn-soft);
+  color: var(--warn);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------- filters */
+
+.gg-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-block: 24px 20px;
+}
+
+/* --------------------------------------------------------------- picks */
+
+.gg-picks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 14px;
+}
+.gg-pick {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.sd-tile.gg-pick__tile {
+  border-radius: 14px;
+}
+.gg-pick__badge {
+  position: absolute;
+  inset-block-start: 10px;
+  inset-inline-end: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+.gg-pick__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  padding-block-start: 15px;
+}
+.gg-pick__for {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.gg-pick__name {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+.gg-pick__blurb {
+  flex: 1;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+}
+.gg-pick__prices {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+.gg-pick__price {
+  font-family: var(--font-mono);
+  font-size: 19px;
+  font-weight: 700;
+}
+.gg-pick__was {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--fg-subtle);
+  text-decoration: line-through;
+}
+.gg-pick__actions {
+  display: flex;
+  gap: 9px;
+  margin-block-start: 14px;
+}
+.sd-btn.gg-pick__add {
+  flex: 1;
+  justify-content: center;
+  padding: 11px 15px;
+  border-radius: 11px;
+}
+.sd-iconbtn.gg-pick__save {
+  inline-size: 40px;
+  block-size: 40px;
+  border-radius: 11px;
+  flex-shrink: 0;
+}
+
+/* ---------------------------------------------------------------- foot */
+
+.gg-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-block-start: 24px;
+}
+.gg-delivery {
+  flex: 1 1 300px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: clamp(18px, 3vw, 22px);
+  box-shadow: var(--shadow);
+}
+.gg-dates {
+  margin-block-start: 14px;
+}
+.gg-date {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 0;
+  border-block-end: 1px solid var(--border);
+}
+.gg-date--last {
+  border-block-end: none;
+}
+.gg-date__label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+.gg-date__date {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.gg-wrap {
+  flex: 1 1 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  border: 1px dashed var(--border-strong);
+  border-radius: 18px;
+  padding: clamp(18px, 3vw, 22px);
+}
+.gg-wrap__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 700;
+}
+.gg-wrap__text {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.62;
+  color: var(--fg-muted);
+}
+.gg-wrap__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  cursor: pointer;
+}

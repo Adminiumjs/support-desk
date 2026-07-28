@@ -286,6 +286,16 @@ svg {
   }
 }
 
+/* The loading-skeleton sweep. `.fx-nomotion` already kills it. */
+@keyframes fx-shimmer {
+  from {
+    background-position: -420px 0;
+  }
+  to {
+    background-position: 420px 0;
+  }
+}
+
 /* --- the eleven interaction classes, verbatim from the comp --- */
 
 .fx-screen {
@@ -375,6 +385,19 @@ svg {
   animation: fx-blink 1.3s infinite;
 }
 
+/* One skeleton block. Height, width and radius are set per block in JS. */
+.fx-skel {
+  background: linear-gradient(
+    90deg,
+    var(--surface-2) 0%,
+    var(--surface-3) 42%,
+    var(--surface-2) 84%
+  );
+  background-size: 840px 100%;
+  animation: fx-shimmer 1.2s linear infinite;
+  border-radius: 12px;
+}
+
 .fx-nomotion *,
 .fx-nomotion *::before,
 .fx-nomotion *::after {
@@ -434,6 +457,19 @@ svg {
 .w-760  { max-inline-size: 760px; }
 .w-720  { max-inline-size: 720px; }
 .w-620  { max-inline-size: 620px; }
+
+/* --- ultra-wide (ruling R5) ---
+ *
+ * The comp implemented the 1800 → 1440 rule twice: a CSS class plus a
+ * `colWidth()` JS mirror that had to stay in sync. Here it exists once, in
+ * CSS. Add `.fx-wide` beside `.w-1000` / `.w-1120` on any wrapper that should
+ * stretch on a very wide display; narrower columns (900 and below) never do.
+ */
+@media (min-width: 1800px) {
+  .fx-wide {
+    max-inline-size: 1440px;
+  }
+}
 
 /* --- the two real breakpoints (ruling R5) --- */
 

@@ -183,3 +183,12 @@
   font-size: 13px;
   font-weight: 700;
 }
+
+/* Per-device warranty-transfer button (delta §6.2 / §6.13). */
+.wr-dev__transfer {
+  inline-size: 38px;
+  block-size: 38px;
+  border-radius: 11px;
+  color: var(--fg-muted);
+  flex-shrink: 0;
+}

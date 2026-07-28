@@ -1,7 +1,7 @@
 /*
  * `overview` — Every screen in the portal (port spec §6.39). Max-width 1120.
  *
- * The catalogue is `dataSource.overviewGroups()`: 8 groups, 39 entries. Every
+ * The catalogue is `dataSource.overviewGroups()`: 8 groups, 54 entries. Every
  * card routes through `ovGo`, which owns the seeding special cases (`chat`
  * opens the widget, `category` lands on setup, `thread` on HH-3117, and so on)
  * so this screen never seeds sub-state itself.
@@ -30,7 +30,7 @@ export default function Overview() {
   const dark = theme === "dark";
 
   return (
-    <main className="fx-screen fx-page w-1120 ovw">
+    <main className="fx-screen fx-page w-1120 fx-wide ovw">
       <header className="ovw__head">
         <div className="ovw__intro">
           <p className="ovw__eyebrow">OVERVIEW</p>

@@ -54,6 +54,7 @@ export default function Refer() {
   const refEmail = useAppStore((s) => s.refEmail);
   const set = useAppStore((s) => s.set);
   const showToast = useAppStore((s) => s.showToast);
+  const gotoBoard = useAppStore((s) => s.gotoBoard);
 
   const joined = referrals.filter((r) => r.st === "joined").length;
   const earned = `£${joined * REFERRAL_REWARD} earned`;
@@ -110,6 +111,15 @@ export default function Refer() {
           >
             Copy code
           </ButtonPrimary>
+          {/* Delta §6.13 — cross-link to the new leaderboard. */}
+          <ButtonSecondary
+            icon="trophy"
+            iconSize={16}
+            className="refer-copy refer-copy--ghost"
+            onClick={gotoBoard}
+          >
+            Leaderboard
+          </ButtonSecondary>
           <ButtonSecondary
             icon="link"
             iconSize={16}

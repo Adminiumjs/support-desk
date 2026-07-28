@@ -16,6 +16,8 @@ export interface StatTileProps {
   delta?: string;
   /** `trending-down` reads as good (less energy) and colours `--pos`. */
   deltaIcon?: string;
+  /** Plain footnote under the value — the recycling stat strip. */
+  note?: string;
   /** Smaller 26px value — the partner KPI row. */
   compact?: boolean;
   className?: string;
@@ -30,6 +32,7 @@ export function StatTile({
   icon,
   delta,
   deltaIcon,
+  note,
   compact = false,
   className,
 }: StatTileProps) {
@@ -52,6 +55,7 @@ export function StatTile({
           {delta}
         </span>
       ) : null}
+      {note ? <p className="stat__note">{note}</p> : null}
     </Card>
   );
 }

@@ -1,0 +1,252 @@
+/* screen-deleteacct.css — Account deletion (delta B §8). */
+
+/* -------------------------------------------------------- scheduled card */
+
+.dl-done {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-start;
+  border: 1.5px solid var(--danger);
+  border-radius: 18px;
+  padding: clamp(20px, 3vw, 28px);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.dl-done__ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 52px;
+  block-size: 52px;
+  border-radius: 15px;
+  background: var(--danger-soft);
+}
+.dl-done__title {
+  margin: 0;
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.dl-done__text {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--fg-muted);
+  max-inline-size: 480px;
+}
+.dl-done__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.dl-chip {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  padding: 7px 12px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.dl-chip--danger {
+  border-color: transparent;
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.dl-done__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+}
+.dl-done__cta {
+  padding: 13px 20px;
+  border-radius: 13px;
+}
+
+/* ------------------------------------------------------------- the flow */
+
+.dl-h1 {
+  margin: 0 0 12px;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+.dl-lede {
+  margin: 0 0 22px;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--fg-muted);
+  max-inline-size: 540px;
+  text-wrap: pretty;
+}
+.dl-steps {
+  margin-block-end: 22px;
+}
+
+.dl-card {
+  border-radius: 18px;
+  padding: clamp(18px, 3vw, 26px);
+}
+.dl-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.dl-h2 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.dl-text {
+  margin: -6px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+}
+.dl-word {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--fg);
+}
+
+.dl-inventory {
+  border-radius: 14px;
+  box-shadow: none;
+}
+
+/* ------------------------------------------------------------ step two */
+
+.dl-alts {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.dl-alt {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 13px;
+  align-items: center;
+  padding: 15px 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+.dl-alt__ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 38px;
+  block-size: 38px;
+  border-radius: 11px;
+  background: var(--surface);
+  color: var(--fg-muted);
+  flex-shrink: 0;
+}
+.dl-alt__body {
+  flex: 1 1 180px;
+  min-inline-size: 0;
+}
+.dl-alt__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+.dl-alt__note {
+  margin: 3px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--fg-subtle);
+}
+.dl-alt__cta {
+  padding: 10px 15px;
+  border-radius: 11px;
+  border: 1px solid var(--border-strong);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.dl-optional {
+  font-size: 12.5px;
+  color: var(--fg-subtle);
+}
+.dl-select {
+  block-size: 48px;
+  padding-inline: 14px;
+  border-radius: 12px;
+  font-size: 14.5px;
+}
+
+/* ---------------------------------------------------------- step three */
+
+.dl-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dl-label {
+  display: block;
+  margin-block-end: 9px;
+  font-size: 14px;
+  font-weight: 700;
+}
+.dl-phrase {
+  inline-size: 100%;
+  block-size: 48px;
+  padding-inline: 15px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  letter-spacing: 0.12em;
+}
+
+/* -------------------------------------------------------------- footer */
+
+.dl-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+  align-items: center;
+  margin-block-start: 22px;
+  padding-block-start: 20px;
+  border-block-start: 1px solid var(--border);
+}
+.dl-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: none;
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+.dl-next--danger {
+  background: var(--danger);
+  color: #fff;
+}
+.dl-next--off {
+  background: var(--surface-3);
+  color: var(--fg-subtle);
+  cursor: default;
+}
+.dl-cancel {
+  margin-inline-start: auto;
+  border: none;
+  background: transparent;
+  color: var(--fg-subtle);
+  font-size: 13.5px;
+  font-weight: 700;
+  font-family: inherit;
+  padding: 12px 6px;
+  cursor: pointer;
+}

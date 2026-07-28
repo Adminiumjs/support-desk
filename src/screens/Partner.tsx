@@ -45,6 +45,7 @@ export default function Partner() {
   const ptOut = useAppStore((s) => s.ptOut);
   const set = useAppStore((s) => s.set);
   const showToast = useAppStore((s) => s.showToast);
+  const gotoTrade = useAppStore((s) => s.gotoTrade);
 
   const all = dataSource.partnerJobs();
   const links = dataSource.partnerLinks();
@@ -64,7 +65,7 @@ export default function Partner() {
   };
 
   return (
-    <main className="fx-screen fx-page w-1000">
+    <main className="fx-screen fx-page w-1000 fx-wide">
       <div className="pt-head">
         <Avatar
           initials={PARTNER.initials}
@@ -82,6 +83,10 @@ export default function Partner() {
           </div>
           <p className="pt-head__meta">{PARTNER.meta}</p>
         </div>
+        {/* Delta §6.13 — cross-link to the new trade-account signup. */}
+        <ButtonSecondary icon="percent" onClick={gotoTrade}>
+          Trade account
+        </ButtonSecondary>
         <ButtonSecondary
           icon="headset"
           onClick={() => showToast(PARTNER.supportLine, "info")}

@@ -1,0 +1,161 @@
+/* screen-transfer.css — `transfer` (delta spec A §4). Imported by Transfer.tsx. */
+
+.tr__h1 {
+  margin: 0 0 12px;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.tr__lede {
+  margin: 0 0 26px;
+  max-inline-size: 560px;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+
+/* --------------------------------------------------------- confirmation */
+
+.tr-done {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+  margin-block-end: 22px;
+}
+.tr-done__tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 52px;
+  block-size: 52px;
+  border-radius: 15px;
+  background: var(--pos-soft);
+}
+.tr-done__title {
+  margin: 0;
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.tr-done__body {
+  margin: 0;
+  max-inline-size: 480px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+}
+.tr-done__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.tr-done__chip {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 7px 12px;
+}
+.tr-done__acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+}
+
+/* ----------------------------------------------------------------- form */
+
+.tr-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.tr-group__label {
+  margin: 0 0 11px;
+  font-size: 14px;
+  font-weight: 700;
+}
+.tr-devs {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+/* The comp trails the radio behind the label column (spec A §4.2a). */
+.tr-dev .sd-radio {
+  order: 2;
+  margin-inline-start: auto;
+}
+.tr-dev .sd-col > span + span {
+  font-family: var(--font-mono);
+}
+
+.tr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.tr-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.tr-check {
+  align-items: flex-start;
+  gap: 12px;
+}
+.tr-check .sd-box {
+  margin-block-start: 1px;
+}
+
+.tr-submit {
+  align-self: flex-start;
+  padding: 13px 22px;
+  border-radius: 13px;
+  font-size: 14.5px;
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------- how it works */
+
+.tr__h2 {
+  margin: 32px 0 14px;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+.tr-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.tr-steps__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.tr-steps__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 25px;
+  block-size: 25px;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12.5px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.tr-steps__text {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+}

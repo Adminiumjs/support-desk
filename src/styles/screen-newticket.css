@@ -3,14 +3,14 @@
  * primitives, the card and the attachment chip are styled by components.css.
  */
 
-.nt__title {
+.ntk__title {
   margin: 0 0 6px;
   font-size: clamp(26px, 3.6vw, 34px);
   font-weight: 800;
   letter-spacing: -0.035em;
 }
 
-.nt__lede {
+.ntk__lede {
   margin: 0 0 28px;
   font-size: 15px;
   color: var(--fg-muted);
@@ -18,37 +18,37 @@
   text-wrap: pretty;
 }
 
-.nt__form {
+.ntk__form {
   display: flex;
   flex-direction: column;
   gap: 26px;
 }
 
 /* Tile-style groups (product picker, attachments) sit 11px under their label. */
-.nt__group > .sd-label,
-.nt__group .sd-row > .sd-label {
+.ntk__group > .sd-label,
+.ntk__group .sd-row > .sd-label {
   margin-block-end: 11px;
 }
 
-.nt__group > .sd-label {
+.ntk__group > .sd-label {
   font-size: 14px;
   font-weight: 700;
 }
 
-.nt__attach {
+.ntk__attach {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
 }
 
-.nt__addfile {
+.ntk__addfile {
   padding: 9px 14px;
   border-radius: 10px;
   font-size: 12.5px;
 }
 
-.nt__foot {
+.ntk__foot {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -57,7 +57,7 @@
   padding-block-start: 4px;
 }
 
-.nt__note {
+.ntk__note {
   display: flex;
   align-items: center;
   gap: 7px;
@@ -66,7 +66,7 @@
   color: var(--fg-subtle);
 }
 
-.nt__submit {
+.ntk__submit {
   gap: 9px;
   padding: 13px 24px;
   border-radius: 13px;

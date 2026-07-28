@@ -1,0 +1,189 @@
+/*
+ * `billing` — Billing & invoices (delta spec A §3, logic C §"billingVals").
+ *
+ * Two summary cards (plan + payment method), then the invoice history: a
+ * period segmented control, kind-filter chips scoped to that period, and the
+ * six-column `<InvoiceHead>` / `<InvoiceRow>` table.
+ *
+ * DOM note: the comp nests the filter-chip row *inside* the right-hand flex
+ * cluster of the toolbar (comp 2564–2569), which makes the chips wrap under
+ * the segmented control by accident rather than by design. The intended
+ * layout is ported here — heading + period switch on the toolbar row, chips
+ * as their own sibling row beneath it.
+ *
+ * Max-width 900.
+ */
+
+import {
+  ButtonSecondary,
+  Callout,
+  Card,
+  Chip,
+  ChipRow,
+  EmptyState,
+  Eyebrow,
+  Icon,
+  InvoiceHead,
+  InvoiceRow,
+  Tabs,
+  columnClass,
+} from "../components";
+import { dataSource } from "../data/source";
+import {
+  BL_INTRO,
+  billingEmpty,
+  filterInvoices,
+  invoicesInPeriod,
+  nextChargeLine,
+  planPriceLine,
+} from "../lib/derive";
+import { money } from "../lib/format";
+import { useAppStore } from "../state/store";
+import "../styles/screen-billing.css";
+
+export default function Billing() {
+  const blFilter = useAppStore((s) => s.blFilter);
+  const blPeriod = useAppStore((s) => s.blPeriod);
+  const blCredit = useAppStore((s) => s.blCredit);
+  const planCurrent = useAppStore((s) => s.planCurrent);
+  const planCycle = useAppStore((s) => s.planCycle);
+  const set = useAppStore((s) => s.set);
+  const go = useAppStore((s) => s.go);
+  const applyCredit = useAppStore((s) => s.applyCredit);
+  const updateCard = useAppStore((s) => s.updateCard);
+  const exportInvoices = useAppStore((s) => s.exportInvoices);
+  const downloadInvoice = useAppStore((s) => s.downloadInvoice);
+
+  const plans = dataSource.plans();
+  const plan = plans.find((p) => p.id === planCurrent) ?? plans[0];
+
+  const inPeriod = invoicesInPeriod(dataSource.invoices(), blPeriod);
+  const rows = filterInvoices(inPeriod, blFilter);
+  const empty = billingEmpty(inPeriod.length, blFilter);
+
+  const periods = dataSource
+    .billingPeriods()
+    .map(([id, label]) => ({ id, label }));
+
+  return (
+    <main className={`fx-screen fx-page ${columnClass("billing")} bl`}>
+      <div className="bl__head">
+        <div className="bl__head-text">
+          <h1 className="bl__h1">Billing &amp; invoices</h1>
+          <p className="bl__lede">{BL_INTRO}</p>
+        </div>
+        <ButtonSecondary icon="download" onClick={exportInvoices}>
+          Export all as CSV
+        </ButtonSecondary>
+      </div>
+
+      <div className="bl__cards">
+        <Card className="bl-sum bl-sum--plan">
+          <Eyebrow>Current plan</Eyebrow>
+          <div className="bl-sum__row">
+            <span className="bl-sum__plan">{plan.name}</span>
+            <span className="bl-sum__price">
+              {planPriceLine(plan.mo, planCycle)}
+            </span>
+          </div>
+          <p className="bl-sum__next">{nextChargeLine(plan.mo, planCycle)}</p>
+          <div className="bl-sum__acts">
+            <ButtonSecondary
+              icon="layers"
+              iconSize={14}
+              className="bl-sum__btn"
+              onClick={() => go("plans")}
+            >
+              Change plan
+            </ButtonSecondary>
+            <ButtonSecondary
+              icon="ticket"
+              iconSize={14}
+              tone="var(--fg-muted)"
+              className="bl-sum__btn"
+              onClick={applyCredit}
+            >
+              Apply credit
+            </ButtonSecondary>
+          </div>
+        </Card>
+
+        <Card className="bl-sum bl-sum--card">
+          <Eyebrow>Payment method</Eyebrow>
+          <div className="bl-card__row">
+            <span className="bl-card__tile">
+              <Icon name="credit-card" size={19} />
+            </span>
+            <span className="bl-card__id">
+              <span className="bl-card__num">•••• 4417</span>
+              <span className="bl-card__exp">Visa · expires 09/28</span>
+            </span>
+          </div>
+          <div className="bl-card__credit">
+            <span className="bl-card__credit-label">Account credit</span>
+            <span
+              className="bl-card__credit-value"
+              style={blCredit > 0 ? { color: "var(--pos)" } : undefined}
+            >
+              {money(blCredit)}
+            </span>
+          </div>
+          <ButtonSecondary
+            icon="pencil"
+            iconSize={14}
+            className="bl-card__update"
+            onClick={updateCard}
+          >
+            Update card
+          </ButtonSecondary>
+        </Card>
+      </div>
+
+      <div className="bl__toolbar">
+        <h2 className="bl__h2">History</h2>
+        <Tabs
+          label="Invoice period"
+          className="bl__periods"
+          options={periods}
+          value={blPeriod}
+          onChange={(id) => set({ blPeriod: id })}
+        />
+      </div>
+
+      <ChipRow className="bl__filters">
+        {dataSource.billingFilters().map(([id, label]) => (
+          <Chip
+            key={id}
+            active={blFilter === id}
+            count={filterInvoices(inPeriod, id).length}
+            onClick={() => set({ blFilter: id })}
+          >
+            {label}
+          </Chip>
+        ))}
+      </ChipRow>
+
+      {rows.length ? (
+        <div className="bl-table">
+          <InvoiceHead />
+          {rows.map((invoice, i) => (
+            <InvoiceRow
+              key={invoice.id}
+              invoice={invoice}
+              last={i === rows.length - 1}
+              onDownload={() => downloadInvoice(invoice)}
+            />
+          ))}
+        </div>
+      ) : (
+        <EmptyState icon="receipt" title={empty.title} body={empty.text} />
+      )}
+
+      <Callout tone="info" icon="info" className="bl__note">
+        Hardware invoices are issued by Hearth Home Ltd. and include VAT at 20%.
+        Plan invoices show the period they cover — cancel mid-period and we
+        refund the unused days automatically.
+      </Callout>
+    </main>
+  );
+}

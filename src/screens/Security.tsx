@@ -9,6 +9,10 @@
  * Accessibility note: the comp made the whole settings row a button with a
  * nested switch button. Nested buttons are invalid, so the row itself carries
  * `role="switch"` and the switch graphic is decorative (`aria-hidden`).
+ *
+ * Delta §6.9: signing a session out is undoable, an empty state appears once
+ * this device is the only one left, and "Start deletion" is no longer a
+ * dead-end toast — it opens the three-step `deleteacct` flow.
  */
 
 import { useMemo } from "react";
@@ -17,6 +21,7 @@ import {
   Card,
   Chip,
   ChipRow,
+  EmptyState,
   Eyebrow,
   Icon,
   ListCard,
@@ -33,6 +38,8 @@ export default function Security() {
   const secOut = useAppStore((s) => s.secOut);
   const set = useAppStore((s) => s.set);
   const showToast = useAppStore((s) => s.showToast);
+  const undoToast = useAppStore((s) => s.undoToast);
+  const gotoDelete = useAppStore((s) => s.gotoDelete);
 
   const toggles = dataSource.securityToggles();
   const retains = dataSource.retentionOptions();
@@ -42,6 +49,9 @@ export default function Security() {
     () => allSessions.filter((s) => !secOut.includes(s.id)),
     [allSessions, secOut],
   );
+
+  /* Only this device left signed in — the empty state below (delta §6.9). */
+  const onlyThisDevice = sessions.every((s) => s.current);
 
   const flip = (id: string, label: string, was: boolean) => {
     set({ secOn: { ...secOn, [id]: !was } });
@@ -167,7 +177,13 @@ export default function Security() {
                 tone="var(--danger)"
                 onClick={() => {
                   set({ secOut: [...secOut, s.id] });
-                  showToast(`Signed out of ${s.device}`);
+                  undoToast(`Signed out of ${s.device}`, () =>
+                    set({
+                      secOut: useAppStore
+                        .getState()
+                        .secOut.filter((id) => id !== s.id),
+                    }),
+                  );
                 }}
               >
                 Sign out
@@ -176,6 +192,16 @@ export default function Security() {
           </div>
         ))}
       </ListCard>
+
+      {onlyThisDevice ? (
+        <EmptyState
+          compact
+          className="sec__empty"
+          icon="monitor-off"
+          title="No other devices signed in"
+          body="This is the only session on your account. Anything else that signs in will show up here with its location."
+        />
+      ) : null}
 
       <div className="sec__split">
         <Card variant="lg" className="sec__panel">
@@ -212,9 +238,7 @@ export default function Security() {
             icon="alert-triangle"
             tone="var(--danger)"
             className="sec__danger-btn"
-            onClick={() =>
-              showToast("Deletion needs confirming from your email", "warn")
-            }
+            onClick={gotoDelete}
           >
             Start deletion
           </ButtonSecondary>

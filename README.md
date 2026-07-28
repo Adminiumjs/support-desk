@@ -14,16 +14,19 @@ like a real product's support site rather than lorem ipsum.
 
 ## Highlights
 
-- **State-based routing** (no router) — a single `view` value drives all 39
+- **State-based routing** (no router) — a single `view` value drives all 54
   screens: home and search, the article reader, ticket list and detail, the
   new-ticket flow, live chat, guided troubleshooters, the returns wizard,
-  warranty and order lookup, the community forum, account and accessibility
-  settings, status, contact, and the rest.
+  warranty and order lookup, the community forum, the camera live view and
+  clip sharing, the automations builder, billing, the store locator, account
+  and accessibility settings, status, contact, and the rest.
 - **Real support logic** — full-text-ish article search with topic chips,
   ticket state machine with a timeline, SLA badges, canned-reply composition,
   and a returns wizard that branches on reason.
-- **Light / dark themes** via CSS custom properties, persisted to
-  `localStorage`.
+- **Light / dark themes** via CSS custom properties. The app follows your
+  operating system on first load and keeps tracking it; toggling the theme by
+  hand latches it, and *Accessibility → Appearance → Follow my system theme*
+  hands control back.
 - **Accessibility as a feature, not a footnote** — three shipped override
   palettes (high-contrast, deuteranopia, monochrome) layered on top of the
   canonical design tokens, plus a reduce-motion setting backed by
@@ -42,6 +45,17 @@ npm run dev
 ```
 
 Then open the URL Vite prints (default http://localhost:5173).
+
+### Demo modes
+
+Two failure states are worth showing on a design review, so both are reachable
+without any UI chrome:
+
+| How                                     | What it does                                                                             |
+| --------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `?demo=error`                           | Forces the failed-load screen on every view. **Try again** still runs the loading cycle and lands back on the error — it is a permanent-error mode. |
+| Command palette → *Simulate a failed load* | Fails the current view only. **Try again** clears it.                                   |
+| Command palette → *Simulate being offline* | Toggles the offline strip under the breadcrumbs. Independent of the error state.       |
 
 ## Deploy
 
@@ -120,7 +134,7 @@ src/
   state/       Zustand store (tickets, search, chat, theme, a11y settings)
   data/        demo data, types, DataSource seam
   lib/         search, formatting, SLA, the injectable delay helper
-  screens/     the 39 views — home, article, tickets, chat, wizards, forum, …
+  screens/     the 54 views — home, article, tickets, chat, wizards, forum, …
   components/  header, footer, command palette, modal, toast, mobile sheet, …
   styles/      tokens.css (design tokens + accent) + base.css (fonts, a11y layers)
 public/fonts/  self-hosted Manrope + JetBrains Mono (woff2)

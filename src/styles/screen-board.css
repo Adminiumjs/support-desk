@@ -1,0 +1,239 @@
+/* screen-board.css — Referral leaderboard (delta A §8). */
+
+.lb-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-block-end: 20px;
+}
+.lb-head__text {
+  flex: 1 1 320px;
+  min-inline-size: 0;
+}
+.lb-h1 {
+  margin: 0 0 10px;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+.lb-lede {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  max-inline-size: 520px;
+  text-wrap: pretty;
+}
+
+/* ------------------------------------------------------------- you card */
+
+.lb-you {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  padding: clamp(16px, 3vw, 20px);
+  border-radius: 18px;
+  border: 1.5px solid var(--accent);
+  background:
+    radial-gradient(120% 90% at 100% 0%, var(--accent-soft), transparent 62%),
+    var(--surface);
+  box-shadow: var(--shadow);
+}
+.lb-you__mid {
+  flex: 1 1 180px;
+  min-inline-size: 0;
+}
+.lb-you__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+}
+.lb-you__name {
+  font-size: 16px;
+  font-weight: 800;
+}
+.lb-you__line {
+  margin: 5px 0 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+.lb-you__score {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: end;
+}
+.lb-you__count {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.lb-you__caption {
+  margin-block-start: 2px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--fg-subtle);
+}
+.lb-you__cta {
+  padding: 11px 17px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+/* ----------------------------------------------------------- rank chips */
+
+.lb-rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 30px;
+  block-size: 30px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.lb-rank--lg {
+  flex: 0 0 42px;
+  block-size: 34px;
+}
+.lb-rank--top {
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-color: transparent;
+}
+
+/* ---------------------------------------------------------------- table */
+
+.lb-tablehead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block: 24px 14px;
+}
+.lb-tablehead__title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fg-subtle);
+}
+.lb-tablehead__updated {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-subtle);
+}
+
+.lb-row--you {
+  background: var(--accent-soft);
+}
+.lb-row__body {
+  flex: 1 1 160px;
+  min-inline-size: 0;
+}
+.lb-row__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+}
+.lb-row__name {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--fg);
+}
+.lb-row__name--you {
+  font-weight: 800;
+  color: var(--accent);
+}
+.lb-row__place {
+  display: block;
+  margin-block-start: 3px;
+  font-size: 12.5px;
+  color: var(--fg-subtle);
+}
+.lb-row__count {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+}
+.lb-row__earned {
+  flex: 0 0 62px;
+  text-align: end;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--pos);
+}
+
+/* --------------------------------------------------------- bonus prizes */
+
+.lb-h2 {
+  margin: 30px 0 14px;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.lb-prizes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: 13px;
+}
+.lb-prize {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(16px, 3vw, 20px);
+}
+.lb-prize__ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 40px;
+  block-size: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--fg-muted);
+}
+.lb-prize__ico--first {
+  background: var(--accent);
+  border-color: transparent;
+  color: var(--accent-fg);
+}
+.lb-prize__place {
+  margin-block-start: 12px;
+  font-size: 14.5px;
+  font-weight: 800;
+}
+.lb-prize__amount {
+  margin-block: 6px;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+}
+.lb-prize__note {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+
+.lb-legal {
+  margin: 22px 0 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--fg-subtle);
+  max-inline-size: 560px;
+}

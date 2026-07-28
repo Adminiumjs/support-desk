@@ -85,7 +85,7 @@ export function Header() {
 
   return (
     <header className="hdr">
-      <div className="hdr__bar">
+      <div className="hdr__bar w-1120 fx-wide">
         <button type="button" className="hdr__logo fx-nav" onClick={goHome}>
           <span className="hdr__mark">
             <Icon name="life-buoy" size={19} />

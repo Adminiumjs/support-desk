@@ -1,0 +1,93 @@
+/* screen-live.css — `live` (delta spec A §1). Imported by Live.tsx. */
+
+/* The comp gives this screen a shallower top gutter than the rest. */
+.lv {
+  padding-block-start: clamp(20px, 3vw, 36px);
+}
+
+.lv__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-block-end: 20px;
+}
+.lv__head-text {
+  flex: 1 1 260px;
+  max-inline-size: 520px;
+}
+.lv__h1 {
+  margin: 0 0 6px;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.lv__lede {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+.lv__cams {
+  margin: 0;
+}
+
+/* ---------------------------------------------------------- control strip */
+
+.lv__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-block: 14px 26px;
+}
+.lv__ctrl {
+  padding: 10px 15px;
+  border-radius: 11px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* ----------------------------------------------------------- clip history */
+
+.lv__clips-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block-end: 14px;
+}
+.lv__clips-title {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+.lv__retention {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--fg-subtle);
+}
+
+.lv__types {
+  margin-block-end: 20px;
+}
+
+.lv__days {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.lv__day-clips {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lv__note {
+  margin-block-start: 22px;
+}

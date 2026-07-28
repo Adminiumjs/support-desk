@@ -60,7 +60,7 @@ export interface FooterColumn {
   links: FooterLink[];
 }
 
-/** 8 columns, 36 label → handler pairs (port spec §5.11). */
+/** 8 columns; the delta added 15 more links across four of them. */
 export const FOOTER_COLUMNS: FooterColumn[] = [
   {
     name: "Support",
@@ -92,13 +92,22 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
       { label: "Trade-in valuation", to: "tradein" },
       { label: "Bundle deals", to: "bundles" },
       { label: "Gift cards", to: "gift" },
+      { label: "Gift guide", to: "guide" },
+      { label: "Wishlist", to: "wish" },
+      { label: "Recently viewed", to: "recent" },
+      { label: "Find a store", to: "stores" },
+      { label: "Recycling drop-off", to: "recycle" },
       { label: "Refer a friend", to: "refer" },
+      { label: "Leaderboard", to: "board" },
     ],
   },
   {
     name: "Your home",
     links: [
       { label: "Device dashboard", to: "devices" },
+      { label: "Live view & clips", to: "live" },
+      { label: "Shared clips", to: "share" },
+      { label: "Automations", to: "auto" },
       { label: "Energy insights", to: "energy" },
       { label: "Household members", to: "members" },
       { label: "Notifications", to: "notifs" },
@@ -108,6 +117,8 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
     name: "Account",
     links: [
       { label: "Subscription plans", to: "plans" },
+      { label: "Billing & invoices", to: "billing" },
+      { label: "Warranty transfer", to: "transfer" },
       { label: "Security & privacy", to: "security" },
       { label: "Accessibility settings", to: "a11y" },
       { label: "Give feedback", to: "survey" },
@@ -119,6 +130,9 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
       { label: "Downloads & manuals", to: "downloads" },
       { label: "Firmware release notes", to: "firmware" },
       { label: "Service & system status", to: "status" },
+      { label: "Security notice", to: "breach" },
+      { label: "Insurance claims", to: "insurance" },
+      { label: "Delete account", to: "deleteacct" },
     ],
   },
   {
@@ -135,6 +149,7 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
       { label: "About us", to: "about" },
       { label: "Contact us", to: "contact" },
       { label: "Partner portal", to: "partner" },
+      { label: "Trade account", to: "trade" },
       { label: "Imprint", to: "imprint" },
     ],
   },
@@ -152,6 +167,7 @@ export const CRUMB_W: Partial<Record<ViewId, number>> = {
   bundles: 1000,
   devices: 1000,
   partner: 1000,
+  guide: 1000,
   contact: 900,
   downloads: 900,
   installers: 900,
@@ -159,12 +175,23 @@ export const CRUMB_W: Partial<Record<ViewId, number>> = {
   a11y: 900,
   gift: 900,
   energy: 900,
+  live: 900,
+  auto: 900,
+  billing: 900,
+  wish: 900,
+  stores: 900,
+  recycle: 900,
+  trade: 900,
+  share: 900,
   imprint: 760,
   returns: 760,
   survey: 760,
+  deleteacct: 760,
+  breach: 760,
   newticket: 720,
   tour: 720,
   "404": 620,
+  /* `recent`, `board`, `insurance` and `transfer` fall to the 820 default. */
 };
 
 /** Single-label trails. `home` is absent on purpose — Home has no breadcrumb. */
@@ -201,6 +228,41 @@ export const CRUMB_LABELS: Partial<Record<ViewId, string>> = {
   partner: "Partner portal",
   overview: "All screens",
   "404": "Page not found",
+  /* --- delta: the single-label trails --- */
+  recent: "Recently viewed",
+  stores: "Find a store",
+  recycle: "Recycling drop-off",
+  insurance: "Insurance claims",
+  guide: "Gift guide",
+};
+
+/**
+ * The width utility classes for a view's `<main>`: `w-900`, `w-1000 fx-wide`…
+ *
+ * Ruling R5: the 1800 → 1440 ultra-wide bump exists once, in CSS. Columns of
+ * 1000px and wider opt in via `.fx-wide`; narrower ones never stretch. Use
+ * this rather than an inline `maxWidth`, which would beat the media query.
+ */
+export function columnClass(view: ViewId): string {
+  const w = CRUMB_W[view] ?? 820;
+  return w >= 1000 ? `w-${w} fx-wide` : `w-${w}`;
+}
+
+/**
+ * Delta trails with a clickable middle crumb: `[parent view, parent label,
+ * last label]`. Rendered by `<Breadcrumbs>`.
+ */
+export const CRUMB_TRAILS: Partial<Record<ViewId, [ViewId, string, string]>> = {
+  live: ["devices", "Devices", "Live view & clips"],
+  auto: ["devices", "Devices", "Automations"],
+  billing: ["plans", `${BRAND} Care plans`, "Billing & invoices"],
+  transfer: ["warranty", "Warranty", "Transfer a warranty"],
+  wish: ["parts", "Spare parts", "Wishlist"],
+  board: ["refer", "Refer a friend", "Leaderboard"],
+  breach: ["security", "Security & privacy", "Security notice"],
+  deleteacct: ["security", "Security & privacy", "Delete account"],
+  share: ["live", "Live view & clips", "Shared clips"],
+  trade: ["partner", "Partner portal", "Trade account"],
 };
 
 /* ------------------------------------------------------------- shortcuts */

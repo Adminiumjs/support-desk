@@ -18,13 +18,17 @@ import { useMemo } from "react";
 import { create } from "zustand";
 import {
   AGENT,
+  BREACH_HIT_EMAIL,
   CHAT_ESCALATION_CLOSER,
   CHAT_QUICK,
   CHAT_REPLIES,
   CUSTOMER,
+  DL_SCHEDULED_DATE,
+  INVOICE_EXPORT_FILE,
   OV_GROUPS,
   PRODUCTS,
   SEEDED_ATTACHMENT,
+  SHARE_HOST,
 } from "../data/demo";
 import { dataSource } from "../data/source";
 import {
@@ -33,7 +37,55 @@ import {
   applyA11ySettings,
   chime,
 } from "../lib/a11y";
-import { NOW_STAMP } from "../lib/format";
+import {
+  AU_ACTION_TOAST,
+  AU_CREATED_TOAST,
+  AU_NAME_TOAST,
+  AU_TRIGGER_TOAST,
+  automationDeleteToast,
+  automationToggleToast,
+  buildAutomation,
+  isAutomationOn,
+  nextAutomationId,
+} from "../lib/automations";
+import {
+  CLIP_DELETE_TOAST,
+  CLIP_SHARE_TOAST,
+  LIVE_TROUBLESHOOT_ARTICLE,
+  clipDownloadToast,
+  clipPlayToast,
+  liveRetryToast,
+  newShareLink,
+  shareExtendToast,
+} from "../lib/clips";
+import {
+  OFFLINE_BACK_TOAST,
+  OFFLINE_STILL_TOAST,
+  REPORT_TOAST,
+  RETRY_TOAST,
+  SIMULATE_FAIL_TOAST,
+  isOnline,
+} from "../lib/errors";
+import {
+  FREE_DELIVERY_LINE,
+  filterStores,
+  invoiceDownloadToast,
+  storeKeyToast,
+  storeSearchToast,
+  visibleWish,
+  wishAddToast,
+} from "../lib/derive";
+import { BUSY_MOUNT_MS, BUSY_NAV_MS, BUSY_RETRY_MS } from "../lib/skeletons";
+import { FOLLOW_SYSTEM_TOAST, systemTheme } from "../lib/theme";
+import {
+  NOW_STAMP,
+  deleteRef,
+  money,
+  pluralise,
+  recycleRef,
+  tradeRef,
+  transferRef,
+} from "../lib/format";
 import {
   CHAT_TYPING_DELAY_MS,
   TYPING_DELAY_MS,
@@ -68,6 +120,31 @@ import type {
   ToastKind,
   ToastMessage,
   ViewId,
+  /* --- delta --- */
+  Automation,
+  BillingFilterId,
+  BillingPeriodId,
+  BreachResult,
+  Clip,
+  ClipFilterId,
+  DeleteSchedule,
+  GiftFilterId,
+  InsuranceClaim,
+  Invoice,
+  LeaderPeriod,
+  LiveControl,
+  RecentEntry,
+  RecentFilterId,
+  RecycleBooking,
+  RecycleMethodId,
+  ShareLink,
+  StoreFilterId,
+  StoreLocation,
+  SuccessMessage,
+  ToastAction,
+  TradeApplication,
+  TransferReceipt,
+  WishItem,
 } from "../data/types";
 
 /* ---------------------------------------------------------------- helpers */
@@ -88,6 +165,15 @@ export function looksLikeEmail(value: string): boolean {
 
 const TOAST_MS = 2600;
 
+/** Actionable toasts (Undo) stay up longer. */
+const TOAST_ACTION_MS = 5200;
+
+/** The inline success banner auto-dismisses after seven seconds. */
+const SUCCESS_MS = 7000;
+
+/** Both free-text notes (trade, insurance) clamp at 600 characters. */
+export const NOTE_MAX = 600;
+
 /** The `g`-chord window. */
 export const CHORD_MS = 1400;
 
@@ -96,6 +182,10 @@ export const HEADER_BLUR_MS = 140;
 export const HERO_BLUR_MS = 150;
 
 let toastTimer: ReturnType<typeof setTimeout> | null = null;
+let successTimer: ReturnType<typeof setTimeout> | null = null;
+let busyTimer: ReturnType<typeof setTimeout> | null = null;
+/** The transfer reference counter — WT-8823-01, -02, … */
+let transferSeq = 0;
 let cancelAgentReply: (() => void) | null = null;
 let cancelChatReply: (() => void) | null = null;
 
@@ -267,6 +357,118 @@ export interface AppState {
   chatTyping: boolean;
   chatQuick: boolean;
   chatMsgs: ChatMessage[];
+
+  /* ================================================================ delta */
+
+  /* --- cross-cutting: busy / failure / offline / success banner --- */
+  /** True during the view-change skeleton window. */
+  busy: boolean;
+  /** The view id that "failed"; the error screen renders for that view only. */
+  failed: ViewId | null;
+  offline: boolean;
+  succ: SuccessMessage | null;
+  /**
+   * Ruling R3: the persisted theme stays binary. This flag records that the
+   * user toggled it by hand, which stops the OS being followed.
+   */
+  themeManual: boolean;
+
+  /* --- live view + clips --- */
+  lvCam: string;
+  lvType: ClipFilterId;
+  lvOut: string[];
+
+  /* --- automations --- */
+  /** Seeded from the source; created rules are unshifted onto it. */
+  automations: Automation[];
+  auOff: string[];
+  auGone: string[];
+  auNewOpen: boolean;
+  auName: string;
+  auTrigger: string;
+  auAction: string;
+
+  /* --- billing --- */
+  blFilter: BillingFilterId;
+  blPeriod: BillingPeriodId;
+  blCredit: number;
+
+  /* --- wishlist --- */
+  wlOut: string[];
+
+  /* --- recently viewed --- */
+  rvCat: RecentFilterId;
+  rvOut: string[];
+  rvCleared: boolean;
+
+  /* --- store locator --- */
+  stQ: string;
+  stFilter: StoreFilterId;
+
+  /* --- referral leaderboard --- */
+  lbPeriod: LeaderPeriod;
+
+  /* --- breach notice --- */
+  brEmail: string;
+  brResult: BreachResult | null;
+
+  /* --- recycling --- */
+  rcMethod: RecycleMethodId;
+  rcOn: string[];
+  rcPostcode: string;
+  rcBooked: RecycleBooking | null;
+
+  /* --- account deletion --- */
+  dlStep: 1 | 2 | 3;
+  dlReason: string;
+  dlOn: string[];
+  dlPhrase: string;
+  dlScheduled: DeleteSchedule | null;
+
+  /* --- shared clips --- */
+  /** Seeded from the source; created links are unshifted onto it. */
+  shareLinks: ShareLink[];
+  shNewOpen: boolean;
+  shClip: string;
+  shAudience: string;
+  shExpiry: string;
+  shOn: string[];
+  shOut: string[];
+
+  /* --- insurance claims --- */
+  inKind: string;
+  inDate: string;
+  inWindow: string;
+  inRefInput: string;
+  inNote: string;
+  /** Read by the claim filter; nothing writes it (kept from the comp). */
+  inOut: string[];
+
+  /* --- gift guide --- */
+  ggFilter: GiftFilterId;
+
+  /* --- trade account --- */
+  tdTier: string;
+  tdName: string;
+  tdType: string;
+  tdCo: string;
+  tdVat: string;
+  tdContact: string;
+  tdEmail: string;
+  tdPhone: string;
+  tdVolume: string;
+  tdSkillsOn: string[];
+  tdNote: string;
+  tdOn: string[];
+  tdDone: TradeApplication | null;
+
+  /* --- warranty transfer --- */
+  trDev: string | null;
+  trName: string;
+  trEmail: string;
+  trReason: string;
+  trOn: string[];
+  trDone: TransferReceipt | null;
 }
 
 export interface AppActions {
@@ -274,7 +476,8 @@ export interface AppActions {
   set: (patch: Partial<AppState>) => void;
 
   /* shell */
-  showToast: (msg: string, kind?: ToastKind) => void;
+  /** `action` makes it an Undo-style toast: 5200 ms instead of 2600 ms. */
+  showToast: (msg: string, kind?: ToastKind, action?: ToastAction | null) => void;
   clearToast: () => void;
   toggleTheme: () => void;
   openMenu: () => void;
@@ -336,6 +539,149 @@ export interface AppActions {
   chatSubmit: () => void;
   chatAct: (act: string) => void;
   escalateChat: () => void;
+
+  /* ================================================================ delta */
+
+  /* --- toasts, undo and the success banner --- */
+  /** `showToast(msg, kind, action)` — actionable toasts live 5200 ms. */
+  undoToast: (msg: string, undo: () => void) => void;
+  runToastAction: () => void;
+  succeed: (title: string, text: string, action?: ToastAction | null) => void;
+  dismissSuccess: () => void;
+  runSuccessAction: () => void;
+
+  /* --- the busy / error / offline layer (ruling R4) --- */
+  /** Start the 620 ms first-paint skeleton. App calls this once on mount. */
+  bootBusy: () => void;
+  /** Explicit busy window; `go()` already fires a 480 ms one. */
+  startBusy: (ms?: number) => void;
+  /** Error-screen "Try again": clears `failed`, 620 ms skeleton, toasts. */
+  retryView: () => void;
+  /** Error-screen "Report it": opens a ticket. */
+  reportFailure: () => void;
+  /** Command-palette "Simulate a failed load". */
+  failView: () => void;
+  /** Command-palette "Simulate being offline" — a toggle, no toast. */
+  toggleOffline: () => void;
+  setOffline: (offline: boolean) => void;
+  /** Offline banner "Retry now". */
+  retryConnection: () => void;
+
+  /* --- theme (ruling R3) --- */
+  /** Adopt an OS theme change; ignored once the user has toggled by hand. */
+  syncSystemTheme: (theme: ThemeName) => void;
+  /** The Accessibility screen's escape hatch. */
+  followSystemTheme: () => void;
+
+  /* --- navigation into the fifteen new views --- */
+  gotoLive: () => void;
+  gotoAuto: () => void;
+  gotoBilling: () => void;
+  gotoTransfer: () => void;
+  gotoWish: () => void;
+  gotoRecent: () => void;
+  gotoStores: () => void;
+  gotoBoard: () => void;
+  gotoBreach: () => void;
+  gotoRecycle: () => void;
+  gotoTrade: () => void;
+  gotoShare: () => void;
+  gotoInsurance: () => void;
+  gotoGuide: () => void;
+  gotoDelete: () => void;
+
+  /* --- live view --- */
+  playClip: (clip: Clip) => void;
+  downloadClip: (clip: Clip) => void;
+  shareClipLink: (clip: Clip) => void;
+  deleteClip: (clip: Clip) => void;
+  runLiveControl: (control: LiveControl) => void;
+  liveRetry: () => void;
+  liveTroubleshoot: () => void;
+
+  /* --- automations --- */
+  toggleAutomation: (id: string) => void;
+  deleteAutomation: (id: string) => void;
+  toggleNewAutomation: () => void;
+  saveAutomation: () => void;
+
+  /* --- billing --- */
+  applyCredit: () => void;
+  updateCard: () => void;
+  exportInvoices: () => void;
+  downloadInvoice: (invoice: Invoice) => void;
+
+  /* --- wishlist --- */
+  wishAdd: (item: WishItem) => void;
+  wishRemove: (item: WishItem) => void;
+  wishAddAll: () => void;
+  wishShare: () => void;
+  wishRestore: () => void;
+  saveToWishlist: (name: string) => void;
+
+  /* --- recently viewed --- */
+  openRecent: (entry: RecentEntry) => void;
+  recentSecondary: (entry: RecentEntry) => void;
+  recentForget: (entry: RecentEntry) => void;
+  recentClear: () => void;
+  recentRestore: () => void;
+
+  /* --- store locator --- */
+  storeSearch: () => void;
+  storeSearchKey: () => void;
+  storeNearMe: () => void;
+  storeReset: () => void;
+  storeDirections: (name: string) => void;
+  storeCall: () => void;
+  storeBook: (store: StoreLocation) => void;
+
+  /* --- breach notice --- */
+  setBreachEmail: (value: string) => void;
+  breachCheck: () => void;
+  breachReport: () => void;
+
+  /* --- recycling --- */
+  toggleRecycleItem: (id: string) => void;
+  setRecyclePostcode: (value: string) => void;
+  recycleSubmit: () => void;
+  recycleReset: () => void;
+
+  /* --- account deletion --- */
+  toggleDeleteCheck: (id: string) => void;
+  deleteBack: () => void;
+  deleteNext: () => void;
+  deleteCancel: () => void;
+
+  /* --- shared clips --- */
+  toggleShareNew: () => void;
+  toggleShareOption: (id: string) => void;
+  shareCreate: () => void;
+  shareCopy: () => void;
+  shareExtend: (link: ShareLink) => void;
+  shareRevoke: (link: ShareLink) => void;
+
+  /* --- insurance claims --- */
+  setInsuranceNote: (value: string) => void;
+  insurancePrimary: (claim: InsuranceClaim) => void;
+  insuranceShare: () => void;
+  insuranceSubmit: () => void;
+
+  /* --- gift guide --- */
+  addToBasketByName: (name: string) => void;
+
+  /* --- trade account --- */
+  setTradeCompany: (value: string) => void;
+  setTradeVat: (value: string) => void;
+  setTradeNote: (value: string) => void;
+  toggleTradeSkill: (label: string) => void;
+  toggleTradeCheck: (id: string) => void;
+  tradeSubmit: () => void;
+  tradeReset: () => void;
+
+  /* --- warranty transfer --- */
+  toggleTransferCheck: (id: string) => void;
+  transferSubmit: () => void;
+  transferReset: () => void;
 }
 
 export type Store = AppState & AppActions;
@@ -492,6 +838,93 @@ function initialState(): AppState {
     chatTyping: false,
     chatQuick: true,
     chatMsgs: [dataSource.chatGreeting()],
+
+    /* ============================================================== delta */
+
+    busy: false,
+    failed: null,
+    offline: false,
+    succ: null,
+    themeManual: false,
+
+    lvCam: "front",
+    lvType: "all",
+    lvOut: [],
+
+    automations: dataSource.seedAutomations(),
+    auOff: [],
+    auGone: [],
+    auNewOpen: false,
+    auName: "",
+    auTrigger: "",
+    auAction: "",
+
+    blFilter: "all",
+    blPeriod: "2026",
+    blCredit: 40,
+
+    wlOut: [],
+
+    rvCat: "all",
+    rvOut: [],
+    rvCleared: false,
+
+    stQ: "Bristol",
+    stFilter: "all",
+
+    lbPeriod: "quarter",
+
+    brEmail: "",
+    brResult: null,
+
+    rcMethod: "post",
+    rcOn: ["doorbell"],
+    rcPostcode: "BS1 4TR",
+    rcBooked: null,
+
+    dlStep: 1,
+    dlReason: "",
+    dlOn: [],
+    dlPhrase: "",
+    dlScheduled: null,
+
+    shareLinks: dataSource.seedShareLinks(),
+    shNewOpen: false,
+    shClip: "c1",
+    shAudience: "link",
+    shExpiry: "7d",
+    shOn: ["notify"],
+    shOut: [],
+
+    inKind: "theft",
+    inDate: "",
+    inWindow: "60",
+    inRefInput: "",
+    inNote: "",
+    inOut: [],
+
+    ggFilter: "all",
+
+    tdTier: "silver",
+    tdName: "",
+    tdType: "",
+    tdCo: "",
+    tdVat: "",
+    tdContact: "",
+    tdEmail: "",
+    tdPhone: "",
+    tdVolume: "5",
+    tdSkillsOn: ["Doorbell wiring", "Thermostats"],
+    tdNote: "",
+    tdOn: [],
+    tdDone: null,
+
+    trDev: "d1",
+    trName: "",
+    trEmail: "",
+    trReason: "",
+    trOn: [],
+    trDone: null,
   };
 }
 
@@ -504,11 +937,14 @@ export const useAppStore = create<Store>((set, get) => ({
 
   /* ------------------------------------------------------------- shell */
 
-  showToast: (msg, kind = "ok") => {
+  showToast: (msg, kind = "ok", action = null) => {
     if (toastTimer) clearTimeout(toastTimer);
-    set({ toast: { msg, kind } });
+    set({ toast: { msg, kind, action } });
     chime(kind, get().a11y);
-    toastTimer = setTimeout(() => set({ toast: null }), TOAST_MS);
+    toastTimer = setTimeout(
+      () => set({ toast: null }),
+      action ? TOAST_ACTION_MS : TOAST_MS,
+    );
   },
 
   clearToast: () => {
@@ -516,8 +952,13 @@ export const useAppStore = create<Store>((set, get) => ({
     set({ toast: null });
   },
 
+  /* Ruling R3: toggling by hand latches the theme; the OS is no longer
+   * followed until `followSystemTheme()` releases it. */
   toggleTheme: () =>
-    set((s) => ({ theme: s.theme === "dark" ? "light" : "dark" })),
+    set((s) => ({
+      theme: s.theme === "dark" ? "light" : "dark",
+      themeManual: true,
+    })),
 
   openMenu: () => set({ menu: true }),
   closeMenu: () => set({ menu: false }),
@@ -529,8 +970,11 @@ export const useAppStore = create<Store>((set, get) => ({
 
   /* -------------------------------------------------------- navigation */
 
+  /* Every navigation restarts the 480 ms skeleton window (spec C §2.2). */
   go: (view, patch) => {
+    const changed = get().view !== view;
     set({ view, menu: false, ...(patch ?? {}) });
+    if (changed) get().startBusy(BUSY_NAV_MS);
     top();
   },
 
@@ -573,6 +1017,12 @@ export const useAppStore = create<Store>((set, get) => ({
     if (id === "gift") return s.go("gift", { gcBought: null });
     if (id === "survey") return s.go("survey", { svDone: null });
     if (id === "tour") return s.go("tour", { tourStep: 0 });
+    /* The delta screens that reset a done/step field on entry. */
+    if (id === "deleteacct") return s.gotoDelete();
+    if (id === "trade") return s.gotoTrade();
+    if (id === "recycle") return s.gotoRecycle();
+    if (id === "transfer") return s.gotoTransfer();
+    if (id === "auto") return s.gotoAuto();
     return s.go(id);
   },
 
@@ -790,6 +1240,25 @@ export const useAppStore = create<Store>((set, get) => ({
         words: "shortcuts keys help",
         run: () => set({ shortcuts: true }),
       },
+      {
+        id: "act:fail",
+        label: "Simulate a failed load",
+        icon: "cloud-off",
+        group: "Actions",
+        hint: "Action",
+        words: "error failure retry broken offline",
+        run: () => s.failView(),
+      },
+      {
+        id: "act:offline",
+        /* A toggle, and deliberately silent. */
+        label: "Simulate being offline",
+        icon: "wifi-off",
+        group: "Actions",
+        hint: "Action",
+        words: "offline connection network",
+        run: () => s.toggleOffline(),
+      },
     );
 
     for (const a of dataSource.articles()) {
@@ -838,7 +1307,15 @@ export const useAppStore = create<Store>((set, get) => ({
       return { a11y: next };
     }),
 
-  saveA11y: () => get().showToast("Accessibility settings saved"),
+  saveA11y: () => {
+    const s = get();
+    s.showToast("Accessibility settings saved");
+    s.succeed(
+      "Settings saved",
+      "These now apply across the help centre and the Hearth app on this account.",
+      { label: "See it on Home", icon: "life-buoy", fn: () => get().goHome() },
+    );
+  },
 
   resetA11y: () => {
     const next = a11yReset();
@@ -973,6 +1450,694 @@ export const useAppStore = create<Store>((set, get) => ({
     s.showToast(`Chat moved to ticket ${res.ticketId}`);
     top();
   },
+
+  /* ==================================================================== *
+   * delta                                                                *
+   * ==================================================================== */
+
+  /* ------------------------------------------ toasts, undo and success */
+
+  undoToast: (msg, undo) => {
+    get().showToast(msg, "ok", {
+      label: "Undo",
+      fn: () => {
+        undo();
+        if (toastTimer) clearTimeout(toastTimer);
+        set({ toast: null });
+        get().showToast("Put back");
+      },
+    });
+  },
+
+  runToastAction: () => {
+    get().toast?.action?.fn();
+  },
+
+  succeed: (title, text, action = null) => {
+    if (successTimer) clearTimeout(successTimer);
+    set({ succ: { title, text, action } });
+    successTimer = setTimeout(() => set({ succ: null }), SUCCESS_MS);
+  },
+
+  dismissSuccess: () => {
+    if (successTimer) clearTimeout(successTimer);
+    set({ succ: null });
+  },
+
+  runSuccessAction: () => {
+    const action = get().succ?.action;
+    get().dismissSuccess();
+    action?.fn();
+  },
+
+  /* ------------------------------------------- busy, failure, offline */
+
+  startBusy: (ms = BUSY_NAV_MS) => {
+    if (busyTimer) clearTimeout(busyTimer);
+    if (!get().busy) set({ busy: true });
+    busyTimer = setTimeout(() => set({ busy: false }), ms);
+  },
+
+  bootBusy: () => get().startBusy(BUSY_MOUNT_MS),
+
+  retryView: () => {
+    const s = get();
+    set({ failed: null });
+    s.startBusy(BUSY_RETRY_MS);
+    s.showToast(RETRY_TOAST, "info");
+  },
+
+  reportFailure: () => {
+    const s = get();
+    set({ failed: null });
+    s.openTicket();
+    s.showToast(REPORT_TOAST, "info");
+  },
+
+  failView: () => {
+    const s = get();
+    set({ failed: s.view });
+    s.showToast(SIMULATE_FAIL_TOAST, "warn");
+  },
+
+  toggleOffline: () => set((s) => ({ offline: !s.offline })),
+
+  setOffline: (offline) => set({ offline }),
+
+  retryConnection: () => {
+    const s = get();
+    if (isOnline()) {
+      set({ offline: false });
+      s.showToast(OFFLINE_BACK_TOAST);
+      return;
+    }
+    s.showToast(OFFLINE_STILL_TOAST, "warn");
+  },
+
+  /* --------------------------------------------------------- theme R3 */
+
+  syncSystemTheme: (theme) => {
+    if (!get().themeManual) set({ theme });
+  },
+
+  followSystemTheme: () => {
+    set({ themeManual: false, theme: systemTheme() });
+    get().showToast(FOLLOW_SYSTEM_TOAST);
+  },
+
+  /* -------------------------------------------------------- navigation */
+
+  gotoLive: () => get().go("live"),
+  gotoAuto: () => get().go("auto", { auNewOpen: false }),
+  gotoBilling: () => get().go("billing"),
+  gotoTransfer: () => get().go("transfer", { trDone: null }),
+  gotoWish: () => get().go("wish"),
+  gotoRecent: () => get().go("recent"),
+  gotoStores: () => get().go("stores"),
+  gotoBoard: () => get().go("board"),
+  gotoBreach: () => get().go("breach"),
+  gotoRecycle: () => get().go("recycle", { rcBooked: null }),
+  gotoTrade: () => get().go("trade", { tdDone: null }),
+  gotoShare: () => get().go("share"),
+  gotoInsurance: () => get().go("insurance"),
+  gotoGuide: () => get().go("guide"),
+  gotoDelete: () => get().go("deleteacct", { dlStep: 1 }),
+
+  /* --------------------------------------------------------- live view */
+
+  playClip: (clip) => get().showToast(clipPlayToast(clip)),
+
+  downloadClip: (clip) => get().showToast(clipDownloadToast(clip)),
+
+  shareClipLink: () => get().showToast(CLIP_SHARE_TOAST),
+
+  deleteClip: (clip) => {
+    const s = get();
+    set({ lvOut: [...s.lvOut, clip.id] });
+    s.undoToast(CLIP_DELETE_TOAST, () =>
+      set((cur) => ({ lvOut: cur.lvOut.filter((id) => id !== clip.id) })),
+    );
+  },
+
+  runLiveControl: (control) => get().showToast(control.toast, "info"),
+
+  /* Deliberately never succeeds — the seeded camera stays offline. */
+  liveRetry: () =>
+    get().showToast(liveRetryToast(dataSource.camera(get().lvCam)), "warn"),
+
+  liveTroubleshoot: () => get().openArticle(LIVE_TROUBLESHOOT_ARTICLE),
+
+  /* ------------------------------------------------------- automations */
+
+  /**
+   * The pause list and the rule's own `on` flag are kept in step, so a rule
+   * seeded paused (`r4`) can be started again — the comp could not.
+   */
+  toggleAutomation: (id) => {
+    const s = get();
+    const rule = s.automations.find((r) => r.id === id);
+    if (!rule) return;
+    const nextOn = !isAutomationOn(rule, s.auOff);
+    set({
+      automations: s.automations.map((r) =>
+        r.id === id ? { ...r, on: nextOn } : r,
+      ),
+      auOff: nextOn ? s.auOff.filter((x) => x !== id) : [...s.auOff, id],
+    });
+    s.showToast(automationToggleToast(rule, nextOn));
+  },
+
+  deleteAutomation: (id) => {
+    const s = get();
+    const rule = s.automations.find((r) => r.id === id);
+    if (!rule) return;
+    set({ auGone: [...s.auGone, id] });
+    s.undoToast(automationDeleteToast(rule), () =>
+      set((cur) => ({ auGone: cur.auGone.filter((x) => x !== id) })),
+    );
+  },
+
+  toggleNewAutomation: () =>
+    set((s) => ({
+      auNewOpen: !s.auNewOpen,
+      auName: "",
+      auTrigger: "",
+      auAction: "",
+    })),
+
+  saveAutomation: () => {
+    const s = get();
+    if (!s.auName.trim()) {
+      s.showToast(AU_NAME_TOAST, "warn");
+      return;
+    }
+    const trigger = dataSource
+      .automationTriggers()
+      .find((t) => t.value === s.auTrigger);
+    if (!trigger) {
+      s.showToast(AU_TRIGGER_TOAST, "warn");
+      return;
+    }
+    const action = dataSource
+      .automationActions()
+      .find((a) => a.value === s.auAction);
+    if (!action) {
+      s.showToast(AU_ACTION_TOAST, "warn");
+      return;
+    }
+    const rule = buildAutomation({
+      id: nextAutomationId(s.automations.length),
+      name: s.auName.trim(),
+      trigger,
+      action,
+    });
+    set({
+      automations: [rule, ...s.automations],
+      auNewOpen: false,
+      auName: "",
+      auTrigger: "",
+      auAction: "",
+    });
+    s.showToast(AU_CREATED_TOAST);
+  },
+
+  /* ----------------------------------------------------------- billing */
+
+  applyCredit: () => {
+    const s = get();
+    if (s.blCredit > 0) {
+      s.showToast(`${money(s.blCredit)} will come off your next invoice`);
+      return;
+    }
+    s.showToast("No credit on the account", "info");
+  },
+
+  updateCard: () => get().showToast("Card changes happen in the Hearth app", "info"),
+
+  exportInvoices: () => get().showToast(`Downloading ${INVOICE_EXPORT_FILE}`),
+
+  downloadInvoice: (invoice) => get().showToast(invoiceDownloadToast(invoice)),
+
+  /* ---------------------------------------------------------- wishlist */
+
+  wishAdd: (item) => get().showToast(wishAddToast(item)),
+
+  wishRemove: (item) => {
+    const s = get();
+    set({ wlOut: [...s.wlOut, item.id] });
+    s.undoToast(`${item.name} removed`, () =>
+      set((cur) => ({ wlOut: cur.wlOut.filter((id) => id !== item.id) })),
+    );
+  },
+
+  wishAddAll: () => {
+    const s = get();
+    const inStock = visibleWish(dataSource.wishlist(), s.wlOut).filter(
+      (w) => w.stock !== "out",
+    );
+    if (!inStock.length) {
+      s.showToast("Nothing in stock to add yet", "warn");
+      return;
+    }
+    const label = pluralise(inStock.length, "item");
+    s.showToast(`${label} added`);
+    s.succeed(`${label} in your basket`, FREE_DELIVERY_LINE, {
+      label: "View basket",
+      icon: "shopping-basket",
+      fn: () => get().go("parts"),
+    });
+  },
+
+  wishShare: () =>
+    get().showToast("Wishlist link copied — anyone can view it"),
+
+  wishRestore: () => {
+    set({ wlOut: [] });
+    get().showToast("Demo wishlist restored");
+  },
+
+  saveToWishlist: (name) => get().showToast(`${name} saved to your wishlist`),
+
+  /* --------------------------------------------------- recently viewed */
+
+  openRecent: (entry) => {
+    const s = get();
+    if (entry.kind === "article" && entry.ref) {
+      s.openArticle(entry.ref);
+      return;
+    }
+    s.go("parts");
+    s.showToast(`Opening ${entry.name ?? "it"} in the store`, "info");
+  },
+
+  recentSecondary: (entry) => {
+    const s = get();
+    if (entry.kind === "article" && entry.ref) {
+      s.toggleSave(entry.ref);
+      return;
+    }
+    s.saveToWishlist(entry.name ?? "It");
+  },
+
+  recentForget: (entry) => {
+    const s = get();
+    set({ rvOut: [...s.rvOut, entry.id] });
+    s.undoToast("Removed from history", () =>
+      set((cur) => ({ rvOut: cur.rvOut.filter((id) => id !== entry.id) })),
+    );
+  },
+
+  recentClear: () => {
+    const s = get();
+    const before = [...s.rvOut];
+    set({
+      rvOut: dataSource.recentlyViewed().map((e) => e.id),
+      rvCleared: true,
+    });
+    s.undoToast("History cleared", () =>
+      set({ rvOut: before, rvCleared: false }),
+    );
+  },
+
+  recentRestore: () => {
+    set({ rvOut: [], rvCleared: false });
+    get().showToast("Demo history restored");
+  },
+
+  /* ----------------------------------------------------- store locator */
+
+  storeSearch: () => {
+    const s = get();
+    const found = filterStores(dataSource.stores(), s.stQ, s.stFilter);
+    s.showToast(
+      storeSearchToast(found.length, s.stQ),
+      found.length ? "ok" : "warn",
+    );
+  },
+
+  storeSearchKey: () => {
+    const s = get();
+    const found = filterStores(dataSource.stores(), s.stQ, s.stFilter);
+    s.showToast(storeKeyToast(found.length));
+  },
+
+  storeNearMe: () => {
+    set({ stQ: "Bristol", stFilter: "all" });
+    get().showToast("Using your last known area — Bristol", "info");
+  },
+
+  storeReset: () => set({ stQ: "", stFilter: "all" }),
+
+  storeDirections: (name) => get().showToast(`Directions to ${name} copied`),
+
+  storeCall: () => get().showToast("Calling isn't available in this demo", "info"),
+
+  storeBook: (store) => {
+    const s = get();
+    s.go("repair");
+    s.showToast(`Pick a walk-in slot at ${store.name}`, "info");
+  },
+
+  /* ----------------------------------------------------- breach notice */
+
+  /* Typing clears the last verdict. */
+  setBreachEmail: (value) => set({ brEmail: value, brResult: null }),
+
+  breachCheck: () => {
+    const s = get();
+    const email = s.brEmail.trim().toLowerCase();
+    if (email.indexOf("@") < 1) {
+      /* No toast on this branch, by design. */
+      set({
+        brResult: {
+          kind: "info",
+          icon: "info",
+          text: "Enter the email address you use for your Hearth account.",
+        },
+      });
+      return;
+    }
+    const hit = email === BREACH_HIT_EMAIL || email.startsWith("sam");
+    const result: BreachResult = hit
+      ? {
+          kind: "hit",
+          icon: "shield-alert",
+          text: "This address was in the exposed set. We emailed you on 24 July. Nothing else of yours was involved — the steps below are all we’d suggest.",
+        }
+      : {
+          kind: "clear",
+          icon: "shield-check",
+          text: "This address wasn’t in the exposed set. Nothing to do, though two-factor authentication is always worth turning on.",
+        };
+    set({ brResult: result });
+    s.showToast("Checked against the exposed list");
+  },
+
+  breachReport: () => {
+    const s = get();
+    s.openTicket();
+    s.showToast("Tell us what you received", "info");
+  },
+
+  /* --------------------------------------------------------- recycling */
+
+  toggleRecycleItem: (id) =>
+    set((s) => ({
+      rcOn: s.rcOn.includes(id)
+        ? s.rcOn.filter((x) => x !== id)
+        : [...s.rcOn, id],
+    })),
+
+  setRecyclePostcode: (value) => set({ rcPostcode: value.toUpperCase() }),
+
+  recycleSubmit: () => {
+    const s = get();
+    if (!s.rcOn.length) {
+      s.showToast("Pick at least one thing to recycle", "warn");
+      return;
+    }
+    if (s.rcPostcode.trim().length < 3) {
+      s.showToast("Add your postcode", "warn");
+      return;
+    }
+    const method =
+      dataSource.recycleMethods().find((m) => m.id === s.rcMethod) ??
+      dataSource.recycleMethods()[0];
+    const title =
+      s.rcMethod === "post"
+        ? "Label on its way"
+        : s.rcMethod === "drop"
+          ? "Drop-off reserved"
+          : "Collection booked";
+    const booking: RecycleBooking = {
+      ref: recycleRef(s.rcOn.length),
+      method: method.label,
+      title,
+      text: `${method.done} We’ll email a certificate once it’s processed, and confirm what was reused versus recycled.`,
+    };
+    set({ rcBooked: booking });
+    s.showToast("Recycling arranged");
+    top();
+  },
+
+  recycleReset: () => set({ rcBooked: null }),
+
+  /* --------------------------------------------------- account deletion */
+
+  toggleDeleteCheck: (id) =>
+    set((s) => ({
+      dlOn: s.dlOn.includes(id)
+        ? s.dlOn.filter((x) => x !== id)
+        : [...s.dlOn, id],
+    })),
+
+  deleteBack: () => {
+    set((s) => ({ dlStep: (s.dlStep > 1 ? s.dlStep - 1 : 1) as 1 | 2 | 3 }));
+    top();
+  },
+
+  /* Never disabled — step 3 warns instead of blocking. */
+  deleteNext: () => {
+    const s = get();
+    if (s.dlStep < 3) {
+      set({ dlStep: (s.dlStep + 1) as 2 | 3 });
+      top();
+      return;
+    }
+    const ok =
+      s.dlOn.length >= 3 && s.dlPhrase.trim().toUpperCase() === "DELETE";
+    if (!ok) {
+      s.showToast("Tick all three and type DELETE to confirm", "warn");
+      return;
+    }
+    const scheduled: DeleteSchedule = {
+      ref: deleteRef(s.dlOn.length),
+      date: DL_SCHEDULED_DATE,
+    };
+    set({ dlScheduled: scheduled });
+    /* Deliberately `warn`, not `ok`. */
+    s.showToast("Deletion scheduled for 26 August", "warn");
+    top();
+  },
+
+  deleteCancel: () => {
+    const s = get();
+    set({ dlScheduled: null, dlStep: 1, dlOn: [], dlPhrase: "" });
+    s.showToast("Deletion cancelled — welcome back");
+    s.succeed(
+      "Your account is staying",
+      "Nothing was deleted and everything is exactly where you left it.",
+    );
+  },
+
+  /* ------------------------------------------------------ shared clips */
+
+  toggleShareNew: () => set((s) => ({ shNewOpen: !s.shNewOpen })),
+
+  toggleShareOption: (id) =>
+    set((s) => ({
+      shOn: s.shOn.includes(id)
+        ? s.shOn.filter((x) => x !== id)
+        : [...s.shOn, id],
+    })),
+
+  /* No validation — creating a link always succeeds. */
+  shareCreate: () => {
+    const s = get();
+    const clips = dataSource.clips();
+    const clip = clips.find((c) => c.id === s.shClip) ?? clips[0];
+    const audience =
+      dataSource.shareAudiences().find((a) => a.value === s.shAudience) ??
+      dataSource.shareAudiences()[0];
+    const expiry =
+      dataSource.shareExpiries().find((e) => e.value === s.shExpiry) ??
+      dataSource.shareExpiries()[0];
+    const link = newShareLink({
+      clip,
+      audience,
+      expiry,
+      count: s.shareLinks.length,
+      host: SHARE_HOST,
+    });
+    set({ shareLinks: [link, ...s.shareLinks], shNewOpen: false });
+    s.showToast("Share link created");
+    s.succeed(
+      "Link ready to send",
+      "Copy it from the top of the list. You can revoke it at any point and the link dies instantly.",
+    );
+  },
+
+  shareCopy: () => get().showToast("Link copied"),
+
+  shareExtend: (link) => get().showToast(shareExtendToast(link.state)),
+
+  shareRevoke: (link) => {
+    const s = get();
+    set({ shOut: [...s.shOut, link.id] });
+    s.undoToast("Link revoked", () =>
+      set((cur) => ({ shOut: cur.shOut.filter((id) => id !== link.id) })),
+    );
+  },
+
+  /* --------------------------------------------------- insurance claims */
+
+  setInsuranceNote: (value) => set({ inNote: value.slice(0, NOTE_MAX) }),
+
+  insurancePrimary: (claim) => {
+    const s = get();
+    if (claim.state === "ready") {
+      s.showToast(`Downloading ${claim.id.toUpperCase()}-evidence.zip`);
+      return;
+    }
+    s.showToast("Still building — about 4 minutes left", "info");
+  },
+
+  insuranceShare: () => {
+    const s = get();
+    s.go("share");
+    s.showToast("Send it as an expiring link", "info");
+  },
+
+  /* Nothing is appended to the claim list — only the banner appears. */
+  insuranceSubmit: () => {
+    const s = get();
+    if (!s.inDate) {
+      s.showToast("When did it happen?", "warn");
+      return;
+    }
+    if (s.inNote.trim().length < 15) {
+      s.showToast("Add a line or two for the adjuster", "warn");
+      return;
+    }
+    s.showToast("Building your evidence pack");
+    s.succeed(
+      "Pack requested",
+      "We’re collecting the clips and signing the timestamp log. You’ll get an email when it’s ready — usually within the hour.",
+    );
+  },
+
+  /* -------------------------------------------------------- gift guide */
+
+  addToBasketByName: (name) => get().showToast(`${name} added to your basket`),
+
+  /* ----------------------------------------------------- trade account */
+
+  setTradeCompany: (value) => set({ tdCo: value.toUpperCase() }),
+  setTradeVat: (value) => set({ tdVat: value.toUpperCase() }),
+  setTradeNote: (value) => set({ tdNote: value.slice(0, NOTE_MAX) }),
+
+  toggleTradeSkill: (label) =>
+    set((s) => ({
+      tdSkillsOn: s.tdSkillsOn.includes(label)
+        ? s.tdSkillsOn.filter((x) => x !== label)
+        : [...s.tdSkillsOn, label],
+    })),
+
+  toggleTradeCheck: (id) =>
+    set((s) => ({
+      tdOn: s.tdOn.includes(id)
+        ? s.tdOn.filter((x) => x !== id)
+        : [...s.tdOn, id],
+    })),
+
+  tradeSubmit: () => {
+    const s = get();
+    if (!s.tdName.trim()) {
+      s.showToast("What’s the trading name?", "warn");
+      return;
+    }
+    if (!s.tdType) {
+      s.showToast("Pick a business type", "warn");
+      return;
+    }
+    if (!s.tdContact.trim()) {
+      s.showToast("Who should we deal with?", "warn");
+      return;
+    }
+    if (!looksLikeEmail(s.tdEmail)) {
+      s.showToast("Add a work email address", "warn");
+      return;
+    }
+    if (s.tdPhone.replace(/\D/g, "").length < 9) {
+      s.showToast("Add a phone number we can reach you on", "warn");
+      return;
+    }
+    if (!s.tdSkillsOn.length) {
+      s.showToast("Tell us what you fit", "warn");
+      return;
+    }
+    if (s.tdOn.length < 2) {
+      s.showToast("Tick both confirmations to apply", "warn");
+      return;
+    }
+    const tier = dataSource.tradeTier(s.tdTier);
+    const name = s.tdName.trim();
+    const email = s.tdEmail.trim();
+    const done: TradeApplication = {
+      ref: tradeRef(name.length),
+      tier: `${tier.name} · ${tier.discount}`,
+      text: `We’ll review ${name} within two working days and email ${email} either way. If we need your insurance certificate, that email will say so — nothing else to send for now.`,
+    };
+    set({ tdDone: done });
+    s.showToast("Trade application sent");
+    top();
+  },
+
+  tradeReset: () => set({ tdDone: null }),
+
+  /* ------------------------------------------------- warranty transfer */
+
+  toggleTransferCheck: (id) =>
+    set((s) => ({
+      trOn: s.trOn.includes(id)
+        ? s.trOn.filter((x) => x !== id)
+        : [...s.trOn, id],
+    })),
+
+  /**
+   * The one destructive cross-screen side effect: a successful transfer also
+   * removes the device from the Warranty screen's registered list.
+   */
+  transferSubmit: () => {
+    const s = get();
+    if (!s.trName.trim()) {
+      s.showToast("Who are you transferring it to?", "warn");
+      return;
+    }
+    if (!looksLikeEmail(s.trEmail)) {
+      s.showToast("Add the new owner's email", "warn");
+      return;
+    }
+    if (!s.trReason) {
+      s.showToast("Pick a reason for the transfer", "warn");
+      return;
+    }
+    if (s.trOn.length < 2) {
+      s.showToast("Tick both confirmations to continue", "warn");
+      return;
+    }
+    const device = s.registered.find((d) => d.id === s.trDev);
+    if (!device) {
+      s.showToast("Pick the device you're handing over", "warn");
+      return;
+    }
+    const product = dataSource.product(device.prod);
+    transferSeq += 1;
+    const receipt: TransferReceipt = {
+      ref: transferRef(device.serial, transferSeq),
+      serial: device.serial,
+      name: product.model,
+      to: s.trName.trim(),
+      email: s.trEmail.trim(),
+    };
+    const rest = s.registered.filter((d) => d.id !== device.id);
+    set({ registered: rest, trDone: receipt, trDev: rest[0]?.id ?? null });
+    s.showToast(`${product.model} transfer started`);
+    top();
+  },
+
+  transferReset: () =>
+    set((s) => ({ trDone: null, trDev: s.registered[0]?.id ?? null })),
 }));
 
 /* ------------------------------------------------------------- selectors */

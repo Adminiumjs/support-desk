@@ -1,0 +1,102 @@
+/* screen-recent.css — `recent` (delta spec A §6). Imported by Recent.tsx. */
+
+.rv__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-block-end: 20px;
+}
+.rv__head-text {
+  flex: 1 1 260px;
+  max-inline-size: 540px;
+}
+.rv__h1 {
+  margin: 0 0 6px;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.rv__lede {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+
+.rv__cats {
+  margin-block-end: 20px;
+}
+
+/* --------------------------------------------------------------- groups */
+
+.rv__groups {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.rv-row {
+  align-items: flex-start;
+}
+.rv-row__open {
+  flex: 1 1 220px;
+  min-inline-size: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: 0;
+  padding: 0;
+  text-align: start;
+  color: var(--fg);
+  cursor: pointer;
+}
+.rv-row__title {
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+.rv-row__sub {
+  font-size: 13px;
+  color: var(--fg-muted);
+}
+.rv-row__meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-subtle);
+}
+.rv-row__price {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+/* ---------------------------------------------------------- empty state */
+
+.rv__empty-acts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-block-start: 8px;
+}
+
+/* ---------------------------------------------------------- footer note */
+
+.rv__note {
+  margin-block-start: 22px;
+}
+.rv__note-link {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: underline;
+  cursor: pointer;
+}

@@ -4,8 +4,8 @@
  * taller top rhythm than the rest).
  */
 
+/* Width comes from the shared `.w-1120 .fx-wide` pair in base.css (R5). */
 .home__band {
-  max-inline-size: 1120px;
   margin-inline: auto;
 }
 

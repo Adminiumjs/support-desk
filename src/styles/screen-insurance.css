@@ -1,0 +1,190 @@
+/* screen-insurance.css — Insurance claims / evidence packs (delta spec B §10). */
+
+.ins-h1 {
+  margin: 0 0 8px;
+  font-size: clamp(24px, 3.4vw, 32px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+.ins-lede {
+  margin: 0 0 22px;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  max-inline-size: 580px;
+}
+
+/* --------------------------------------------------------- explainers */
+
+.ins-explainers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-block-end: 22px;
+}
+.ins-explainer {
+  flex: 1 1 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+.ins-explainer__title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.ins-explainer__text {
+  font-size: 13px;
+  line-height: 1.62;
+  color: var(--fg-muted);
+}
+
+/* -------------------------------------------------------------- claims */
+
+.ins-claims {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-block: 14px 26px;
+}
+.sd-card.ins-claim {
+  border-radius: 16px;
+  padding: clamp(16px, 3vw, 20px);
+}
+.ins-claim__top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-start;
+}
+.ins-claim__body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-inline-size: 0;
+  flex: 1 1 220px;
+}
+.ins-claim__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+}
+.ins-claim__title {
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.ins-claim__text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+}
+.ins-claim__meta {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--fg-subtle);
+}
+.ins-claim__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-block-start: 16px;
+  padding-block-start: 14px;
+  border-block-start: 1px solid var(--border);
+}
+.sd-btn.ins-primary,
+.sd-btn-ghost.ins-primary,
+.sd-btn-ghost.ins-secondary {
+  padding: 10px 16px;
+  border-radius: 11px;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.sd-btn-ghost.ins-secondary {
+  padding: 10px 15px;
+}
+
+/* ---------------------------------------------------------- request form */
+
+.sd-card.ins-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  border-radius: 18px;
+  padding: clamp(18px, 3vw, 26px);
+}
+.ins-form__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.ins-kinds {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 11px;
+}
+.ins-kind {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 15px 16px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--fg);
+  text-align: start;
+  cursor: pointer;
+}
+.ins-kind--on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.ins-kind__label {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.ins-when {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+}
+.sd-input.ins-date,
+.sd-select.ins-select,
+.sd-input.ins-input {
+  block-size: 48px;
+  border-radius: 12px;
+  font-size: 14.5px;
+}
+.sd-input.ins-date {
+  inline-size: 100%;
+}
+
+.ins-optional {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--fg-subtle);
+}
+
+.sd-callout.ins-retention {
+  padding: 14px 16px;
+  border-radius: 13px;
+}
+
+.sd-btn.ins-submit {
+  align-self: flex-start;
+  padding: 13px 22px;
+  border-radius: 13px;
+}

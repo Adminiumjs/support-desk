@@ -11,7 +11,7 @@
 
 /* ------------------------------------------------------------------ views */
 
-/** The 39 real screens. `view` in the store is one of these — no router. */
+/** The 54 real screens. `view` in the store is one of these — no router. */
 export type ViewId =
   | "home"
   | "category"
@@ -51,7 +51,23 @@ export type ViewId =
   | "tradein"
   | "installers"
   | "parts"
-  | "a11y";
+  | "a11y"
+  /* --- the fifteen views added by the revised comp --- */
+  | "live"
+  | "auto"
+  | "billing"
+  | "transfer"
+  | "wish"
+  | "recent"
+  | "stores"
+  | "board"
+  | "breach"
+  | "recycle"
+  | "trade"
+  | "share"
+  | "insurance"
+  | "guide"
+  | "deleteacct";
 
 /** `chat` is a pseudo-screen: a global overlay listed in the overview grid. */
 export type OverviewId = ViewId | "chat";
@@ -689,9 +705,26 @@ export interface A11ySettings {
 
 export type ToastKind = "ok" | "warn" | "info";
 
+/** The optional button carried by an actionable toast or a success banner. */
+export interface ToastAction {
+  label: string;
+  /** Defaults to `arrow-right` on the success banner; unused on toasts. */
+  icon?: IconName;
+  fn: () => void;
+}
+
 export interface ToastMessage {
   msg: string;
   kind: ToastKind;
+  /** Present on undoable toasts — they live 5200 ms instead of 2600 ms. */
+  action?: ToastAction | null;
+}
+
+/** The inline success banner (`succeed()`), auto-dismissed after 7000 ms. */
+export interface SuccessMessage {
+  title: string;
+  text: string;
+  action: ToastAction | null;
 }
 
 export interface Person {
@@ -716,6 +749,464 @@ export interface NewTicketForm {
 }
 
 export type FormErrors = Record<string, string>;
+
+/* ================================================================= delta =
+ *
+ * Everything below belongs to the fifteen views added by the revised comp
+ * (delta specs A, B and C). Ordering follows the spec: live, auto, billing,
+ * transfer, wish, recent, stores, board, breach, recycle, trade, share,
+ * insurance, guide, deleteacct — then the cross-cutting error / skeleton
+ * models.
+ * ======================================================================== */
+
+/* -------------------------------------------------- live view and clips */
+
+export interface Camera {
+  id: string;
+  name: string;
+  tint: Tint;
+  icon: IconName;
+  /** e.g. `-52 dBm`; an em dash when the camera is offline. */
+  signal: string;
+  offline?: boolean;
+  /** "offline since Thursday, 21:14" — only on offline cameras. */
+  since?: string;
+}
+
+export type ClipType = "person" | "parcel" | "press" | "motion";
+
+/** `all` is the filter-only pseudo type. */
+export type ClipFilterId = "all" | ClipType;
+
+/** `[id, label, icon]`. */
+export type ClipTypeOption = [ClipFilterId, string, IconName];
+
+export interface Clip {
+  id: string;
+  /** Camera id. */
+  cam: string;
+  /** Group header — "Today" / "Yesterday" / "Earlier this week". */
+  day: string;
+  time: string;
+  /** `0:06`. */
+  dur: string;
+  type: ClipType;
+  title: string;
+  text: string;
+}
+
+/** One of the four always-rendered stage buttons under the live feed. */
+export interface LiveControl {
+  icon: IconName;
+  label: string;
+  /** Always toasted as `info`. */
+  toast: string;
+}
+
+/* -------------------------------------------------------- automations */
+
+/** A WHEN trigger or a THEN action offered by the builder. */
+export interface AutomationOption {
+  value: string;
+  label: string;
+  icon: IconName;
+}
+
+/** One THEN line inside a rule. */
+export interface AutomationStep {
+  text: string;
+  icon: IconName;
+}
+
+export interface Automation {
+  id: string;
+  name: string;
+  on: boolean;
+  /** The lower-case WHEN clause. */
+  when: string;
+  whenIcon: IconName;
+  then: AutomationStep[];
+  /** "ran yesterday, 19:26" / "paused since 12 Jul" / "never run yet". */
+  last: string;
+  /** Set on rules created in-session; drives the "New" pill. */
+  fresh?: boolean;
+}
+
+/* ------------------------------------------------------------- billing */
+
+export type InvoiceKind = "plan" | "hardware" | "refund";
+
+/** `failed` renders as **Retrying**, not "Failed". */
+export type InvoiceStatus = "paid" | "refunded" | "failed";
+
+export interface Invoice {
+  id: string;
+  desc: string;
+  /** "12 Jul 2026" — the period filters regex this string. */
+  date: string;
+  /** Negative on credit notes; rendered with U+2212. */
+  amount: number;
+  kind: InvoiceKind;
+  status: InvoiceStatus;
+}
+
+export type BillingFilterId = "all" | InvoiceKind;
+
+export type BillingPeriodId = "2026" | "2025" | "month";
+
+/** `[id, label]`. */
+export type BillingFilterOption = [BillingFilterId, string];
+
+/** `[id, label]`. */
+export type BillingPeriodOption = [BillingPeriodId, string];
+
+/* ------------------------------------------------------------ transfer */
+
+export interface TransferCheck {
+  id: string;
+  label: string;
+}
+
+/** The confirmation snapshot written by a successful transfer. */
+export interface TransferReceipt {
+  /** `WT-8823-01`. */
+  ref: string;
+  serial: string;
+  /** The product model string. */
+  name: string;
+  to: string;
+  email: string;
+}
+
+/* ------------------------------------------------------------ wishlist */
+
+export interface WishItem {
+  id: string;
+  prod: ProductId;
+  name: string;
+  blurb: string;
+  price: number;
+  was: number;
+  /** "saved 12 Jul". */
+  added: string;
+  stock: PartStock;
+}
+
+export interface WishSuggestion {
+  id: string;
+  prod: ProductId;
+  name: string;
+  price: number;
+}
+
+/* ------------------------------------------------------ recently viewed */
+
+export type RecentKind = "article" | "product";
+
+export interface RecentEntry {
+  id: string;
+  kind: RecentKind;
+  /** Article id — `article` rows only. */
+  ref?: string;
+  /** Product display name — `product` rows only. */
+  name?: string;
+  prod?: ProductId;
+  price?: number;
+  /** Group header — "Today" / "Yesterday" / "Earlier this week". */
+  when: string;
+  time: string;
+}
+
+export type RecentFilterId = "all" | RecentKind;
+
+/** `[id, label, icon]`. */
+export type RecentFilterOption = [RecentFilterId, string, IconName];
+
+/* ------------------------------------------------------- store locator */
+
+export type StoreKind = "flagship" | "stockist" | "recycling";
+
+/** `[label, icon]`. */
+export type StoreService = [string, IconName];
+
+export interface StoreLocation {
+  id: string;
+  name: string;
+  kind: StoreKind;
+  address: string;
+  /** "0.4 mi". */
+  distance: string;
+  phone: string;
+  open: boolean;
+  hours: string;
+  tint: Tint;
+  services: StoreService[];
+}
+
+export type StoreFilterId = "all" | StoreKind;
+
+/** `[id, label, icon]`. */
+export type StoreFilterOption = [StoreFilterId, string, IconName];
+
+/* ------------------------------------------------- referral leaderboard */
+
+export type LeaderPeriod = "quarter" | "alltime";
+
+export interface Leader {
+  name: string;
+  initials: string;
+  tint: Tint;
+  place: string;
+  count: number;
+  /** Exactly one row per period carries this. */
+  you?: boolean;
+}
+
+export type LeaderBoard = Record<LeaderPeriod, Leader[]>;
+
+export interface LeaderPrize {
+  place: string;
+  prize: string;
+  icon: IconName;
+  note: string;
+}
+
+/* -------------------------------------------------------- breach notice */
+
+export interface BreachItem {
+  label: string;
+  /** "Exposed" / "Not affected". */
+  state: string;
+  bad: boolean;
+  icon: IconName;
+}
+
+export interface BreachEvent {
+  when: string;
+  text: string;
+  st: StepState;
+}
+
+export type BreachResultKind = "hit" | "clear" | "info";
+
+export interface BreachResult {
+  kind: BreachResultKind;
+  icon: IconName;
+  text: string;
+}
+
+/** One of the three "what we'd suggest doing" cards. */
+export interface BreachStep {
+  title: string;
+  text: string;
+  action?: { label: string; icon: IconName };
+}
+
+/* ------------------------------------------------------------ recycling */
+
+export type RecycleMethodId = "post" | "drop" | "collect";
+
+export interface RecycleMethod {
+  id: RecycleMethodId;
+  label: string;
+  icon: IconName;
+  note: string;
+  /** The first sentence of the confirmation body. */
+  done: string;
+}
+
+export interface RecycleStat {
+  label: string;
+  value: string;
+  icon: IconName;
+  note: string;
+}
+
+export interface RecyclePoint {
+  name: string;
+  address: string;
+  hours: string;
+  distance: string;
+}
+
+/** A bullet on the "We take" / "We can't take" pair. */
+export interface RecycleRule {
+  text: string;
+}
+
+/** `PRODUCTS` plus the two synthetic rows (`other`, `cables`). */
+export interface RecycleItem {
+  id: string;
+  name: string;
+  model: string;
+  icon: IconName;
+  tint: Tint;
+}
+
+export interface RecycleBooking {
+  /** `RC-31953` with the default selection. */
+  ref: string;
+  method: string;
+  title: string;
+  text: string;
+}
+
+/* -------------------------------------------------------- trade account */
+
+export interface TradePerk {
+  title: string;
+  icon: IconName;
+  text: string;
+}
+
+export interface TradeTier {
+  id: string;
+  name: string;
+  /** "20% off". */
+  discount: string;
+  req: string;
+}
+
+export interface TradeVolume {
+  value: string;
+  label: string;
+}
+
+/** `[label, icon]` — the label string is what `tdSkillsOn` stores. */
+export type TradeSkill = [string, IconName];
+
+export interface TradeCheck {
+  id: string;
+  label: string;
+}
+
+export interface TradeApplication {
+  /** `TA-78200 + name.length * 11`. */
+  ref: string;
+  /** "Silver · 20% off". */
+  tier: string;
+  text: string;
+}
+
+/* --------------------------------------------------------------- share */
+
+export type ShareState = "live" | "expiring" | "expired";
+
+/** `[name, initials, tint]`. */
+export type ShareWatcher = [string, string, Tint];
+
+export interface ShareLink {
+  id: string;
+  title: string;
+  /** Camera id. */
+  cam: string;
+  audience: string;
+  url: string;
+  views: number;
+  /** "expires in 5 days" / "expired" / "no expiry". */
+  expires: string;
+  state: ShareState;
+  watchers: ShareWatcher[];
+}
+
+/** Both `SH_AUDIENCES` and `SH_EXPIRIES` rows. */
+export interface ShareOption {
+  value: string;
+  label: string;
+}
+
+export interface ShareToggleOption {
+  id: string;
+  label: string;
+  note: string;
+}
+
+/* ----------------------------------------------------- insurance claims */
+
+export type ClaimPackState = "ready" | "building";
+
+export interface InsuranceClaim {
+  id: string;
+  /** Carried but never rendered. */
+  kind: string;
+  title: string;
+  state: ClaimPackState;
+  text: string;
+  meta: string;
+}
+
+/** `[id, label, icon]`. */
+export type InsuranceKindOption = [string, string, IconName];
+
+export interface InsuranceWindow {
+  value: string;
+  label: string;
+}
+
+/* ----------------------------------------------------------- gift guide */
+
+export type GiftTag = "popular" | "budget" | "newhome" | "splurge";
+
+export interface GiftPick {
+  id: string;
+  /** Drives the tile icon and tint via `dataSource.product()`. */
+  prod: ProductId;
+  /** "For the worrier". */
+  forWho: string;
+  name: string;
+  price: number;
+  was: number;
+  badge: string | null;
+  tag: GiftTag;
+  blurb: string;
+}
+
+export type GiftFilterId = "all" | GiftTag;
+
+/** `[id, label, icon]`. */
+export type GiftFilterOption = [GiftFilterId, string, IconName];
+
+export interface GiftDate {
+  label: string;
+  date: string;
+  /** Misleading name, kept from the comp: `true` renders `--pos`. */
+  late: boolean;
+}
+
+/* ------------------------------------------------------ account deletion */
+
+export interface DeleteItem {
+  label: string;
+  /** "Deleted" / "Keep working locally" / … */
+  fate: string;
+  bad: boolean;
+  icon: IconName;
+}
+
+export interface DeleteCheck {
+  id: string;
+  label: string;
+}
+
+/** One of the three retention offers on step 2. */
+export interface DeleteAlternative {
+  icon: IconName;
+  title: string;
+  text: string;
+  cta: string;
+}
+
+export interface DeleteSchedule {
+  /** `AD-90413` with all three boxes ticked. */
+  ref: string;
+  /** "deletes 26 Aug 2026". */
+  date: string;
+}
+
+/* -------------------------------------------- errors, skeletons, layout */
+
+/** `grid` is a SKELETON SHAPE, not a view (delta B §0a). */
+export type SkeletonShape = "grid" | "form" | "doc" | "list";
 
 /** A command-palette row, built from screens + actions + articles. */
 export interface Command {

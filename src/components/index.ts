@@ -16,13 +16,18 @@ export type { IconProps } from "./Icon";
 export {
   PlaceholderTile,
   IconChip,
+  MapPlaceholder,
   hexToRgba,
   phBg,
   phIco,
   phInitials,
   useIsDark,
 } from "./PlaceholderTile";
-export type { PlaceholderTileProps, IconChipProps } from "./PlaceholderTile";
+export type {
+  PlaceholderTileProps,
+  IconChipProps,
+  MapPlaceholderProps,
+} from "./PlaceholderTile";
 
 export { Avatar } from "./Avatar";
 export type { AvatarProps } from "./Avatar";
@@ -34,6 +39,8 @@ export {
   Callout,
   Card,
   Eyebrow,
+  FactRow,
+  GroupHeader,
   IconButton,
   ListCard,
 } from "./Primitives";
@@ -45,6 +52,8 @@ export type {
   CalloutTone,
   CardProps,
   EyebrowProps,
+  FactRowProps,
+  GroupHeaderProps,
   IconButtonProps,
   ListCardProps,
 } from "./Primitives";
@@ -77,11 +86,14 @@ export { MiniChart, ProgressBar } from "./MiniChart";
 export type { MiniChartProps, MiniChartBar, ProgressBarProps } from "./MiniChart";
 
 export {
+  EventTimeline,
   HorizontalTimeline,
   StepIndicator,
   VerticalTimeline,
 } from "./Timeline";
 export type {
+  EventTimelineEntry,
+  EventTimelineProps,
   HorizontalTimelineProps,
   StepIndicatorProps,
   VerticalTimelineEntry,
@@ -133,13 +145,26 @@ export { CommandPalette } from "./CommandPalette";
 export { ShortcutsOverlay } from "./ShortcutsOverlay";
 export { ChatWidget } from "./ChatWidget";
 
+/* --- delta components --- */
+
+export { ErrorScreen, OfflineBanner } from "./ErrorScreen";
+export { SuccessBanner } from "./SuccessBanner";
+export { Skel, SkeletonScreen } from "./Skeleton";
+export type { SkelProps } from "./Skeleton";
+export { ClipCard, LiveStage } from "./LiveStage";
+export type { ClipCardProps, LiveStageProps } from "./LiveStage";
+export { InvoiceHead, InvoiceRow } from "./InvoiceRow";
+export type { InvoiceRowProps } from "./InvoiceRow";
+
 export {
   CHORD_MAP,
   CRUMB_LABELS,
+  CRUMB_TRAILS,
   CRUMB_W,
   FOOTER_COLUMNS,
   NAV_LINKS,
   SHORTCUT_GROUPS,
+  columnClass,
 } from "./chrome";
 export type {
   FooterColumn,

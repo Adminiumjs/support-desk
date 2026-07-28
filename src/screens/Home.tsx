@@ -3,6 +3,9 @@
  *
  * Four stacked bands, each capped at 1120px: the search hero, the category
  * grid, the popular-article list and the "open a ticket" CTA. No breadcrumbs.
+ *
+ * Ruling R5: the width cap comes from the shared `.w-1120` + `.fx-wide` pair so
+ * the 1800px ultra-wide rule reaches the bands too.
  */
 
 import {
@@ -27,12 +30,12 @@ export default function Home() {
   return (
     <main className="fx-screen home">
       {/* A — search hero */}
-      <div className="home__band">
+      <div className="home__band w-1120 fx-wide">
         <SearchHero />
       </div>
 
       {/* B — browse by topic */}
-      <section className="home__band home__sec">
+      <section className="home__band w-1120 fx-wide home__sec">
         <h2 className="home__h2">Browse by topic</h2>
         <div className="home__grid">
           {categories.map((c) => (
@@ -47,7 +50,7 @@ export default function Home() {
       </section>
 
       {/* C — popular articles */}
-      <section className="home__band home__sec">
+      <section className="home__band w-1120 fx-wide home__sec">
         <h2 className="home__h2">Popular articles</h2>
         <ListCard>
           {popular.map((a) => (
@@ -61,7 +64,7 @@ export default function Home() {
       </section>
 
       {/* D — open a ticket */}
-      <section className="home__band home__cta">
+      <section className="home__band w-1120 fx-wide home__cta">
         <div className="home__cta-inner">
           <div className="home__cta-copy">
             <h3>Can't find what you need?</h3>

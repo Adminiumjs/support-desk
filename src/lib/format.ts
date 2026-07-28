@@ -155,6 +155,37 @@ export function nextMemberId(count: number): string {
   return `m${count + 1}`;
 }
 
+/* ------------------------------------------------------------ delta refs */
+
+/**
+ * Invoice amounts. Negative values use a real U+2212 MINUS SIGN, not a
+ * hyphen: `-129` → `−£129.00`.
+ */
+export function signedMoney(amount: number): string {
+  return `${amount < 0 ? "−£" : "£"}${Math.abs(amount).toFixed(2)}`;
+}
+
+/** `'AD-' + (90410 + ticked)` — all three boxes → `AD-90413`. */
+export function deleteRef(tickedCount: number): string {
+  return `AD-${90410 + tickedCount}`;
+}
+
+/** `'TA-' + (78200 + trimmedName.length * 11)`. */
+export function tradeRef(nameLength: number): string {
+  return `TA-${78200 + nameLength * 11}`;
+}
+
+/** `'RC-' + (31940 + items * 13)` — the default one item → `RC-31953`. */
+export function recycleRef(itemCount: number): string {
+  return `RC-${31940 + itemCount * 13}`;
+}
+
+/** `WT-8823-01` — the last four serial digits plus a 2-digit sequence. */
+export function transferRef(serial: string, seq: number): string {
+  const digits = (serial.match(/\d/g) ?? ["0"]).join("").slice(-4);
+  return `WT-${digits}-${String(seq).padStart(2, "0")}`;
+}
+
 /* ----------------------------------------------------------------- names */
 
 /** `jo.smith@example.com` → `Jo Smith`. */

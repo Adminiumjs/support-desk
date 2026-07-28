@@ -194,3 +194,8 @@
 .sec__danger-btn {
   border-color: var(--danger);
 }
+
+/* Only-this-device empty state (delta §6.9). */
+.sec__empty {
+  margin-block-start: 12px;
+}

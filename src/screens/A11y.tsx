@@ -9,6 +9,10 @@
  * reset set `motion: true` while first paint had `motion: false`; that was a
  * real inconsistency, and the store now uses `a11yReset()` from lib/a11y.
  *
+ * Ruling R3: the aside gained an "Appearance" card. `state.theme` stays binary,
+ * and `themeManual` records whether the header toggle has been used; the card's
+ * button clears it and re-adopts the OS preference.
+ *
  * The toggle rows are a single `role="switch"` button each so the whole row is
  * one control (the comp nested a switch inside a clickable row). The switch
  * visual reuses the shared `.sd-toggle` classes; two local rules mirror the
@@ -28,6 +32,7 @@ import {
 } from "../components";
 import { dataSource } from "../data/source";
 import { a11yActiveNote } from "../lib/a11y";
+import { themeModeNote } from "../lib/theme";
 import { useAppStore } from "../state/store";
 import "../styles/screen-a11y.css";
 
@@ -48,6 +53,8 @@ export default function A11y() {
   const saveA11y = useAppStore((s) => s.saveA11y);
   const resetA11y = useAppStore((s) => s.resetA11y);
   const scToggle = useAppStore((s) => s.scToggle);
+  const themeManual = useAppStore((s) => s.themeManual);
+  const followSystemTheme = useAppStore((s) => s.followSystemTheme);
   const dark = useIsDark();
 
   const hc = a11y.on.contrast;
@@ -172,6 +179,23 @@ export default function A11y() {
             <button type="button" className="fx-nav a11__see-all" onClick={scToggle}>
               See all shortcuts
               <Icon name="arrow-right" size={13} />
+            </button>
+          </Card>
+
+          {/* Ruling R3 — the escape hatch back to the system theme. */}
+          <Card className="a11__shortcuts">
+            <p className="a11__shortcuts-head">
+              <Icon name="sun-moon" size={18} />
+              Appearance
+            </p>
+            <p className="a11__shortcuts-body">{themeModeNote(themeManual)}</p>
+            <button
+              type="button"
+              className="fx-nav a11__see-all"
+              onClick={followSystemTheme}
+            >
+              <Icon name="monitor-smartphone" size={13} />
+              Follow my system theme
             </button>
           </Card>
 

@@ -35,19 +35,19 @@ export default function NewTicket() {
   const submitTicket = useAppStore((s) => s.submitTicket);
 
   return (
-    <main className="fx-screen fx-page w-720 nt">
-      <h1 className="nt__title">Open a ticket</h1>
-      <p className="nt__lede">
+    <main className="fx-screen fx-page w-720 ntk">
+      <h1 className="ntk__title">Open a ticket</h1>
+      <p className="ntk__lede">
         Tell us what's going on and we'll get back to you. The more detail, the
         faster we can help.
       </p>
 
-      <Card variant="form" className="nt__form">
+      <Card variant="form" className="ntk__form">
         {/* 1 — product */}
         <Field
           label="Which product?"
           error={errs.product}
-          className="nt__group"
+          className="ntk__group"
         >
           <ProductPicker
             label="Which product?"
@@ -103,12 +103,12 @@ export default function NewTicket() {
         </Field>
 
         {/* 5 — attachments */}
-        <div className="nt__group">
+        <div className="ntk__group">
           <p className="sd-label" id="nt-attach-label">
             Attachments
           </p>
           <div
-            className="nt__attach"
+            className="ntk__attach"
             role="group"
             aria-labelledby="nt-attach-label"
           >
@@ -119,7 +119,7 @@ export default function NewTicket() {
               dashed
               icon="plus"
               iconSize={14}
-              className="nt__addfile"
+              className="ntk__addfile"
               onClick={addAttachment}
             >
               Add file
@@ -127,15 +127,15 @@ export default function NewTicket() {
           </div>
         </div>
 
-        <div className="nt__foot">
-          <p className="nt__note">
+        <div className="ntk__foot">
+          <p className="ntk__note">
             <Icon name="info" size={14} />
             Replies in this demo are simulated.
           </p>
           <ButtonPrimary
             icon="send"
             iconSize={17}
-            className="nt__submit"
+            className="ntk__submit"
             onClick={submitTicket}
           >
             Submit ticket

@@ -1,0 +1,186 @@
+/* screen-auto.css — `auto` (delta spec A §2). Imported by Auto.tsx. */
+
+.au__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-block-end: 20px;
+}
+.au__head-text {
+  flex: 1 1 260px;
+  max-inline-size: 540px;
+}
+.au__h1 {
+  margin: 0 0 6px;
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.au__lede {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  text-wrap: pretty;
+}
+.au__new-btn {
+  padding: 12px 19px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------ new-rule composer */
+
+.au__panel {
+  border-radius: 18px;
+  margin-block-end: 18px;
+  animation: fx-drop 0.2s ease;
+}
+.au__panel-h {
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.au__panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.au__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-block-end: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.au__badge {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  padding: 3px 7px;
+  border-radius: 6px;
+}
+.au__badge--when {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.au__badge--then {
+  background: var(--pos-soft);
+  color: var(--pos);
+}
+.au__selects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+.au__panel-acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ------------------------------------------------------------ rule cards */
+
+.au__rules {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+.au-rule {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(16px, 3vw, 20px);
+  border-radius: 18px;
+}
+.au-rule--off {
+  opacity: 0.72;
+}
+.au-rule__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  padding-block-end: 14px;
+  border-block-end: 1px solid var(--border);
+}
+.au-rule__title-col {
+  flex: 1 1 220px;
+  min-inline-size: 0;
+}
+.au-rule__title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+}
+.au-rule__name {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+.au-rule--off .au-rule__name {
+  color: var(--fg-subtle);
+}
+.au-rule__badge {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 3px 9px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.au-rule__last {
+  display: block;
+  margin-block-start: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-subtle);
+}
+.au-rule__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-block-start: 14px;
+}
+.au-rule__step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--fg-subtle);
+}
+.au-rule__tag {
+  flex: 0 0 auto;
+  min-inline-size: 52px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+.au-rule__tag--when {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.au-rule__tag--then {
+  background: var(--pos-soft);
+  color: var(--pos);
+}
+.au-rule__text {
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.au__note {
+  margin-block-start: 22px;
+}

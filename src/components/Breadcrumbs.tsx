@@ -2,15 +2,17 @@
  * Breadcrumbs — the trail above every screen except `home` (port spec §5.8).
  * Store-connected: takes no props.
  *
- * The wrapper max-width comes from CRUMB_W, which mirrors each view's content
- * width so the trail lines up with the page below it.
+ * The wrapper width comes from `columnClass()`, the same helper the screens
+ * use, so the trail lines up with the page below it — including the 1800px
+ * ultra-wide bump (ruling R5). An inline max-width would beat that media
+ * query, so there isn't one.
  */
 
 import { dataSource } from "../data/source";
 import { truncateCrumb } from "../lib/format";
 import { useAppStore } from "../state/store";
 import { Icon } from "./Icon";
-import { CRUMB_LABELS, CRUMB_W } from "./chrome";
+import { CRUMB_LABELS, CRUMB_TRAILS, columnClass } from "./chrome";
 
 interface Crumb {
   label: string;
@@ -29,6 +31,7 @@ export function Breadcrumbs() {
   if (view === "home") return null;
 
   const trail: Crumb[] = [{ label: "Help center", onClick: goHome }];
+  const spec = CRUMB_TRAILS[view];
 
   if (view === "article") {
     const a = dataSource.article(articleId);
@@ -50,6 +53,10 @@ export function Breadcrumbs() {
   } else if (view === "members") {
     trail.push({ label: "Devices", onClick: () => go("devices") });
     trail.push({ label: "Household members" });
+  } else if (spec) {
+    const [parent, parentLabel, last] = spec;
+    trail.push({ label: parentLabel, onClick: () => go(parent) });
+    trail.push({ label: last });
   } else {
     const label = CRUMB_LABELS[view];
     if (!label) return null;
@@ -58,9 +65,8 @@ export function Breadcrumbs() {
 
   return (
     <nav
-      className="crumbs"
+      className={`crumbs ${columnClass(view)}`}
       aria-label="Breadcrumb"
-      style={{ maxInlineSize: CRUMB_W[view] ?? 820 }}
     >
       {trail.map((c, i) => (
         <span className="sd-row" style={{ gap: 8 }} key={`${c.label}-${i}`}>

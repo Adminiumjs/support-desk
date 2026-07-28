@@ -96,23 +96,76 @@ export function VerticalTimeline({ entries, className }: VerticalTimelineProps) 
   );
 }
 
+/* -------------------------------------------------------- event rail */
+
+export interface EventTimelineEntry {
+  /** Mono timestamp, rendered above the text. */
+  when: string;
+  text: string;
+  st: StepState;
+}
+
+export interface EventTimelineProps {
+  entries: EventTimelineEntry[];
+  className?: string;
+}
+
+/**
+ * The incident rail: timestamp first, then the sentence. Same dots and
+ * connectors as `<VerticalTimeline>`, opposite text order.
+ *
+ * `<EventTimeline entries={dataSource.breachTimeline()} />`
+ */
+export function EventTimeline({ entries, className }: EventTimelineProps) {
+  return (
+    <div className={`tl-v tl-e${className ? ` ${className}` : ""}`}>
+      {entries.map((e, i) => (
+        <div className="tl-v__row" key={`${e.when}-${i}`}>
+          <div className="tl-v__rail">
+            <span className={`tl-dot tl-dot--${e.st}`} />
+            {i < entries.length - 1 ? (
+              <span
+                className={`tl-v__conn${e.st === "done" ? " tl-v__conn--on" : ""}`}
+              />
+            ) : null}
+          </div>
+          <div className="tl-e__body">
+            <div className="tl-v__time">{e.when}</div>
+            <p className="tl-e__text">{e.text}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /* -------------------------------------------------------------- steps */
 
 export interface StepIndicatorProps {
   labels: string[];
   /** 1-based current step. */
   current: number;
+  /**
+   * `danger` paints the nodes, connectors and current label in `--danger` —
+   * the account-deletion wizard, which is deliberately not accent-coloured.
+   */
+  tone?: "accent" | "danger";
   className?: string;
 }
 
-/** `<StepIndicator labels={["Items", "Reason", "Label"]} current={rStep} />` */
+/** `<StepIndicator labels={["What goes", "Alternatives", "Confirm"]} current={dlStep} tone="danger" />` */
 export function StepIndicator({
   labels,
   current,
+  tone = "accent",
   className,
 }: StepIndicatorProps) {
   return (
-    <div className={`steps${className ? ` ${className}` : ""}`}>
+    <div
+      className={`steps${tone === "danger" ? " steps--danger" : ""}${
+        className ? ` ${className}` : ""
+      }`}
+    >
       {labels.map((label, i) => {
         const n = i + 1;
         const done = current > n;

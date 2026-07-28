@@ -156,6 +156,82 @@ export function AccentIconTile({
   );
 }
 
+/* ----------------------------------------------------------- GroupHeader */
+
+export interface GroupHeaderProps {
+  /** "Today" / "Yesterday" / "Earlier this week". */
+  label: string;
+  /** Mono count on the far end, e.g. "3 clips". */
+  count?: string;
+  className?: string;
+}
+
+/**
+ * The uppercase label / hairline / mono-count row above a day group.
+ * Shared by the clip history and Recently viewed.
+ *
+ * `<GroupHeader label={group.day} count={group.count} />`
+ */
+export function GroupHeader({ label, count, className }: GroupHeaderProps) {
+  return (
+    <div className={`sd-grouphead${className ? ` ${className}` : ""}`}>
+      <span className="sd-grouphead__label">{label}</span>
+      <span className="sd-grouphead__rule" />
+      {count ? <span className="sd-grouphead__count">{count}</span> : null}
+    </div>
+  );
+}
+
+/* --------------------------------------------------------------- FactRow */
+
+export interface FactRowProps {
+  icon: string;
+  label: string;
+  /** The trailing pill — usually a `<SoftPill>`. */
+  pill: ReactNode;
+  /** Tints the leading chip `--warn` / `--danger`; `false` uses the neutral. */
+  bad?: boolean;
+  /** Colour family for a `bad` chip. */
+  tone?: "warn" | "danger";
+  last?: boolean;
+  className?: string;
+}
+
+/**
+ * One row of an inventory table: tinted chip, label, state pill. Used by the
+ * breach "what was affected" table and the deletion "what goes" table.
+ */
+export function FactRow({
+  icon,
+  label,
+  pill,
+  bad = false,
+  tone = "warn",
+  last = false,
+  className,
+}: FactRowProps) {
+  return (
+    <div
+      className={`sd-listrow sd-factrow${last ? " sd-listrow--last" : ""}${
+        className ? ` ${className}` : ""
+      }`}
+    >
+      <span
+        className="sd-factrow__ico"
+        style={
+          bad
+            ? { background: `var(--${tone}-soft)`, color: `var(--${tone})` }
+            : undefined
+        }
+      >
+        <Icon name={icon} size={16} />
+      </span>
+      <span className="sd-factrow__label">{label}</span>
+      {pill}
+    </div>
+  );
+}
+
 /* --------------------------------------------------------------- buttons */
 
 type NativeButton = ButtonHTMLAttributes<HTMLButtonElement>;

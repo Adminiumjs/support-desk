@@ -5,6 +5,10 @@
  * device list, which renders either way. Validation is toast-only (§9.2) —
  * there are no field-level errors on this screen.
  *
+ * Delta §6.2: every registered device gained a "Transfer this warranty" button,
+ * and the list has an empty state — `transferSubmit()` removes the handed-over
+ * device from `state.registered`, so this list really can end up empty.
+ *
  * Max-width 820.
  */
 
@@ -13,7 +17,9 @@ import {
   ButtonSecondary,
   Callout,
   Card,
+  EmptyState,
   Icon,
+  IconButton,
   IconChip,
   ProductPicker,
   ProgressBar,
@@ -37,6 +43,7 @@ export default function Warranty() {
   const set = useAppStore((s) => s.set);
   const go = useAppStore((s) => s.go);
   const showToast = useAppStore((s) => s.showToast);
+  const gotoTransfer = useAppStore((s) => s.gotoTransfer);
 
   /* `gotoClaim(dev)` also resets `clRef` (port spec §8.1). */
   function gotoClaim(deviceId?: string) {
@@ -224,9 +231,29 @@ export default function Warranty() {
               >
                 Claim
               </ButtonSecondary>
+              <IconButton
+                icon="repeat"
+                label="Transfer this warranty"
+                iconSize={16}
+                className="wr-dev__transfer"
+                onClick={gotoTransfer}
+              />
             </div>
           );
         })}
+
+        {registered.length === 0 ? (
+          <EmptyState
+            icon="shield-off"
+            title="No registered devices"
+            body="Nothing is registered to this account yet. Registering adds a free third year of cover and takes about a minute."
+            action={{
+              label: "Register a device",
+              icon: "shield-check",
+              onClick: wReset,
+            }}
+          />
+        ) : null}
       </div>
     </main>
   );

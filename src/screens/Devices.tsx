@@ -4,6 +4,10 @@
  * Five seeded devices with live stats and working toggles. The toggle value is
  * `devOn[id] ?? device.on`, and the toast reports the state the device is
  * moving *to*, derived from the previous value.
+ *
+ * Delta §6.13: the shortcut row gained Live view and Automations cards ahead of
+ * Notifications and Household. Their subtitles are derived rather than the
+ * comp's hard-coded strings, so pausing a rule updates the card.
  */
 
 import { useMemo } from "react";
@@ -19,6 +23,7 @@ import {
 } from "../components";
 import { dataSource } from "../data/source";
 import { HOUSEHOLD_NAME } from "../data/demo";
+import { runningCount, visibleAutomations } from "../lib/automations";
 import { pluralise } from "../lib/format";
 import { useAppStore } from "../state/store";
 import type { DeviceHealth } from "../data/types";
@@ -54,9 +59,14 @@ export default function Devices() {
   const ntRead = useAppStore((s) => s.ntRead);
   const members = useAppStore((s) => s.members);
   const mbOut = useAppStore((s) => s.mbOut);
+  const automations = useAppStore((s) => s.automations);
+  const auOff = useAppStore((s) => s.auOff);
+  const auGone = useAppStore((s) => s.auGone);
   const set = useAppStore((s) => s.set);
   const go = useAppStore((s) => s.go);
   const showToast = useAppStore((s) => s.showToast);
+  const gotoLive = useAppStore((s) => s.gotoLive);
+  const gotoAuto = useAppStore((s) => s.gotoAuto);
 
   const devices = dataSource.devices();
 
@@ -78,13 +88,26 @@ export default function Devices() {
     return `${pluralise(live, "person", "people")} · 1 invite pending`;
   }, [members, mbOut]);
 
+  /* Delta §6.13 — the two new shortcut cards. */
+  const liveLine = useMemo(() => {
+    const online = dataSource.cameras().filter((c) => !c.offline).length;
+    const today = dataSource.clips().filter((c) => c.day === "Today").length;
+    return `${pluralise(online, "camera")} · ${today} clips today`;
+  }, []);
+
+  const autoLine = useMemo(() => {
+    const rules = visibleAutomations(automations, auGone);
+    const live = runningCount(rules, auOff);
+    return `${live} running, ${rules.length - live} paused`;
+  }, [automations, auGone, auOff]);
+
   const onToggle = (id: string, name: string, label: string, was: boolean) => {
     set({ devOn: { ...devOn, [id]: !was } });
     showToast(`${name} · ${label}${was ? " off" : " on"}`);
   };
 
   return (
-    <main className="fx-screen fx-page w-1000 dv">
+    <main className="fx-screen fx-page w-1000 fx-wide dv">
       <div className="dv__head">
         <div className="dv__head-text">
           <h1 className="dv__h1">{HOUSEHOLD_NAME}</h1>
@@ -162,6 +185,32 @@ export default function Devices() {
       </div>
 
       <div className="dv__shortcuts">
+        <button
+          type="button"
+          className="sd-card fx-card dv__shortcut"
+          onClick={gotoLive}
+        >
+          <AccentIconTile icon="video" size={42} radius={13} iconSize={20} />
+          <span className="dv__shortcut-text">
+            <span className="dv__shortcut-title">Live view</span>
+            <span className="dv__shortcut-sub">{liveLine}</span>
+          </span>
+          <Icon name="arrow-right" size={17} />
+        </button>
+
+        <button
+          type="button"
+          className="sd-card fx-card dv__shortcut"
+          onClick={gotoAuto}
+        >
+          <AccentIconTile icon="workflow" size={42} radius={13} iconSize={20} />
+          <span className="dv__shortcut-text">
+            <span className="dv__shortcut-title">Automations</span>
+            <span className="dv__shortcut-sub">{autoLine}</span>
+          </span>
+          <Icon name="arrow-right" size={17} />
+        </button>
+
         <button
           type="button"
           className="sd-card fx-card dv__shortcut"

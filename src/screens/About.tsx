@@ -67,7 +67,7 @@ export default function About() {
   const dark = useIsDark();
 
   return (
-    <main className="fx-screen fx-page w-1000 abt">
+    <main className="fx-screen fx-page w-1000 fx-wide abt">
       <p className="abt__eyebrow">ABOUT HEARTH</p>
       <h1 className="abt__h1">We build home tech that gets out of the way.</h1>
       <p className="abt__lede">
