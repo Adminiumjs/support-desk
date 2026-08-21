@@ -16,18 +16,17 @@ import {
   TextInput,
 } from "../components";
 import { dataSource } from "../data/source";
-import { distanceMiles, pluralise } from "../lib/format";
+import { useI18n } from "../i18n";
+import { counted, distanceMiles } from "../lib/format";
 import { useAppStore } from "../state/store";
 import type { Installer } from "../data/types";
 import "../styles/screen-installers.css";
 
-const RADIUS_OPTIONS: { value: string; label: string }[] = [
-  { value: "5", label: "5 miles" },
-  { value: "10", label: "10 miles" },
-  { value: "25", label: "25 miles" },
-];
+/** The three radii the comp offers, in miles. */
+const RADII = [5, 10, 25];
 
 export default function Installers() {
+  const { t, number } = useI18n();
   const inPostcode = useAppStore((s) => s.inPostcode);
   const inRadius = useAppStore((s) => s.inRadius);
   const set = useAppStore((s) => s.set);
@@ -41,36 +40,46 @@ export default function Installers() {
     [all, radius],
   );
 
-  const inCount = `${pluralise(list.length, "installer")} within ${radius} miles`;
+  const inCount = t(
+    "screensA.installers.count",
+    { installers: counted("count.installer", list.length) },
+    radius,
+  );
 
   function findInstallers() {
     if (inPostcode.trim().length < 3) {
-      showToast("Enter a postcode to search", "warn");
+      showToast(t("screensA.installers.toastPostcode"), "warn");
       return;
     }
-    showToast(`${list.length} installers near ${inPostcode}`);
+    showToast(
+      t(
+        "screensA.installers.toastFound",
+        { postcode: inPostcode },
+        list.length,
+      ),
+    );
   }
 
   function onCall() {
-    showToast("Calling isn't available in this demo", "info");
+    showToast(t("screensA.installers.toastCall"), "info");
   }
 
   function onBook(i: Installer) {
-    showToast(`Request sent to ${i.name}`);
+    showToast(t("screensA.installers.toastRequest", { name: i.name }));
     go("repair");
   }
 
   return (
     <main className="fx-screen fx-page w-900 in">
-      <h1 className="in__h1">Find an approved installer</h1>
-      <p className="in__lede">
-        Every installer here is trained on Hearth hardware, insured, and rated
-        only by customers who actually booked. Wiring a doorbell or swapping a
-        thermostat usually takes under two hours.
-      </p>
+      <h1 className="in__h1">{t("screensA.installers.h1")}</h1>
+      <p className="in__lede">{t("screensA.installers.lede")}</p>
 
       <Card className="in__search">
-        <Field className="in__field" label="Postcode" htmlFor="in-postcode">
+        <Field
+          className="in__field"
+          label={t("screensA.installers.postcode")}
+          htmlFor="in-postcode"
+        >
           <TextInput
             id="in-postcode"
             className="in__postcode sd-mono"
@@ -80,16 +89,20 @@ export default function Installers() {
             onChange={(v) => set({ inPostcode: v })}
           />
         </Field>
-        <Field className="in__field in__field--sm" label="Within" htmlFor="in-radius">
+        <Field
+          className="in__field in__field--sm"
+          label={t("screensA.installers.within")}
+          htmlFor="in-radius"
+        >
           <select
             id="in-radius"
             className="sd-select fx-fld"
             value={inRadius}
             onChange={(e) => set({ inRadius: e.target.value })}
           >
-            {RADIUS_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
+            {RADII.map((miles) => (
+              <option key={miles} value={String(miles)}>
+                {t("screensA.installers.radius", undefined, miles)}
               </option>
             ))}
           </select>
@@ -99,7 +112,7 @@ export default function Installers() {
           icon="search"
           onClick={findInstallers}
         >
-          Find installers
+          {t("screensA.installers.find")}
         </ButtonPrimary>
       </Card>
 
@@ -110,7 +123,9 @@ export default function Installers() {
 
       <div className="in__meta">
         <span className="in__count">{inCount}</span>
-        <span className="in__sorted sd-mono">sorted by distance</span>
+        <span className="in__sorted sd-mono">
+          {t("screensA.installers.sorted")}
+        </span>
       </div>
 
       <div className="in__list">
@@ -123,15 +138,20 @@ export default function Installers() {
                 {i.verified ? (
                   <span className="in__approved">
                     <Icon name="badge-check" size={13} />
-                    Approved
+                    {t("screensA.installers.approved")}
                   </span>
                 ) : null}
               </div>
               <div className="in__metarow">
                 <span className="in__stat">
                   <Icon name="star" size={14} color="var(--warn)" />
-                  <span className="sd-mono">{i.rating.toFixed(1)}</span>
-                  <span>({i.reviews})</span>
+                  <span className="sd-mono">
+                    {number(i.rating, {
+                      minimumFractionDigits: 1,
+                      maximumFractionDigits: 1,
+                    })}
+                  </span>
+                  <span>({number(i.reviews)})</span>
                 </span>
                 <span className="in__stat">
                   <Icon name="map-pin" size={14} />
@@ -153,7 +173,7 @@ export default function Installers() {
             </div>
             <div className="in__actions">
               <ButtonSecondary className="in__call" icon="phone" onClick={onCall}>
-                Call
+                {t("screensA.installers.call")}
               </ButtonSecondary>
               <ButtonPrimary
                 className="in__request"
@@ -161,7 +181,7 @@ export default function Installers() {
                 size="md"
                 onClick={() => onBook(i)}
               >
-                Request a visit
+                {t("screensA.installers.request")}
               </ButtonPrimary>
             </div>
           </Card>
@@ -169,9 +189,7 @@ export default function Installers() {
       </div>
 
       <Callout tone="info" icon="shield-check" className="in__note">
-        Installers are independent businesses. Work booked through Hearth is
-        covered by our two-year installation guarantee — keep the invoice and
-        we&rsquo;ll handle any dispute.
+        {t("screensA.installers.note")}
       </Callout>
     </main>
   );

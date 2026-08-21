@@ -24,6 +24,7 @@ import {
   SoftPill,
   TextInput,
 } from "../components";
+import { useT, type MessageKey } from "../i18n";
 import {
   displayNameFromEmail,
   initialsFrom,
@@ -33,25 +34,29 @@ import { looksLikeEmail, useAppStore } from "../state/store";
 import type { Member, MemberRole } from "../data/types";
 import "../styles/screen-members.css";
 
-/** The member-role pill family (port spec §4.2). */
+/**
+ * The member-role pill family (port spec §4.2). `label` is a message key, not
+ * prose — this table is module scope and has no hook, so it is resolved at the
+ * render site below.
+ */
 const ROLE: Record<
   MemberRole,
-  { label: string; fg: string; soft: string; icon: string }
+  { label: MessageKey; fg: string; soft: string; icon: string }
 > = {
   owner: {
-    label: "Owner",
+    label: "screensB.members.roleOwner",
     fg: "--accent",
     soft: "--accent-soft",
     icon: "crown",
   },
   adult: {
-    label: "Adult",
+    label: "screensB.members.roleAdult",
     fg: "--pos",
     soft: "--pos-soft",
     icon: "user-round",
   },
   guest: {
-    label: "Guest",
+    label: "screensB.members.roleGuest",
     fg: "--warn",
     soft: "--warn-soft",
     icon: "user-round-cog",
@@ -62,6 +67,7 @@ const ROLE: Record<
 const NEW_MEMBER_TINT = "#b06f8f";
 
 export default function Members() {
+  const t = useT();
   const members = useAppStore((s) => s.members);
   const mbEmail = useAppStore((s) => s.mbEmail);
   const mbRole = useAppStore((s) => s.mbRole);
@@ -83,7 +89,7 @@ export default function Members() {
   const invite = () => {
     const email = mbEmail.trim();
     if (!looksLikeEmail(email)) {
-      showToast("Enter an email address", "warn");
+      showToast(t("screensB.members.needEmail"), "warn");
       return;
     }
     const name = displayNameFromEmail(email);
@@ -93,28 +99,32 @@ export default function Members() {
       initials: initialsFrom(name),
       tint: NEW_MEMBER_TINT,
       role: mbRole,
-      meta: `${email} · invite pending`,
+      meta: t("screensB.members.pendingMeta", { email }),
       perms:
         mbRole === "guest"
-          ? [["Front door only", "door-open"]]
-          : [["All devices", "cpu"]],
+          ? [[t("screensB.members.permFrontDoor"), "door-open"]]
+          : [[t("screensB.members.permAllDevices"), "cpu"]],
     };
     set({ members: [...members, member], mbEmail: "" });
-    showToast("Invite sent");
+    showToast(t("screensB.members.inviteSent"));
     succeed(
-      `Invite sent to ${email}`,
-      "It expires in 14 days. They'll appear below as pending until they accept.",
+      t("screensB.members.inviteSentTo", { email }),
+      t("screensB.members.inviteSentBody"),
     );
   };
 
   const changeRole = (m: Member, role: MemberRole) => {
     set({ mbRoles: { ...mbRoles, [m.id]: role } });
-    showToast(`${m.name} is now a${role === "adult" ? "n adult" : " guest"}`);
+    showToast(
+      role === "adult"
+        ? t("screensB.members.nowAdult", { name: m.name })
+        : t("screensB.members.nowGuest", { name: m.name }),
+    );
   };
 
   const remove = (m: Member) => {
     set({ mbOut: [...mbOut, m.id] });
-    undoToast(`${m.name} removed`, () =>
+    undoToast(t("screensB.members.removed", { name: m.name }), () =>
       set({
         mbOut: useAppStore.getState().mbOut.filter((id) => id !== m.id),
       }),
@@ -123,15 +133,12 @@ export default function Members() {
 
   return (
     <main className="fx-screen fx-page w-820 mb">
-      <h1 className="mb__h1">Household members</h1>
-      <p className="mb__lede">
-        Share the home without sharing your password. Guests never see clip
-        history, and you can remove anyone instantly.
-      </p>
+      <h1 className="mb__h1">{t("screensB.members.h1")}</h1>
+      <p className="mb__lede">{t("screensB.members.lede")}</p>
 
       <Card className="mb__invite">
         <Field
-          label="Invite by email"
+          label={t("screensB.members.inviteByEmail")}
           htmlFor="mb-email"
           className="mb__invite-email"
         >
@@ -143,7 +150,11 @@ export default function Members() {
             onChange={(v) => set({ mbEmail: v })}
           />
         </Field>
-        <Field label="Role" htmlFor="mb-role" className="mb__invite-role">
+        <Field
+          label={t("screensB.members.roleLabel")}
+          htmlFor="mb-role"
+          className="mb__invite-role"
+        >
           <select
             id="mb-role"
             className="sd-select fx-fld"
@@ -152,12 +163,12 @@ export default function Members() {
               set({ mbRole: e.target.value as "adult" | "guest" })
             }
           >
-            <option value="adult">Adult</option>
-            <option value="guest">Guest</option>
+            <option value="adult">{t("screensB.members.roleAdult")}</option>
+            <option value="guest">{t("screensB.members.roleGuest")}</option>
           </select>
         </Field>
         <ButtonPrimary icon="user-plus" size="md" onClick={invite}>
-          Send invite
+          {t("screensB.members.sendInvite")}
         </ButtonPrimary>
       </Card>
 
@@ -179,7 +190,7 @@ export default function Members() {
                 <div className="mb__name-row">
                   <span className="mb__name">{m.name}</span>
                   <SoftPill fg={meta.fg} soft={meta.soft} icon={meta.icon}>
-                    {meta.label}
+                    {t(meta.label)}
                   </SoftPill>
                 </div>
                 <span className="mb__meta">{m.meta}</span>
@@ -194,23 +205,27 @@ export default function Members() {
               </div>
 
               {isOwner ? (
-                <span className="mb__you">{"That's you"}</span>
+                <span className="mb__you">{t("screensB.members.thatsYou")}</span>
               ) : (
                 <div className="mb__acts">
                   <select
                     className="sd-select fx-fld mb__role"
-                    aria-label={`Role for ${m.name}`}
+                    aria-label={t("screensB.members.roleFor", { name: m.name })}
                     value={role}
                     onChange={(e) =>
                       changeRole(m, e.target.value as MemberRole)
                     }
                   >
-                    <option value="adult">Adult</option>
-                    <option value="guest">Guest</option>
+                    <option value="adult">
+                      {t("screensB.members.roleAdult")}
+                    </option>
+                    <option value="guest">
+                      {t("screensB.members.roleGuest")}
+                    </option>
                   </select>
                   <IconButton
                     icon="user-minus"
-                    label="Remove"
+                    label={t("screensB.members.remove")}
                     iconSize={17}
                     className="mb__remove"
                     onClick={() => remove(m)}
@@ -227,15 +242,13 @@ export default function Members() {
           compact
           className="mb__empty"
           icon="users"
-          title="Just you in this household"
-          body="Nobody else has access. Invite someone above and they can use live view and unlocking without ever seeing your password."
+          title={t("screensB.members.emptyTitle")}
+          body={t("screensB.members.emptyBody")}
         />
       ) : null}
 
       <Callout tone="info" icon="info" className="mb__note">
-        Only the owner can add or remove devices, see billing, or close the
-        account. Adults can do everything else; guests get live view and
-        unlocking during the hours you set.
+        {t("screensB.members.note")}
       </Callout>
     </main>
   );

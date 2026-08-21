@@ -22,7 +22,8 @@ import {
 } from "../components";
 import { CODE_PREFIX } from "../data/demo";
 import { dataSource } from "../data/source";
-import { dayPart, normaliseOrderCode } from "../lib/format";
+import { useI18n, type MessageKey, type TFunction } from "../i18n";
+import { counted, dayPart, normaliseOrderCode } from "../lib/format";
 import { useAppStore } from "../state/store";
 import type { Order, OrderStatus } from "../data/types";
 import "../styles/screen-orders.css";
@@ -30,7 +31,8 @@ import "../styles/screen-orders.css";
 /* ------------------------------------------------------- status vocabulary */
 
 interface OrderStatusMeta {
-  label: string;
+  /** A message key — this table is module scope, so it is resolved on render. */
+  label: MessageKey;
   fg: string;
   soft: string;
   icon: string;
@@ -38,29 +40,40 @@ interface OrderStatusMeta {
 
 /** `ORDER_STATUS` (port spec §4.2). */
 const ORDER_STATUS: Record<OrderStatus, OrderStatusMeta> = {
-  transit: { label: "In transit", fg: "--info", soft: "--info-soft", icon: "truck" },
+  transit: {
+    label: "screensB.orders.statusTransit",
+    fg: "--info",
+    soft: "--info-soft",
+    icon: "truck",
+  },
   delivered: {
-    label: "Delivered",
+    label: "screensB.orders.statusDelivered",
     fg: "--pos",
     soft: "--pos-soft",
     icon: "package-check",
   },
-  packing: { label: "Preparing", fg: "--warn", soft: "--warn-soft", icon: "package" },
+  packing: {
+    label: "screensB.orders.statusPacking",
+    fg: "--warn",
+    soft: "--warn-soft",
+    icon: "package",
+  },
 };
 
 /** `ordHeadline` (§8.8). */
-function headline(order: Order): string {
+function headline(order: Order, t: TFunction): string {
   if (order.status === "delivered") {
     const last = order.steps[order.steps.length - 1];
-    return `Delivered ${dayPart(last.when)}`;
+    return t("screensB.orders.headlineDelivered", { day: dayPart(last.when) });
   }
-  if (order.status === "packing") return "Packing now, ships tomorrow";
-  return "Arriving Tue 28 Jul";
+  if (order.status === "packing") return t("screensB.orders.headlinePacking");
+  return t("screensB.orders.headlineTransit");
 }
 
 /* -------------------------------------------------------------- the screen */
 
 export default function Orders() {
+  const { t, number } = useI18n();
   const ordNum = useAppStore((s) => s.ordNum);
   const ordEmail = useAppStore((s) => s.ordEmail);
   const ordFound = useAppStore((s) => s.ordFound);
@@ -78,7 +91,7 @@ export default function Orders() {
     const id = normaliseOrderCode(ordNum);
     if (!id) {
       set({
-        ordErr: "Enter the order number from your confirmation email.",
+        ordErr: t("screensB.orders.errNoNumber"),
         ordFound: null,
       });
       return;
@@ -86,29 +99,27 @@ export default function Orders() {
     const match = dataSource.order(id);
     if (!match) {
       set({
-        ordErr: `We couldn't find an order matching ${id}. Check the number on your confirmation email — it starts with ${CODE_PREFIX}.`,
+        ordErr: t("screensB.orders.errNotFound", { id, prefix: CODE_PREFIX }),
         ordFound: null,
       });
       return;
     }
     if (!ordEmail.trim()) {
       set({
-        ordErr:
-          "Enter the email address used on the order so we can confirm it's yours.",
+        ordErr: t("screensB.orders.errNoEmail"),
         ordFound: null,
       });
       return;
     }
     if (ordEmail.trim().toLowerCase() !== match.email.trim().toLowerCase()) {
       set({
-        ordErr:
-          "That order exists, but the email doesn't match our records. Try the address on your confirmation email.",
+        ordErr: t("screensB.orders.errEmailMismatch"),
         ordFound: null,
       });
       return;
     }
     set({ ordErr: "", ordFound: id });
-    showToast(`Found order ${id}`);
+    showToast(t("screensB.orders.found", { id }));
   }
 
   /* Demo chips fill both fields and clear the result — they do not search. */
@@ -123,24 +134,21 @@ export default function Orders() {
 
   /* No clipboard API call in the comp — the toast is the whole behaviour. */
   function copyTracking() {
-    showToast("Tracking number copied");
+    showToast(t("screensB.orders.trackingCopied"));
   }
 
   const meta = order ? ORDER_STATUS[order.status] : null;
 
   return (
     <main className="fx-screen fx-page w-820 scr-orders">
-      <h1 className="scr-orders__h1">Order status</h1>
-      <p className="scr-orders__lede">
-        Enter your order number and the email you ordered with. Tracking updates
-        land here within an hour of a scan.
-      </p>
+      <h1 className="scr-orders__h1">{t("screensB.orders.h1")}</h1>
+      <p className="scr-orders__lede">{t("screensB.orders.lede")}</p>
 
       <Card variant="lg" className="ord-lookup">
         <div className="ord-lookup__grid">
           <div>
             <label className="ord-lookup__label" htmlFor="ord-num">
-              Order number
+              {t("screensB.orders.numberLabel")}
             </label>
             <TextInput
               id="ord-num"
@@ -152,7 +160,7 @@ export default function Orders() {
           </div>
           <div>
             <label className="ord-lookup__label" htmlFor="ord-email">
-              Email on the order
+              {t("screensB.orders.emailLabel")}
             </label>
             <TextInput
               id="ord-email"
@@ -166,9 +174,11 @@ export default function Orders() {
 
         <div className="ord-lookup__actions">
           <ButtonPrimary icon="package-search" iconSize={17} onClick={findOrder}>
-            Find my order
+            {t("screensB.orders.find")}
           </ButtonPrimary>
-          <span className="ord-lookup__caption">Demo orders:</span>
+          <span className="ord-lookup__caption">
+            {t("screensB.orders.demoOrders")}
+          </span>
           {orders.map((demo) => (
             <button
               key={demo.id}
@@ -195,9 +205,14 @@ export default function Orders() {
             <div className="ord-block ord-summary">
               <div className="ord-summary__col">
                 <span className="ord-summary__id">{order.id}</span>
-                <span className="ord-summary__headline">{headline(order)}</span>
+                <span className="ord-summary__headline">
+                  {headline(order, t)}
+                </span>
                 <span className="ord-summary__meta">
-                  Placed {order.placed} · {order.items.length} items
+                  {t("screensB.orders.placedLine", {
+                    placed: order.placed,
+                    items: counted("count.item", order.items.length),
+                  })}
                 </span>
               </div>
               <SoftPill
@@ -207,7 +222,7 @@ export default function Orders() {
                 iconSize={14}
                 soften={false}
               >
-                {meta.label}
+                {t(meta.label)}
               </SoftPill>
             </div>
 
@@ -223,20 +238,20 @@ export default function Orders() {
 
             <div className="ord-block ord-carrier">
               <div>
-                <Eyebrow>Carrier</Eyebrow>
+                <Eyebrow>{t("screensB.orders.carrier")}</Eyebrow>
                 <p className="ord-carrier__name">{order.carrier}</p>
                 <button
                   type="button"
                   className="ord-carrier__copy fx-gi"
                   onClick={copyTracking}
-                  title="Copy tracking number"
+                  title={t("screensB.orders.copyTracking")}
                 >
                   {order.tracking}
                   <Icon name="copy" size={13} />
                 </button>
               </div>
               <div>
-                <Eyebrow>Delivering to</Eyebrow>
+                <Eyebrow>{t("screensB.orders.deliveringTo")}</Eyebrow>
                 {order.addr.map((line) => (
                   <p className="ord-carrier__addr" key={line}>
                     {line}
@@ -246,9 +261,13 @@ export default function Orders() {
             </div>
 
             <div className="ord-block ord-items">
-              <Eyebrow>In this order</Eyebrow>
+              <Eyebrow>{t("screensB.orders.inThisOrder")}</Eyebrow>
               {order.items.map((item) => {
                 const product = dataSource.product(item.prod);
+                /* `qty` is authored as a string in the dataset; format it as a
+                 * number when it is one, so Arabic gets its own digits. */
+                const parsed = Number(item.qty);
+                const qty = Number.isFinite(parsed) ? number(parsed) : item.qty;
                 return (
                   <div className="ord-item" key={`${item.prod}-${item.name}`}>
                     <IconChip
@@ -259,13 +278,17 @@ export default function Orders() {
                       iconSize={21}
                     />
                     <span className="ord-item__name">{item.name}</span>
-                    <span className="ord-item__qty">Qty {item.qty}</span>
+                    <span className="ord-item__qty">
+                      {t("screensB.orders.qty", { n: qty })}
+                    </span>
                     <span className="ord-item__price">{item.price}</span>
                   </div>
                 );
               })}
               <div className="ord-total">
-                <span className="ord-total__label">Total</span>
+                <span className="ord-total__label">
+                  {t("screensB.orders.total")}
+                </span>
                 <span className="ord-total__value">{order.total}</span>
               </div>
             </div>
@@ -273,14 +296,14 @@ export default function Orders() {
 
           <div className="ord-followup">
             <ButtonSecondary icon="pen-line" iconSize={16} onClick={openTicket}>
-              Something's wrong with this order
+              {t("screensB.orders.somethingWrong")}
             </ButtonSecondary>
             <ButtonSecondary
               icon="message-circle"
               iconSize={16}
               onClick={openChat}
             >
-              Ask about delivery
+              {t("screensB.orders.askDelivery")}
             </ButtonSecondary>
           </div>
         </>

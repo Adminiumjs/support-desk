@@ -6,6 +6,7 @@
 import { useMemo } from "react";
 import { Card, Chip, ChipRow, Icon, SoftPill } from "../components";
 import { dataSource } from "../data/source";
+import { useT } from "../i18n";
 import { useAppStore } from "../state/store";
 import type { FirmwareType } from "../data/types";
 import "../styles/screen-firmware.css";
@@ -17,6 +18,7 @@ const TYPE_TONE: Record<FirmwareType, { fg: string; soft: string }> = {
 };
 
 export default function Firmware() {
+  const t = useT();
   const fwCat = useAppStore((s) => s.fwCat);
   const set = useAppStore((s) => s.set);
 
@@ -25,10 +27,10 @@ export default function Firmware() {
 
   const chips = useMemo(
     () => [
-      { id: "all", label: "All devices" },
+      { id: "all", label: t("screensA.firmware.allDevices") },
       ...products.map((p) => ({ id: p.id as string, label: p.name })),
     ],
-    [products],
+    [products, t],
   );
 
   const shown = useMemo(
@@ -41,11 +43,8 @@ export default function Firmware() {
 
   return (
     <main className="fx-screen fx-page w-820 fw">
-      <h1 className="fw__h1">Firmware release notes</h1>
-      <p className="fw__lede">
-        Updates install overnight on their own. You can always nudge one by hand
-        in the app under Settings &rarr; About.
-      </p>
+      <h1 className="fw__h1">{t("screensA.firmware.h1")}</h1>
+      <p className="fw__lede">{t("screensA.firmware.lede")}</p>
 
       <ChipRow className="fw__chips">
         {chips.map((c) => (
@@ -72,7 +71,7 @@ export default function Firmware() {
                 {r.rolling ? (
                   <span className="fw__rolling">
                     <Icon name="radio" size={12} />
-                    Rolling out
+                    {t("screensA.firmware.rolling")}
                   </span>
                 ) : null}
                 <span className="fw__date sd-mono">{r.date}</span>

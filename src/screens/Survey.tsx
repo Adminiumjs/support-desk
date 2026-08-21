@@ -22,6 +22,7 @@ import {
 } from "../components";
 import { SURVEY_THANKS_HIGH, SURVEY_THANKS_LOW } from "../data/demo";
 import { dataSource } from "../data/source";
+import { useI18n } from "../i18n";
 import { surveyRef } from "../lib/format";
 import { top, useAppStore } from "../state/store";
 import "../styles/screen-survey.css";
@@ -29,6 +30,9 @@ import "../styles/screen-survey.css";
 const NPS_SCORES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const TOTAL_Q = 5;
 const TEXT_CAP = 800;
+const NPS_MAX = 10;
+const SURVEY_MINUTES = 2;
+const SURVEY_QUESTIONS = 4;
 
 /** The band a chosen NPS score sits in — promoter / passive / detractor. */
 function npsToken(n: number): string {
@@ -38,6 +42,7 @@ function npsToken(n: number): string {
 }
 
 export default function Survey() {
+  const { t, number } = useI18n();
   const ROWS = dataSource.surveyRows();
   const SCALE = dataSource.surveyScale();
   const TAGS = dataSource.surveyTags();
@@ -52,7 +57,13 @@ export default function Survey() {
   const showToast = useAppStore((s) => s.showToast);
   const goHome = useAppStore((s) => s.goHome);
 
-  const scoreText = svNps === null ? "—" : `${svNps}/10`;
+  const scoreText =
+    svNps === null
+      ? "—"
+      : t("screensB.survey.scoreOf", {
+          score: number(svNps),
+          max: number(NPS_MAX),
+        });
 
   /* ------------------------------------------------------- thank-you state */
 
@@ -63,7 +74,7 @@ export default function Survey() {
           <span className="svy__done-tile">
             <Icon name="heart" size={26} />
           </span>
-          <h1 className="svy__done-title">Thank you — genuinely</h1>
+          <h1 className="svy__done-title">{t("screensB.survey.doneTitle")}</h1>
           <p className="svy__done-body">
             {svNps !== null && svNps >= 9
               ? SURVEY_THANKS_HIGH
@@ -71,11 +82,13 @@ export default function Survey() {
           </p>
           <div className="svy__done-chips">
             <span className="svy__ref">{svDone}</span>
-            <span className="svy__ref">score {scoreText}</span>
+            <span className="svy__ref">
+              {t("screensB.survey.scoreChip", { score: scoreText })}
+            </span>
           </div>
           <div className="svy__done-actions">
             <ButtonPrimary icon="life-buoy" onClick={goHome}>
-              Back to help center
+              {t("screensB.survey.backToHelp")}
             </ButtonPrimary>
             <ButtonSecondary
               icon="rotate-ccw"
@@ -90,7 +103,7 @@ export default function Survey() {
                 })
               }
             >
-              Fill it in again
+              {t("screensB.survey.fillAgain")}
             </ButtonSecondary>
           </div>
         </Card>
@@ -108,29 +121,31 @@ export default function Survey() {
 
   const submit = () => {
     if (svNps === null) {
-      showToast("Pick a score from 0 to 10 first", "warn");
+      showToast(t("screensB.survey.needScore"), "warn");
       return;
     }
     set({ svDone: surveyRef(svNps, svTagsOn.length) });
-    showToast("Feedback sent — thank you");
+    showToast(t("screensB.survey.sent"));
     top();
   };
 
   const toggleTag = (tag: string) =>
     set({
       svTagsOn: svTagsOn.includes(tag)
-        ? svTagsOn.filter((t) => t !== tag)
+        ? svTagsOn.filter((x) => x !== tag)
         : [...svTagsOn, tag],
     });
 
   return (
     <main className="fx-screen fx-page w-760 svy">
-      <p className="svy__eyebrow">2 MINUTES, 4 QUESTIONS</p>
-      <h1 className="svy__h1">How did we do?</h1>
-      <p className="svy__lede">
-        This goes straight to the support team — no marketing list, no follow-up
-        unless you ask for one.
+      <p className="svy__eyebrow">
+        {t("screensB.survey.eyebrow", {
+          minutes: number(SURVEY_MINUTES),
+          questions: number(SURVEY_QUESTIONS),
+        })}
       </p>
+      <h1 className="svy__h1">{t("screensB.survey.h1")}</h1>
+      <p className="svy__lede">{t("screensB.survey.lede")}</p>
 
       <div className="svy__progress">
         <div
@@ -139,20 +154,27 @@ export default function Survey() {
           aria-valuenow={answered}
           aria-valuemin={0}
           aria-valuemax={TOTAL_Q}
-          aria-label="Survey progress"
+          aria-label={t("screensB.survey.progressLabel")}
         >
           <div className="svy__fill" style={{ inlineSize: `${pct}%` }} />
         </div>
-        <span className="svy__count">{answered} of {TOTAL_Q} answered</span>
+        <span className="svy__count">
+          {t("screensB.survey.answered", {
+            answered: number(answered),
+            total: number(TOTAL_Q),
+          })}
+        </span>
       </div>
 
       <div className="svy__questions">
         <Card className="svy__q">
-          <h2 className="svy__q-title">
-            How likely are you to recommend Hearth to a friend?
-          </h2>
-          <p className="svy__q-note">0 is never, 10 is already told them.</p>
-          <div className="svy__nps" role="group" aria-label="Recommendation score">
+          <h2 className="svy__q-title">{t("screensB.survey.q1")}</h2>
+          <p className="svy__q-note">{t("screensB.survey.q1Note")}</p>
+          <div
+            className="svy__nps"
+            role="group"
+            aria-label={t("screensB.survey.npsGroup")}
+          >
             {NPS_SCORES.map((n) => {
               const on = svNps === n;
               return (
@@ -172,7 +194,7 @@ export default function Survey() {
                   }
                   onClick={() => set({ svNps: n })}
                 >
-                  {n}
+                  {number(n)}
                 </button>
               );
             })}
@@ -192,7 +214,10 @@ export default function Survey() {
                       key={o.v}
                       className={`sd-chip fx-chip svy__scale-btn${on ? " svy__scale-btn--on" : ""}`}
                       title={o.title}
-                      aria-label={`${r.label}: ${o.title}`}
+                      aria-label={t("screensB.survey.scaleAria", {
+                        row: r.label,
+                        rating: o.title,
+                      })}
                       aria-pressed={on}
                       onClick={() =>
                         set({ svRatings: { ...svRatings, [r.id]: o.v } })
@@ -208,16 +233,16 @@ export default function Survey() {
         </ListCard>
 
         <Card className="svy__q">
-          <h2 className="svy__q-title">What would you like us to fix first?</h2>
-          <p className="svy__q-note">Pick as many as you like.</p>
+          <h2 className="svy__q-title">{t("screensB.survey.q2")}</h2>
+          <p className="svy__q-note">{t("screensB.survey.q2Note")}</p>
           <ChipRow>
-            {TAGS.map((t) => (
+            {TAGS.map((tag) => (
               <Chip
-                key={t}
-                active={svTagsOn.includes(t)}
-                onClick={() => toggleTag(t)}
+                key={tag}
+                active={svTagsOn.includes(tag)}
+                onClick={() => toggleTag(tag)}
               >
-                {t}
+                {tag}
               </Chip>
             ))}
           </ChipRow>
@@ -226,17 +251,19 @@ export default function Survey() {
         <Card className="svy__q">
           <div className="svy__q-head">
             <h2 className="svy__q-title" id="svy-text-label">
-              Anything else?
+              {t("screensB.survey.q3")}
             </h2>
-            <span className="svy__optional">Optional</span>
+            <span className="svy__optional">
+              {t("screensB.survey.optional")}
+            </span>
           </div>
           <TextArea
             value={svText}
             onChange={(v) => set({ svText: v })}
-            placeholder="The good, the bad, the pedantic — all of it helps."
+            placeholder={t("screensB.survey.q3Placeholder")}
             maxLength={TEXT_CAP}
             minHeight={110}
-            ariaLabel="Anything else?"
+            ariaLabel={t("screensB.survey.q3")}
           />
           <div className="svy__q-foot">
             <label className="svy__optin">
@@ -252,10 +279,10 @@ export default function Survey() {
               >
                 {svContact ? <Icon name="check" size={13} /> : null}
               </span>
-              You can email me about this
+              {t("screensB.survey.emailOptIn")}
             </label>
             <ButtonPrimary icon="send" onClick={submit}>
-              Send feedback
+              {t("screensB.survey.send")}
             </ButtonPrimary>
           </div>
         </Card>

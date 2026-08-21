@@ -9,10 +9,12 @@
 
 import { ButtonPrimary, ButtonSecondary, Icon, PlaceholderTile } from "../components";
 import { dataSource } from "../data/source";
+import { useI18n } from "../i18n";
 import { useAppStore } from "../state/store";
 import "../styles/screen-tour.css";
 
 export default function Tour() {
+  const { t, number } = useI18n();
   const STEPS = dataSource.tour();
   const LAST = STEPS.length - 1;
 
@@ -31,7 +33,7 @@ export default function Tour() {
     if (isLast) {
       set({ tourStep: 0 });
       goHome();
-      showToast("Tour finished — welcome aboard");
+      showToast(t("screensB.tour.finished"));
       return;
     }
     go("tour", { tourStep: i + 1 });
@@ -43,7 +45,7 @@ export default function Tour() {
   const skip = () => {
     set({ tourStep: 0 });
     goHome();
-    showToast("Tour skipped — it's in the footer if you want it", "info");
+    showToast(t("screensB.tour.skipped"), "info");
   };
 
   return (
@@ -58,7 +60,10 @@ export default function Tour() {
           className="tur__fig"
         >
           <span className="tur__count">
-            {i + 1} / {STEPS.length}
+            {t("screensB.tour.progress", {
+              n: number(i + 1),
+              total: number(STEPS.length),
+            })}
           </span>
         </PlaceholderTile>
 
@@ -85,7 +90,11 @@ export default function Tour() {
                 type="button"
                 key={s.file}
                 className={`tur__dot${n === i ? " tur__dot--on" : ""}`}
-                aria-label={`Step ${n + 1} of ${STEPS.length}: ${s.title}`}
+                aria-label={t("screensB.tour.stepAria", {
+                  n: number(n + 1),
+                  total: number(STEPS.length),
+                  title: s.title,
+                })}
                 aria-current={n === i ? "step" : undefined}
                 onClick={() => set({ tourStep: n })}
               />
@@ -94,18 +103,18 @@ export default function Tour() {
 
           <div className="tur__actions">
             <button type="button" className="fx-nav tur__skip" onClick={skip}>
-              Skip tour
+              {t("screensB.tour.skip")}
             </button>
             {canBack ? (
               <ButtonSecondary icon="arrow-left" onClick={back}>
-                Back
+                {t("screensB.tour.back")}
               </ButtonSecondary>
             ) : null}
             <ButtonPrimary
               icon={isLast ? "check" : "arrow-right"}
               onClick={next}
             >
-              {isLast ? "Finish" : "Next"}
+              {isLast ? t("screensB.tour.finish") : t("screensB.tour.next")}
             </ButtonPrimary>
           </div>
         </div>

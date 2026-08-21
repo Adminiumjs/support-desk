@@ -22,10 +22,11 @@ import {
   columnClass,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useI18n } from "../i18n";
 import {
-  STORE_KIND_META,
   filterStores,
   storeEmptyTitle,
+  storeKindMeta,
   storeMapFile,
   storeMeta,
 } from "../lib/derive";
@@ -33,6 +34,7 @@ import { useAppStore } from "../state/store";
 import "../styles/screen-stores.css";
 
 export default function Stores() {
+  const { t, number } = useI18n();
   const stQ = useAppStore((s) => s.stQ);
   const stFilter = useAppStore((s) => s.stFilter);
   const set = useAppStore((s) => s.set);
@@ -49,37 +51,34 @@ export default function Stores() {
 
   return (
     <main className={`fx-screen fx-page ${columnClass("stores")} sto`}>
-      <h1 className="sto__h1">Find a store</h1>
-      <p className="sto__lede">
-        Hearth's own shops plus stockists who carry the full range. Every
-        location takes returns, and the two flagship stores do walk-in repairs.
-      </p>
+      <h1 className="sto__h1">{t("screensB.stores.h1")}</h1>
+      <p className="sto__lede">{t("screensB.stores.lede")}</p>
 
       <Card className="sto-search">
         <div className="sto-search__field">
           <label className="sto-search__label" htmlFor="sto-q">
-            Town or postcode
+            {t("screensB.stores.searchLabel")}
           </label>
           <TextInput
             id="sto-q"
             type="search"
             value={stQ}
             onChange={(v) => set({ stQ: v })}
-            placeholder="Bristol, or BS1 4TR"
+            placeholder={t("screensB.stores.searchPlaceholder")}
             onKeyDown={(e) => {
               if (e.key === "Enter") storeSearchKey();
             }}
           />
         </div>
         <ButtonPrimary icon="search" className="sto-search__go" onClick={storeSearch}>
-          Search
+          {t("screensB.stores.search")}
         </ButtonPrimary>
         <ButtonSecondary
           icon="locate-fixed"
           className="sto-search__near"
           onClick={storeNearMe}
         >
-          Near me
+          {t("screensB.stores.nearMe")}
         </ButtonSecondary>
       </Card>
 
@@ -99,13 +98,13 @@ export default function Stores() {
       <MapPlaceholder
         className="sto__map"
         filename={storeMapFile(stQ)}
-        count={`${rows.length} shown`}
+        count={t("screensB.stores.shown", { count: number(rows.length) })}
       />
 
       {rows.length ? (
         <div className="sto-list">
           {rows.map((store) => {
-            const kind = STORE_KIND_META[store.kind];
+            const kind = storeKindMeta(store.kind);
             return (
               <Card key={store.id} className="sto-card fx-card">
                 <div className="sto-card__top">
@@ -141,7 +140,9 @@ export default function Stores() {
                               : "var(--fg-subtle)",
                           }}
                         />
-                        {store.open ? "Open" : "Closed"}
+                        {store.open
+                          ? t("screensB.stores.open")
+                          : t("screensB.stores.closed")}
                       </SoftPill>
                     </div>
                     <p className="sto-card__address">{store.address}</p>
@@ -165,7 +166,7 @@ export default function Stores() {
                     iconSize={14}
                     onClick={() => storeDirections(store.name)}
                   >
-                    Directions
+                    {t("screensB.stores.directions")}
                   </ButtonSecondary>
                   <ButtonSecondary icon="phone" iconSize={14} onClick={storeCall}>
                     {store.phone}
@@ -178,7 +179,7 @@ export default function Stores() {
                       className="sto-card__book"
                       onClick={() => storeBook(store)}
                     >
-                      Book a repair here
+                      {t("screensB.stores.bookRepair")}
                     </ButtonPrimary>
                   ) : null}
                 </div>
@@ -192,20 +193,17 @@ export default function Stores() {
             <Icon name="map-pin-off" size={27} />
           </span>
           <h3 className="empty__title">{storeEmptyTitle(stQ)}</h3>
-          <p className="empty__body">
-            Nothing matched that search. Everything we sell ships free next day,
-            and returns are free from home.
-          </p>
+          <p className="empty__body">{t("screensB.stores.emptyBody")}</p>
           <div className="sto-empty__acts">
             <ButtonPrimary size="md" icon="list" onClick={storeReset}>
-              Show every location
+              {t("screensB.stores.showEvery")}
             </ButtonPrimary>
             <ButtonSecondary
               icon="hard-hat"
               iconSize={15}
               onClick={() => go("installers")}
             >
-              Find an installer instead
+              {t("screensB.stores.findInstaller")}
             </ButtonSecondary>
           </div>
         </div>

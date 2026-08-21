@@ -24,11 +24,13 @@ import {
 } from "../components";
 import { AGENT } from "../data/demo";
 import { dataSource } from "../data/source";
+import { useT } from "../i18n";
 import { canSolve, threadTimeline } from "../lib/thread";
 import { selectThreadTicket, useAppStore } from "../state/store";
 import "../styles/screen-thread.css";
 
 export default function Thread() {
+  const t = useT();
   const ticket = useAppStore(selectThreadTicket);
   const reply = useAppStore((s) => s.reply);
   const typing = useAppStore((s) => s.typing);
@@ -43,7 +45,7 @@ export default function Thread() {
   const back = (
     <button type="button" className="th__back fx-nav" onClick={backTickets}>
       <Icon name="arrow-left" size={15} />
-      All tickets
+      {t("screensB.thread.allTickets")}
     </button>
   );
 
@@ -58,10 +60,10 @@ export default function Thread() {
         {back}
         <EmptyState
           icon="inbox"
-          title="No ticket open"
-          body="Pick a conversation from your tickets to read it here."
+          title={t("screensB.thread.noTicketTitle")}
+          body={t("screensB.thread.noTicketBody")}
           action={{
-            label: "All tickets",
+            label: t("screensB.thread.allTickets"),
             icon: "arrow-left",
             onClick: backTickets,
           }}
@@ -102,7 +104,7 @@ export default function Thread() {
 
       <p className="th__note">
         <Icon name="bot" size={14} />
-        Replies in this demo are simulated.
+        {t("screensB.thread.simulated")}
       </p>
 
       <div className="th__msgs">
@@ -117,7 +119,10 @@ export default function Thread() {
               size={36}
               fontSize={13}
             />
-            <TypingDots bubble label={`${AGENT.full} is typing`} />
+            <TypingDots
+              bubble
+              label={t("screensB.thread.typing", { name: AGENT.full })}
+            />
           </div>
         ) : null}
       </div>
@@ -126,9 +131,9 @@ export default function Thread() {
         <TextArea
           id="th-reply"
           value={reply}
-          placeholder="Write a reply…"
+          placeholder={t("screensB.thread.replyPlaceholder")}
           minHeight={84}
-          ariaLabel="Write a reply"
+          ariaLabel={t("screensB.thread.replyAria")}
           className="th__replybox"
           onChange={(v) => set({ reply: v })}
         />
@@ -137,13 +142,13 @@ export default function Thread() {
             <ButtonSecondary
               icon="paperclip"
               iconSize={15}
-              title="Attach a file"
+              title={t("screensB.thread.attachTitle")}
               className="th__act"
               onClick={() =>
-                showToast("Attachments aren't available in this demo", "info")
+                showToast(t("screensB.thread.attachToast"), "info")
               }
             >
-              Attach
+              {t("screensB.thread.attach")}
             </ButtonSecondary>
             {canSolve(ticket) ? (
               <ButtonSecondary
@@ -153,7 +158,7 @@ export default function Thread() {
                 className="th__act"
                 onClick={markSolved}
               >
-                Mark as solved
+                {t("screensB.thread.markSolved")}
               </ButtonSecondary>
             ) : null}
           </div>
@@ -164,7 +169,7 @@ export default function Thread() {
             disabled={!canSend}
             onClick={sendReply}
           >
-            Send reply
+            {t("screensB.thread.sendReply")}
           </ButtonPrimary>
         </div>
       </div>

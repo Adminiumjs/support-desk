@@ -20,10 +20,10 @@
 import { describe, expect, it } from "vitest";
 import type { Automation, AutomationOption } from "../data/types.ts";
 import {
-  AU_ACTION_TOAST,
-  AU_CREATED_TOAST,
-  AU_NAME_TOAST,
-  AU_TRIGGER_TOAST,
+  auActionToast,
+  auCreatedToast,
+  auNameToast,
+  auTriggerToast,
   automationDeleteToast,
   automationIntro,
   automationLast,
@@ -219,9 +219,9 @@ describe("toasts", () => {
   it("keeps the three validation messages distinct", () => {
     /* They are the only signal about *which* field is missing — the panel
      * highlights nothing. */
-    const toasts = [AU_NAME_TOAST, AU_TRIGGER_TOAST, AU_ACTION_TOAST];
+    const toasts = [auNameToast(), auTriggerToast(), auActionToast()];
     expect(new Set(toasts).size).toBe(3);
-    expect(toasts).not.toContain(AU_CREATED_TOAST);
+    expect(toasts).not.toContain(auCreatedToast());
   });
 });
 
@@ -355,7 +355,7 @@ describe("buildAutomation", () => {
   });
 
   it("survives an empty name and empty labels without throwing", () => {
-    /* The store blocks an empty name with AU_NAME_TOAST, but the builder is a
+    /* The store blocks an empty name with auNameToast(), but the builder is a
      * pure function and must not be the thing that explodes. */
     const r = buildAutomation({
       id: "r9",

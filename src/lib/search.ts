@@ -4,6 +4,8 @@
  */
 
 import type { Article, Category, Command } from "../data/types";
+import { counted } from "./format";
+import { t } from "../i18n/ambient";
 
 /* --------------------------------------------------------------- article */
 
@@ -75,7 +77,7 @@ export function kbSearch(
   const base = matchArticles(articles, q);
 
   const facets: KbFacet[] = [
-    { id: "all", name: "All", count: base.length },
+    { id: "all", name: t("lib.search.facetAll"), count: base.length },
     ...categories.map((c) => ({
       id: c.slug,
       name: c.name,
@@ -89,10 +91,17 @@ export function kbSearch(
   else if (sort === "az")
     list = list.slice().sort((a, b) => a.title.localeCompare(b.title));
 
+  /*
+   * "4 results for “offline”" is one sentence, not a count with a suffix
+   * glued on: the quotation marks are the locale's own, and Arabic puts the
+   * query before the count. The counted noun stays a `count.*` lookup so the
+   * plural category is still chosen by `Intl.PluralRules`.
+   */
   const trimmed = q.trim();
-  const countLabel =
-    `${list.length} result${list.length === 1 ? "" : "s"}` +
-    (trimmed ? ` for “${trimmed}”` : "");
+  const results = counted("count.result", list.length);
+  const countLabel = trimmed
+    ? t("lib.search.countFor", { results, query: trimmed })
+    : results;
 
   return { base, list, facets, countLabel };
 }
@@ -117,6 +126,21 @@ export function scoreCommand(cmd: Command, q: string): number {
 }
 
 /**
+ * What a palette row *is*, decided by the `id` prefix the store mints
+ * (`act:` / `screen:` / `article:`).
+ *
+ * This deliberately does NOT look at `group` or `hint`. Those two carry
+ * translated display text — `group` is `t('chrome.cmd.group.actions')` and
+ * `hint` is `t('chrome.cmd.hint.screen')` — so matching them against the
+ * English words "Actions" and "Screen" silently emptied the whole
+ * empty-query palette in every locale that translates them (de, cs, da,
+ * zh-CN, zh-TW, ar; fr lost only the screens). The `id` prefix is the one
+ * part of a Command that is the same in all eight locales.
+ */
+const isAction = (c: Command) => c.id.startsWith("act:");
+const isScreen = (c: Command) => c.id.startsWith("screen:");
+
+/**
  * Ranked palette rows.
  *
  * Empty query: the comp filtered for `Actions` or screen rows and then sliced
@@ -126,8 +150,8 @@ export function scoreCommand(cmd: Command, q: string): number {
  */
 export function rankCommands(commands: Command[], q: string): Command[] {
   if (!q.trim()) {
-    const actions = commands.filter((c) => c.group === "Actions");
-    const screens = commands.filter((c) => c.hint === "Screen");
+    const actions = commands.filter(isAction);
+    const screens = commands.filter(isScreen);
     return [...actions, ...screens].slice(0, PALETTE_EMPTY_LIMIT);
   }
 

@@ -10,6 +10,7 @@
  */
 
 import { ButtonPrimary, Icon, TextArea, TextInput } from "../components";
+import { useT } from "../i18n";
 import { useAppStore } from "../state/store";
 import "../styles/screen-contact.css";
 
@@ -17,6 +18,7 @@ const MSG_CAP = 800;
 const MSG_MIN = 10;
 
 export default function Contact() {
+  const t = useT();
   const cName = useAppStore((s) => s.cName);
   const cEmail = useAppStore((s) => s.cEmail);
   const cMsg = useAppStore((s) => s.cMsg);
@@ -28,33 +30,28 @@ export default function Contact() {
 
   const sendContact = () => {
     if (!cName.trim() || !cEmail.trim() || cMsg.trim().length < MSG_MIN) {
-      showToast("Add your name, email and a short message", "warn");
+      showToast(t("screensA.contact.toastMissing"), "warn");
       return;
     }
     set({ cName: "", cEmail: "", cMsg: "" });
-    showToast("Message sent — we'll reply within a day");
+    showToast(t("screensA.contact.toastSent"));
   };
 
   return (
     <main className="fx-screen fx-page w-900 con">
-      <h1 className="con__h1">Contact us</h1>
-      <p className="con__lede">
-        Support is open Monday to Friday, 8am–7pm UK time, and Saturday 9am–2pm.
-        Pick whichever channel suits you.
-      </p>
+      <h1 className="con__h1">{t("screensA.contact.h1")}</h1>
+      <p className="con__lede">{t("screensA.contact.lede")}</p>
 
       <div className="con__channels">
         <button type="button" className="sd-card fx-card con__ch" onClick={openChat}>
           <span className="sd-accent-tile con__ch-tile">
             <Icon name="message-circle" size={21} />
           </span>
-          <span className="con__ch-title">Live chat</span>
-          <span className="con__ch-body">
-            Fastest option. Typical wait under two minutes.
-          </span>
+          <span className="con__ch-title">{t("screensA.contact.chat")}</span>
+          <span className="con__ch-body">{t("screensA.contact.chatBody")}</span>
           <span className="con__ch-online">
             <span className="con__dot" aria-hidden="true" />
-            Online now
+            {t("screensA.contact.online")}
           </span>
         </button>
 
@@ -62,8 +59,8 @@ export default function Contact() {
           <span className="sd-accent-tile con__ch-tile">
             <Icon name="mail" size={21} />
           </span>
-          <span className="con__ch-title">Email</span>
-          <span className="con__ch-body">We reply within one working day.</span>
+          <span className="con__ch-title">{t("screensA.contact.email")}</span>
+          <span className="con__ch-body">{t("screensA.contact.emailBody")}</span>
           <span className="con__ch-chip">help@hearth.example</span>
         </div>
 
@@ -71,10 +68,8 @@ export default function Contact() {
           <span className="sd-accent-tile con__ch-tile">
             <Icon name="phone" size={21} />
           </span>
-          <span className="con__ch-title">Phone</span>
-          <span className="con__ch-body">
-            Best for urgent install or safety questions.
-          </span>
+          <span className="con__ch-title">{t("screensA.contact.phone")}</span>
+          <span className="con__ch-body">{t("screensA.contact.phoneBody")}</span>
           <span className="con__ch-chip">+44 117 496 0110</span>
         </div>
 
@@ -82,12 +77,10 @@ export default function Contact() {
           <span className="sd-accent-tile con__ch-tile">
             <Icon name="pen-line" size={21} />
           </span>
-          <span className="con__ch-title">Open a ticket</span>
-          <span className="con__ch-body">
-            Best when you can attach photos or logs.
-          </span>
+          <span className="con__ch-title">{t("screensA.contact.ticket")}</span>
+          <span className="con__ch-body">{t("screensA.contact.ticketBody")}</span>
           <span className="con__ch-start">
-            Start a ticket
+            {t("screensA.contact.startTicket")}
             <Icon name="arrow-right" size={13} />
           </span>
         </button>
@@ -95,15 +88,13 @@ export default function Contact() {
 
       <div className="con__lower">
         <section className="sd-card con__form">
-          <h2 className="con__form-title">Send us a note</h2>
-          <p className="con__form-lede">
-            For anything that isn't about a specific device.
-          </p>
+          <h2 className="con__form-title">{t("screensA.contact.formTitle")}</h2>
+          <p className="con__form-lede">{t("screensA.contact.formLede")}</p>
 
           <div className="con__fields">
             <div className="con__field">
               <label className="con__label" htmlFor="con-name">
-                Your name
+                {t("screensA.contact.name")}
               </label>
               <TextInput
                 id="con-name"
@@ -115,7 +106,7 @@ export default function Contact() {
 
             <div className="con__field">
               <label className="con__label" htmlFor="con-email">
-                Email
+                {t("screensA.contact.email")}
               </label>
               <TextInput
                 id="con-email"
@@ -128,13 +119,13 @@ export default function Contact() {
 
             <div className="con__field">
               <label className="con__label" htmlFor="con-msg">
-                Message
+                {t("screensA.contact.message")}
               </label>
               <TextArea
                 id="con-msg"
                 value={cMsg}
                 onChange={(v) => set({ cMsg: v })}
-                placeholder="How can we help?"
+                placeholder={t("screensA.contact.messagePlaceholder")}
                 maxLength={MSG_CAP}
                 minHeight={120}
               />
@@ -145,7 +136,7 @@ export default function Contact() {
               className="con__send"
               onClick={sendContact}
             >
-              Send message
+              {t("screensA.contact.send")}
             </ButtonPrimary>
           </div>
         </section>
@@ -157,7 +148,7 @@ export default function Contact() {
           </div>
 
           <div className="sd-card con__info">
-            <p className="sd-eyebrow">Head office</p>
+            <p className="sd-eyebrow">{t("screensA.contact.headOffice")}</p>
             <p className="con__info-name">Hearth Home Ltd.</p>
             <p className="con__info-body">
               Unit 4, Ellery Works
@@ -171,18 +162,15 @@ export default function Contact() {
           </div>
 
           <div className="sd-card con__info">
-            <p className="sd-eyebrow">Returns depot</p>
-            <p className="con__info-body">
-              Don't post returns to the office — start a return first and use
-              the prepaid label you get by email.
-            </p>
+            <p className="sd-eyebrow">{t("screensA.contact.returnsDepot")}</p>
+            <p className="con__info-body">{t("screensA.contact.returnsBody")}</p>
             {/* Ruling R2 (preserved): the article, not the wizard. */}
             <button
               type="button"
               className="fx-nav con__returns"
               onClick={() => openArticle("a_return")}
             >
-              How returns work
+              {t("screensA.contact.returnsLink")}
               <Icon name="arrow-right" size={13} />
             </button>
           </div>

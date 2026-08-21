@@ -23,22 +23,25 @@ import {
 } from "../components";
 import { dataSource } from "../data/source";
 import type { RecycleMethodId } from "../data/types";
+import { useT, type MessageKey } from "../i18n";
 import { useAppStore } from "../state/store";
 import "../styles/screen-recycle.css";
 
-const POSTCODE_LABEL: Record<RecycleMethodId, string> = {
-  post: "Postcode for the label",
-  drop: "Your postcode, so we can sort the list by distance",
-  collect: "Collection postcode",
+/* Message keys — module scope has no hook, so they resolve at the render site. */
+const POSTCODE_LABEL: Record<RecycleMethodId, MessageKey> = {
+  post: "screensB.recycle.postcodePost",
+  drop: "screensB.recycle.postcodeDrop",
+  collect: "screensB.recycle.postcodeCollect",
 };
 
-const SUBMIT: Record<RecycleMethodId, { label: string; icon: string }> = {
-  post: { label: "Email me a free label", icon: "mail" },
-  drop: { label: "Reserve a drop-off", icon: "map-pin" },
-  collect: { label: "Book a collection", icon: "truck" },
+const SUBMIT: Record<RecycleMethodId, { label: MessageKey; icon: string }> = {
+  post: { label: "screensB.recycle.submitPost", icon: "mail" },
+  drop: { label: "screensB.recycle.submitDrop", icon: "map-pin" },
+  collect: { label: "screensB.recycle.submitCollect", icon: "truck" },
 };
 
 export default function Recycle() {
+  const t = useT();
   const rcMethod = useAppStore((s) => s.rcMethod);
   const rcOn = useAppStore((s) => s.rcOn);
   const rcPostcode = useAppStore((s) => s.rcPostcode);
@@ -79,14 +82,14 @@ export default function Recycle() {
               className="rc-done__cta"
               onClick={() => go("tradein")}
             >
-              Check trade-in value instead
+              {t("screensB.recycle.checkTradeIn")}
             </ButtonPrimary>
             <ButtonSecondary
               icon="rotate-ccw"
               iconSize={15}
               onClick={recycleReset}
             >
-              Recycle something else
+              {t("screensB.recycle.somethingElse")}
             </ButtonSecondary>
           </div>
         </div>
@@ -98,12 +101,8 @@ export default function Recycle() {
 
   return (
     <main className="fx-screen fx-page w-900 scr-recycle">
-      <h1 className="rc-h1">Recycling drop-off</h1>
-      <p className="rc-lede">
-        Any Hearth device, any age, working or not — free to recycle, and it
-        doesn't have to have come from us. If it still works, check the trade-in
-        value first: you might get credit for it.
-      </p>
+      <h1 className="rc-h1">{t("screensB.recycle.h1")}</h1>
+      <p className="rc-lede">{t("screensB.recycle.lede")}</p>
 
       <StatGrid min={220} className="rc-stats">
         {stats.map((s) => (
@@ -119,7 +118,7 @@ export default function Recycle() {
 
       <Card variant="form" className="rc-form">
         <div>
-          <p className="rc-label">How would you like to send it back?</p>
+          <p className="rc-label">{t("screensB.recycle.methodLabel")}</p>
           <div className="rc-methods">
             {methods.map((m) => (
               <Radio
@@ -141,7 +140,7 @@ export default function Recycle() {
         </div>
 
         <div>
-          <p className="rc-label">What are you recycling?</p>
+          <p className="rc-label">{t("screensB.recycle.itemsLabel")}</p>
           <div className="rc-items">
             {items.map((it) => {
               const on = rcOn.includes(it.id);
@@ -174,7 +173,7 @@ export default function Recycle() {
 
         <div>
           <label className="rc-label" htmlFor="rc-postcode">
-            {POSTCODE_LABEL[rcMethod]}
+            {t(POSTCODE_LABEL[rcMethod])}
           </label>
           <input
             id="rc-postcode"
@@ -191,11 +190,11 @@ export default function Recycle() {
           className="rc-submit"
           onClick={recycleSubmit}
         >
-          {submit.label}
+          {t(submit.label)}
         </ButtonPrimary>
       </Card>
 
-      <h2 className="rc-h2">Nearest drop-off points</h2>
+      <h2 className="rc-h2">{t("screensB.recycle.nearest")}</h2>
       <div className="rc-points">
         {points.map((p) => (
           <div className="fx-card rc-point" key={p.name}>
@@ -213,7 +212,7 @@ export default function Recycle() {
               iconSize={14}
               onClick={() => storeDirections(p.name)}
             >
-              Directions
+              {t("screensB.recycle.directions")}
             </ButtonSecondary>
           </div>
         ))}
@@ -224,14 +223,16 @@ export default function Recycle() {
         className="rc-alllocations"
         onClick={gotoStores}
       >
-        See all locations
+        {t("screensB.recycle.allLocations")}
       </ButtonSecondary>
 
       <div className="rc-pair">
         <Card className="rc-rules">
           <span className="rc-rules__head">
             <Icon name="check-circle-2" size={17} color="var(--pos)" />
-            <span className="rc-rules__title">We take</span>
+            <span className="rc-rules__title">
+              {t("screensB.recycle.weTake")}
+            </span>
           </span>
           <ul className="rc-rules__list">
             {accepted.map((r) => (
@@ -246,7 +247,9 @@ export default function Recycle() {
         <Card className="rc-rules">
           <span className="rc-rules__head">
             <Icon name="x-circle" size={17} color="var(--danger)" />
-            <span className="rc-rules__title">We can't take</span>
+            <span className="rc-rules__title">
+              {t("screensB.recycle.weCantTake")}
+            </span>
           </span>
           <ul className="rc-rules__list">
             {rejected.map((r) => (
@@ -260,9 +263,7 @@ export default function Recycle() {
       </div>
 
       <Callout tone="warn" className="rc-warning">
-        Factory reset anything with a camera or microphone before you hand it
-        over. We wipe every device we receive, but resetting first means nothing
-        leaves your house with your data on it.
+        {t("screensB.recycle.warning")}
       </Callout>
     </main>
   );

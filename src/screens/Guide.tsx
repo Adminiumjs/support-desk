@@ -23,11 +23,12 @@ import {
   columnClass,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useT } from "../i18n";
 import {
-  GG_BLURB,
-  GG_CUTOFF,
-  GG_SEASON,
-  GG_TITLE,
+  ggBlurb,
+  ggCutoff,
+  ggSeason,
+  ggTitle,
   filterGiftPicks,
   giftHasWas,
 } from "../lib/derive";
@@ -36,6 +37,7 @@ import { useAppStore } from "../state/store";
 import "../styles/screen-guide.css";
 
 export default function Guide() {
+  const t = useT();
   const ggFilter = useAppStore((s) => s.ggFilter);
   const set = useAppStore((s) => s.set);
   const go = useAppStore((s) => s.go);
@@ -49,21 +51,25 @@ export default function Guide() {
   return (
     <main className={`fx-screen fx-page ${columnClass("guide")} scr-guide`}>
       <div className="gg-hero">
-        <p className="gg-hero__season">{GG_SEASON}</p>
-        <h1 className="gg-hero__title">{GG_TITLE}</h1>
-        <p className="gg-hero__blurb">{GG_BLURB}</p>
+        <p className="gg-hero__season">{ggSeason()}</p>
+        <h1 className="gg-hero__title">{ggTitle()}</h1>
+        <p className="gg-hero__blurb">{ggBlurb()}</p>
         <div className="gg-hero__actions">
           <ButtonPrimary icon="gift" iconSize={16} onClick={() => go("gift")}>
-            Buy a gift card instead
+            {t("screensA.guide.buyCard")}
           </ButtonPrimary>
           <span className="gg-cutoff">
             <Icon name="truck" size={15} />
-            {GG_CUTOFF}
+            {ggCutoff()}
           </span>
         </div>
       </div>
 
-      <div className="gg-filters" role="group" aria-label="Filter the gift guide">
+      <div
+        className="gg-filters"
+        role="group"
+        aria-label={t("screensA.guide.filterLabel")}
+      >
         {filters.map(([id, label, icon]) => (
           <Chip
             key={id}
@@ -111,12 +117,12 @@ export default function Guide() {
                   className="gg-pick__add"
                   onClick={() => addToBasketByName(g.name)}
                 >
-                  Add to basket
+                  {t("screensA.guide.addBasket")}
                 </ButtonPrimary>
                 <IconButton
                   icon="heart"
                   iconSize={16}
-                  label="Save for later"
+                  label={t("screensA.guide.saveLater")}
                   className="gg-pick__save"
                   onClick={() => saveToWishlist(g.name)}
                 />
@@ -128,7 +134,7 @@ export default function Guide() {
 
       <div className="gg-foot">
         <div className="gg-delivery">
-          <p className="sd-eyebrow">Delivery in time</p>
+          <p className="sd-eyebrow">{t("screensA.guide.delivery")}</p>
           <div className="gg-dates">
             {dates.map((d, i) => (
               <div
@@ -150,19 +156,15 @@ export default function Guide() {
         <div className="gg-wrap">
           <p className="gg-wrap__head">
             <Icon name="package-open" size={16} color="var(--fg-muted)" />
-            Gift-ready as standard
+            {t("screensA.guide.wrapHead")}
           </p>
-          <p className="gg-wrap__text">
-            Plastic-free boxes, no prices on the packing slip, and a handwritten
-            card if you add a message at checkout. Returns run to 31 January on
-            anything bought from November.
-          </p>
+          <p className="gg-wrap__text">{t("screensA.guide.wrapText")}</p>
           <button
             type="button"
             className="gg-wrap__link fx-nav"
             onClick={() => go("returns")}
           >
-            How extended returns work
+            {t("screensA.guide.returnsLink")}
             <Icon name="arrow-right" size={13} />
           </button>
         </div>

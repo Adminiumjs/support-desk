@@ -13,35 +13,54 @@
  */
 
 import type { ViewId } from "../data/types";
+import { clockTime, shortDate } from "./format";
+import { t } from "../i18n/ambient";
+import type { MessageKey } from "../i18n/messages";
 
 /* -------------------------------------------------------------- copy */
 
-/** Object phrases spliced into the error headline. Default: "this screen". */
-export const ERR_LABELS: Partial<Record<ViewId, string>> = {
-  live: "the live view",
-  auto: "your automations",
-  billing: "your invoices",
-  orders: "your order",
-  devices: "your devices",
-  energy: "your energy data",
-  notifs: "your notifications",
-  mytickets: "your tickets",
-  thread: "this conversation",
-  status: "the status page",
+/**
+ * One WHOLE headline per view, not an object phrase spliced into a frame.
+ *
+ * English gets away with "We couldn't load " + "your invoices" because the
+ * verb never agrees with its object; German, Czech and Arabic all decline the
+ * object, and Arabic reverses the clause order outright. The frame is the
+ * translator's to choose, so each view names a complete sentence.
+ */
+export const ERR_TITLE_KEYS: Partial<Record<ViewId, MessageKey>> = {
+  live: "lib.errors.titleLive",
+  auto: "lib.errors.titleAuto",
+  billing: "lib.errors.titleBilling",
+  orders: "lib.errors.titleOrders",
+  devices: "lib.errors.titleDevices",
+  energy: "lib.errors.titleEnergy",
+  notifs: "lib.errors.titleNotifs",
+  mytickets: "lib.errors.titleMytickets",
+  thread: "lib.errors.titleThread",
+  status: "lib.errors.titleStatus",
 };
 
 /**
  * The body copy. The comp left a literal `—` escape unrendered here;
  * ruling R7 says emit the real em dash.
  */
-export const ERR_TEXT =
-  "The request timed out on our side, so nothing you were doing has been lost. Trying again usually works — if it doesn't, the status page will say whether it's us.";
+export function errText(): string {
+  return t("lib.errors.text");
+}
 
-/** Hard-coded in the comp, kept hard-coded here (ruling R2: no `Date.now()`). */
-export const ERR_TIME = "27 Jul, 14:31";
+/**
+ * Hard-coded in the comp, kept hard-coded here (ruling R2: no `Date.now()`) —
+ * but only the instant is fixed. Rendering runs through `Intl` at call time so
+ * the stamp follows the reader's locale, which a module-level const could not.
+ */
+export const ERR_INSTANT = new Date(2026, 6, 27, 14, 31);
+
+export function errTime(): string {
+  return `${shortDate(ERR_INSTANT)}, ${clockTime(ERR_INSTANT)}`;
+}
 
 export function errorTitle(view: ViewId): string {
-  return `We couldn't load ${ERR_LABELS[view] ?? "this screen"}`;
+  return t(ERR_TITLE_KEYS[view] ?? "lib.errors.titleDefault");
 }
 
 export function errorCode(view: ViewId): string {
@@ -57,27 +76,39 @@ export interface ErrorCard {
   action?: { label: string; icon: string };
 }
 
-export const ERR_CARDS: ErrorCard[] = [
-  {
-    title: "Your devices are fine",
-    icon: "cpu",
-    text: "Schedules, alerts and local recording run on the hardware. This is our website, not your home.",
-  },
-  {
-    title: "Need an answer now?",
-    icon: "message-circle",
-    text: "Chat works independently of this page — open it and a person will pick up.",
-    action: { label: "Open live chat", icon: "message-circle" },
-  },
-];
+export function errCards(): ErrorCard[] {
+  return [
+    {
+      title: t("lib.errors.card1Title"),
+      icon: "cpu",
+      text: t("lib.errors.card1Text"),
+    },
+    {
+      title: t("lib.errors.card2Title"),
+      icon: "message-circle",
+      text: t("lib.errors.card2Text"),
+      action: { label: t("lib.errors.card2Action"), icon: "message-circle" },
+    },
+  ];
+}
 
 /* ------------------------------------------------------------ offline */
 
-export const OFFLINE_TITLE = "You're offline";
-export const OFFLINE_TEXT =
-  "Pages you've already opened still work. Anything you send will wait until you're back.";
-export const OFFLINE_BACK_TOAST = "Back online";
-export const OFFLINE_STILL_TOAST = "Still no connection";
+export function offlineTitle(): string {
+  return t("lib.errors.offlineTitle");
+}
+
+export function offlineText(): string {
+  return t("lib.errors.offlineText");
+}
+
+export function offlineBackToast(): string {
+  return t("lib.errors.offlineBackToast");
+}
+
+export function offlineStillToast(): string {
+  return t("lib.errors.offlineStillToast");
+}
 
 /** `navigator.onLine`, guarded — treated as online where unavailable. */
 export function isOnline(): boolean {
@@ -142,6 +173,14 @@ export function viewGate(input: {
 
 /* ------------------------------------------------------------ toasts */
 
-export const RETRY_TOAST = "Retrying…";
-export const REPORT_TOAST = "Tell us what you were doing";
-export const SIMULATE_FAIL_TOAST = "Simulated a failed load";
+export function retryToast(): string {
+  return t("lib.errors.retryToast");
+}
+
+export function reportToast(): string {
+  return t("lib.errors.reportToast");
+}
+
+export function simulateFailToast(): string {
+  return t("lib.errors.simulateFailToast");
+}

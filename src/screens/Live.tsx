@@ -23,20 +23,22 @@ import {
   columnClass,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useT } from "../i18n";
 import {
-  LIVE_CONTROLS,
-  LIVE_RETENTION,
   clipsForCamera,
   clipTypeCounts,
   filterClipsByType,
   groupClipsByDay,
+  liveControls,
   liveEmpty,
   liveIntro,
+  liveRetention,
 } from "../lib/clips";
 import { useAppStore } from "../state/store";
 import "../styles/screen-live.css";
 
 export default function Live() {
+  const t = useT();
   const lvCam = useAppStore((s) => s.lvCam);
   const lvType = useAppStore((s) => s.lvType);
   const lvOut = useAppStore((s) => s.lvOut);
@@ -70,7 +72,7 @@ export default function Live() {
     <main className={`fx-screen fx-page ${columnClass("live")} lv`}>
       <div className="lv__head">
         <div className="lv__head-text">
-          <h1 className="lv__h1">Live view &amp; clips</h1>
+          <h1 className="lv__h1">{t("screensB.live.h1")}</h1>
           <p className="lv__lede">{liveIntro(cam)}</p>
         </div>
         <ChipRow className="lv__cams" gap={8}>
@@ -95,7 +97,7 @@ export default function Live() {
       />
 
       <div className="lv__controls">
-        {LIVE_CONTROLS.map((c) => (
+        {liveControls().map((c) => (
           <ButtonSecondary
             key={c.label}
             icon={c.icon}
@@ -109,8 +111,10 @@ export default function Live() {
       </div>
 
       <div className="lv__clips-head">
-        <span className="lv__clips-title">Clip history</span>
-        <span className="lv__retention">{LIVE_RETENTION}</span>
+        <span className="lv__clips-title">
+          {t("screensB.live.clipHistory")}
+        </span>
+        <span className="lv__retention">{liveRetention()}</span>
       </div>
 
       <ChipRow className="lv__types" gap={9}>
@@ -153,8 +157,7 @@ export default function Live() {
       )}
 
       <Callout tone="info" icon="lock" className="lv__note">
-        Clips are encrypted end to end. Sharing creates a link that expires
-        after 7 days, and we can't watch what's behind it.
+        {t("screensB.live.note")}
       </Callout>
     </main>
   );

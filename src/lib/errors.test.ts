@@ -11,17 +11,18 @@
  *   2. `isOnline` / `watchConnection` touch globals that do not exist in a
  *      test (or in SSR). Both must degrade to "online" rather than throw, so
  *      the guards are exercised with the globals stubbed away entirely.
- *   3. The copy constants carry typographic rulings (R7's real em dash) and a
- *      grammatical contract: every ERR_LABELS entry is spliced mid-sentence.
+ *   3. The copy carries a typographic ruling (R7's real em dash) and a
+ *      per-view contract: every mapped view names its own whole headline.
  */
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ViewId } from "../data/types.ts";
 import {
-  ERR_CARDS,
-  ERR_LABELS,
-  ERR_TEXT,
-  ERR_TIME,
+  ERR_TITLE_KEYS,
+  errCards,
+  errText,
+  ERR_INSTANT,
+  errTime,
   errorCode,
   errorTitle,
   forcedErrorMode,
@@ -51,14 +52,23 @@ describe("error copy", () => {
     expect(errorTitle("imprint")).toBe("We couldn't load this screen");
   });
 
-  it("keeps every label lower-case so the sentence still reads", () => {
-    /* Each phrase lands mid-sentence after "We couldn't load ". A capitalised
-     * entry would read "We couldn't load Your invoices". */
-    for (const [view, label] of Object.entries(ERR_LABELS)) {
-      expect(label, view).toBeTruthy();
-      expect(label![0], view).toBe(label![0].toLowerCase());
-      expect(errorTitle(view as ViewId)).toBe(`We couldn't load ${label}`);
+  it("gives every mapped view a headline of its own", () => {
+    /*
+     * The headline is no longer "We couldn't load " plus an object phrase.
+     * German, Czech and Arabic all decline that object and Arabic reverses
+     * the clause, so each view names a complete sentence and the frame
+     * belongs to the translator. What still has to hold is that a mapped
+     * view says something distinct — otherwise the map earns nothing.
+     */
+    const views = Object.keys(ERR_TITLE_KEYS) as ViewId[];
+    const titles = new Set<string>();
+    for (const view of views) {
+      const title = errorTitle(view);
+      expect(title, view).toBeTruthy();
+      expect(title, view).not.toBe(errorTitle("home"));
+      titles.add(title);
     }
+    expect(titles.size).toBe(views.length);
   });
 
   it("upper-cases the view id into the diagnostic code", () => {
@@ -72,22 +82,30 @@ describe("error copy", () => {
     /* The comp left the escape unrendered; a literal "&mdash;" (or a hyphen
      * standing in for the dash) would be invisible in review but not on
      * screen. Spelled as an escape so the assertion cannot be misread. */
-    expect(ERR_TEXT).toContain("—");
-    expect(ERR_TEXT).not.toContain("&mdash;");
-    expect(ERR_TEXT).not.toContain(" - ");
+    expect(errText()).toContain("—");
+    expect(errText()).not.toContain("&mdash;");
+    expect(errText()).not.toContain(" - ");
   });
 
-  it("keeps the timestamp a static 'DD Mon, HH:MM' (ruling R2: no Date.now())", () => {
-    /* The shape is the contract, not the date — a copy edit may move it, a
-     * live clock or an ISO stamp leaking in may not. */
-    expect(ERR_TIME).toMatch(/^\d{1,2} [A-Z][a-z]{2}, \d{2}:\d{2}$/);
+  it("keeps the timestamp a static instant (ruling R2: no Date.now())", () => {
+    /*
+     * The instant is the contract, not its rendering: `errTime()` formats
+     * through `Intl` and so reads differently in every locale, but it must
+     * never start telling the time. Two calls a moment apart agree because
+     * nothing in it consults the clock.
+     */
+    expect(ERR_INSTANT.getTime()).toBe(new Date(2026, 6, 27, 14, 31).getTime());
+    expect(errTime()).toBe(errTime());
+    /* en-US, which is what the ambient bridge serves with no provider mounted. */
+    expect(errTime()).toBe("Jul 27, 02:31 PM");
   });
 
   it("carries two reassurance cards, only the second of which acts", () => {
-    expect(ERR_CARDS).toHaveLength(2);
-    expect(ERR_CARDS[0].action).toBeUndefined();
-    expect(ERR_CARDS[1].action?.label).toBeTruthy();
-    for (const card of ERR_CARDS) {
+    const cards = errCards();
+    expect(cards).toHaveLength(2);
+    expect(cards[0].action).toBeUndefined();
+    expect(cards[1].action?.label).toBeTruthy();
+    for (const card of cards) {
       expect(card.title).toBeTruthy();
       expect(card.icon).toBeTruthy();
       expect(card.text).toBeTruthy();

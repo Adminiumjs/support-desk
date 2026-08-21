@@ -5,12 +5,15 @@
  * `.fx-nomotion` freezes the animation for reduce-motion users.
  */
 
+import { useT } from "../i18n";
+
 export interface TypingDotsProps {
   /** `thread` = 7px dots at 1.3s; `chat` = 6px dots at 1.2s. */
   variant?: "thread" | "chat";
   /** Wraps the dots in the agent bubble shell. */
   bubble?: boolean;
-  /** Accessible status text announced to screen readers. */
+  /** Accessible status text announced to screen readers. Defaults to the
+   * generic "someone is typing" line. */
   label?: string;
   className?: string;
 }
@@ -19,9 +22,11 @@ export interface TypingDotsProps {
 export function TypingDots({
   variant = "thread",
   bubble = false,
-  label = "Agent is typing",
+  label,
   className,
 }: TypingDotsProps) {
+  const t = useT();
+  const status = label ?? t("chrome.chat.agentTyping");
   const dots = (
     <span
       className={`dots${variant === "chat" ? " dots--sm" : ""}${
@@ -29,7 +34,7 @@ export function TypingDots({
       }`}
       role="status"
       aria-live="polite"
-      aria-label={label}
+      aria-label={status}
     >
       <span />
       <span />

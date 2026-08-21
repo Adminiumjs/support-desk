@@ -22,6 +22,8 @@ import {
 } from "../components";
 import { dataSource } from "../data/source";
 import type { BreachResultKind } from "../data/types";
+import { useT } from "../i18n";
+import { longDate } from "../lib/format";
 import { useAppStore } from "../state/store";
 import "../styles/screen-breach.css";
 
@@ -32,7 +34,16 @@ const RESULT_TONE: Record<BreachResultKind, string> = {
   info: "--info",
 };
 
+/* The disclosure's own dates, as Dates rather than authored strings, so the
+ * meta line and the regulator note read in the locale's own calendar format. */
+const PUBLISHED = new Date(2026, 6, 24);
+const UPDATED = new Date(2026, 6, 27);
+const REPORTED = new Date(2026, 6, 23);
+const ICO_REF = "IC-4471-8823";
+const PRIVACY_EMAIL = "privacy@hearth.example";
+
 export default function Breach() {
+  const t = useT();
   const brEmail = useAppStore((s) => s.brEmail);
   const brResult = useAppStore((s) => s.brResult);
   const setBreachEmail = useAppStore((s) => s.setBreachEmail);
@@ -54,43 +65,43 @@ export default function Breach() {
 
   const tone = brResult ? RESULT_TONE[brResult.kind] : "--info";
 
+  /* One `{ref}` / `{email}` slot each, so a single split keeps the sentence
+     the translator wrote intact around the styled token. */
+  const regulator = t("screensA.breach.regulatorText", {
+    date: longDate(REPORTED),
+  }).split("{ref}");
+  const questions = t("screensA.breach.questionsText").split("{email}");
+
   return (
     <main className="fx-screen fx-page w-760 scr-breach">
       <div className="br-meta">
         <span className="br-badge">
           <Icon name="shield-alert" size={13} />
-          Security notice
+          {t("screensA.breach.badge")}
         </span>
         <span className="br-published">
-          published 24 Jul 2026 · updated 27 Jul 2026
+          {t("screensA.breach.published", {
+            published: longDate(PUBLISHED),
+            updated: longDate(UPDATED),
+          })}
         </span>
       </div>
 
-      <h1 className="br-h1">
-        A third-party email provider exposed some customer email addresses
-      </h1>
-      <p className="br-lede">
-        On 22 July we found that a supplier we use to send order emails had a
-        misconfigured backup. Email addresses and order reference numbers were
-        readable for about 40 hours. No passwords, payment details, video clips
-        or addresses were involved.
-      </p>
+      <h1 className="br-h1">{t("screensA.breach.h1")}</h1>
+      <p className="br-lede">{t("screensA.breach.lede")}</p>
 
       <div className="br-status">
         <span className="br-status__ico">
           <Icon name="check-circle-2" size={22} color="var(--pos)" />
         </span>
         <div>
-          <p className="br-status__title">Contained and closed</p>
-          <p className="br-status__text">
-            The backup was secured within two hours of discovery. The supplier
-            has been audited and the affected system retired.
-          </p>
+          <p className="br-status__title">{t("screensA.breach.statusTitle")}</p>
+          <p className="br-status__text">{t("screensA.breach.statusText")}</p>
         </div>
       </div>
 
       <ListCard className="br-table">
-        <p className="br-table__head">What was and wasn't affected</p>
+        <p className="br-table__head">{t("screensA.breach.tableHead")}</p>
         {items.map((b, i) => (
           <FactRow
             key={b.label}
@@ -111,17 +122,13 @@ export default function Breach() {
         ))}
       </ListCard>
 
-      <h2 className="br-h2">Am I affected?</h2>
+      <h2 className="br-h2">{t("screensA.breach.affected")}</h2>
       <Card variant="lg" className="br-check">
-        <p className="br-check__intro">
-          Everyone affected was emailed on 24 July. You can also check here — we
-          only compare against the list of exposed addresses, and we don't store
-          what you type.
-        </p>
+        <p className="br-check__intro">{t("screensA.breach.checkIntro")}</p>
         <div className="br-check__row">
           <div className="br-check__field">
             <label className="br-check__label" htmlFor="br-email">
-              Your email address
+              {t("screensA.breach.emailLabel")}
             </label>
             <input
               id="br-email"
@@ -144,7 +151,7 @@ export default function Breach() {
             className="br-check__btn"
             onClick={breachCheck}
           >
-            Check
+            {t("screensA.breach.check")}
           </ButtonPrimary>
         </div>
 
@@ -165,7 +172,7 @@ export default function Breach() {
         ) : null}
       </Card>
 
-      <h2 className="br-h2">What we'd suggest doing</h2>
+      <h2 className="br-h2">{t("screensA.breach.steps")}</h2>
       <ol className="br-steps">
         {steps.map((s, i) => (
           <li className="br-step" key={s.title}>
@@ -188,7 +195,7 @@ export default function Breach() {
         ))}
       </ol>
 
-      <h2 className="br-h2">Timeline</h2>
+      <h2 className="br-h2">{t("screensA.breach.timeline")}</h2>
       <Card variant="lg" className="br-timeline">
         <EventTimeline entries={timeline} />
       </Card>
@@ -197,23 +204,28 @@ export default function Breach() {
         <Card variant="lg" className="br-panel">
           <span className="br-panel__head">
             <Icon name="scale" size={16} color="var(--fg-muted)" />
-            <span className="br-panel__title">Regulator</span>
+            <span className="br-panel__title">
+              {t("screensA.breach.regulator")}
+            </span>
           </span>
           <p className="br-panel__text">
-            Reported to the ICO on 23 July, reference{" "}
-            <span className="br-panel__ref">IC-4471-8823</span>. You can
-            complain to them directly at any time.
+            {regulator[0]}
+            <span className="br-panel__ref">{ICO_REF}</span>
+            {regulator[1]}
           </p>
         </Card>
 
         <Card variant="lg" className="br-panel">
           <span className="br-panel__head">
             <Icon name="mail" size={16} color="var(--fg-muted)" />
-            <span className="br-panel__title">Questions</span>
+            <span className="br-panel__title">
+              {t("screensA.breach.questions")}
+            </span>
           </span>
           <p className="br-panel__text">
-            Our data protection lead answers these personally at{" "}
-            <span className="br-panel__ref">privacy@hearth.example</span>.
+            {questions[0]}
+            <span className="br-panel__ref">{PRIVACY_EMAIL}</span>
+            {questions[1]}
           </p>
           <ButtonSecondary
             icon="message-circle"
@@ -221,15 +233,12 @@ export default function Breach() {
             className="br-panel__btn"
             onClick={() => go("contact")}
           >
-            Contact us
+            {t("screensA.breach.contact")}
           </ButtonSecondary>
         </Card>
       </div>
 
-      <p className="br-disclaimer">
-        This is a demo portal. The incident described here is fictional and no
-        real data is involved.
-      </p>
+      <p className="br-disclaimer">{t("screensA.breach.disclaimer")}</p>
     </main>
   );
 }

@@ -14,11 +14,13 @@
 import { AccentIconTile, ButtonPrimary, ButtonSecondary } from "../components";
 import { OV_COUNT } from "../data/demo";
 import { dataSource } from "../data/source";
-import { pluralise } from "../lib/format";
+import { useI18n } from "../i18n";
+import { counted } from "../lib/format";
 import { useAppStore } from "../state/store";
 import "../styles/screen-overview.css";
 
 export default function Overview() {
+  const { t, number } = useI18n();
   const GROUPS = dataSource.overviewGroups();
 
   const view = useAppStore((s) => s.view);
@@ -33,11 +35,10 @@ export default function Overview() {
     <main className="fx-screen fx-page w-1120 fx-wide ovw">
       <header className="ovw__head">
         <div className="ovw__intro">
-          <p className="ovw__eyebrow">OVERVIEW</p>
-          <h1 className="ovw__h1">Every screen in the portal</h1>
+          <p className="ovw__eyebrow">{t("screensB.overview.eyebrow")}</p>
+          <h1 className="ovw__h1">{t("screensB.overview.h1")}</h1>
           <p className="ovw__lede">
-            {OV_COUNT} screens, all interactive. Jump straight to any of them —
-            flows link to each other the way they would in production.
+            {t("screensB.overview.lede", { count: number(OV_COUNT) })}
           </p>
         </div>
         <div className="ovw__actions">
@@ -45,10 +46,12 @@ export default function Overview() {
             icon={dark ? "sun" : "moon"}
             onClick={toggleTheme}
           >
-            {dark ? "Light theme" : "Dark theme"}
+            {dark
+              ? t("screensB.overview.lightTheme")
+              : t("screensB.overview.darkTheme")}
           </ButtonSecondary>
           <ButtonPrimary icon="life-buoy" onClick={goHome}>
-            Open the portal
+            {t("screensB.overview.openPortal")}
           </ButtonPrimary>
         </div>
       </header>
@@ -60,7 +63,7 @@ export default function Overview() {
               <p className="sd-eyebrow">{g.name}</p>
               <span className="ovw__rule" aria-hidden="true" />
               <span className="ovw__group-count">
-                {pluralise(g.items.length, "screen")}
+                {counted("count.screen", g.items.length)}
               </span>
             </div>
 

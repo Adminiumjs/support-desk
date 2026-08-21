@@ -8,13 +8,15 @@
  * The rules worth guarding hardest, because each is one "tidy-up" away from
  * being wrong:
  *
- *   1. `money` is always two decimals; `moneyLoose` drops `.00` only on whole
+ *   1. `money` is always two decimals; `moneyLoose` drops them only on whole
  *      numbers. Swapping one for the other changes every price on the site.
- *   2. Rounding is JS rounding: `Math.round` breaks ties toward +∞, so it is
- *      NOT symmetric across zero, and `toFixed` rounds the binary double, not
- *      the decimal you typed. Both are pinned below.
- *   3. Negative money uses a real U+2212 MINUS SIGN in `signedMoney` and a
- *      plain hyphen everywhere else. That is a deliberate split, not a slip.
+ *   2. Where a rule is the comp's arithmetic, the rounding happens BEFORE
+ *      `Intl` sees the number: `Math.round` breaks ties toward +∞, so it is
+ *      NOT symmetric across zero, and `poundsWhole` / `percentText` preserve
+ *      that. `money` hands the raw value over and gets `Intl`'s half-expand.
+ *   3. Negative money is signed by `Intl`, which places the sign against the
+ *      symbol the way the locale does. The old hand-rolled U+2212 prefix is
+ *      gone — it hard-coded one language's typography into every locale.
  *   4. The reference generators are pure functions of a count, so their whole
  *      job is to be unique across the range the app can actually produce.
  *      Each one is swept over its reachable domain here.
@@ -22,11 +24,14 @@
 
 import { describe, expect, it } from "vitest";
 import { CODE_PREFIX, GIFT_CODE_PREFIX, SURVEY_TAGS } from "../data/demo.ts";
+import { tOr } from "../i18n/ambient";
+import type { MessageKey } from "../i18n/messages";
 import {
   NOW_STAMP,
-  articleCount,
   barHeight,
+  clockTime,
   claimRef,
+  counted,
   dayPart,
   deleteRef,
   displayNameFromEmail,
@@ -41,14 +46,12 @@ import {
   percent,
   percentText,
   planPrice,
-  pluralise,
   poundsWhole,
   readTime,
   readTimeShort,
   recycleRef,
   relativeTime,
   repairRef,
-  resultCount,
   rmaRef,
   signedMoney,
   subjectFromMessage,
@@ -74,46 +77,45 @@ describe("money", () => {
     expect(money(12.5)).toBe("£12.50");
   });
 
-  it("prints negatives with a plain hyphen, after the pound sign", () => {
+  it("puts the sign in front of the symbol, as en-US does", () => {
     /*
-     * `-£12.00` would be the typographically correct form; `money` produces
-     * `£-12.00` because it interpolates the raw number. Only `signedMoney`
-     * moves the sign in front of the symbol — see the signedMoney block.
+     * The old implementation interpolated the raw number and produced the
+     * wrong `£-12.00`. `Intl` knows where each locale wants the sign, so this
+     * is now correct everywhere rather than tidy in one place.
      */
-    expect(money(-12)).toBe("£-12.00");
-    /* Negative zero loses its sign in `toFixed`, so no "£-0.00" ever appears. */
+    expect(money(-12)).toBe("-£12.00");
+    /* `Intl` would render -0 as "-£0.00"; `noNegZero` folds it first, because a
+     * signed zero on a price tag is never what anyone meant. */
     expect(money(-0)).toBe("£0.00");
   });
 
-  it("rounds the binary double, not the decimal literal", () => {
+  it("rounds half away from zero, the way `Intl` does", () => {
     /*
-     * The obvious answer for 1.005 is "1.01" and it is wrong: the nearest
-     * double to 1.005 is slightly *below* it, so `toFixed` rounds down. 12.005
-     * happens to land slightly above and rounds up. Anyone "fixing" this pair
-     * to be consistent is fixing IEEE 754, not this function.
+     * `toFixed` used to round the binary double, which made 1.005 → "£1.00"
+     * and 12.005 → "£12.01" — a pair nobody could defend. `Intl` rounds the
+     * decimal value half-expand, so both go up and the results are consistent.
      */
-    expect(money(1.005)).toBe("£1.00");
-    expect(money(2.675)).toBe("£2.67");
+    expect(money(1.005)).toBe("£1.01");
+    expect(money(2.675)).toBe("£2.68");
     expect(money(12.005)).toBe("£12.01");
-    /* Straightforward halves still round up. */
-    expect(money(1.015)).toBe("£1.01"); // also below the half, in binary
-    expect(money(0.125)).toBe("£0.13"); // exactly representable, ties up
+    expect(money(1.015)).toBe("£1.02");
+    expect(money(0.125)).toBe("£0.13");
   });
 
-  it("truncates nothing and groups nothing at four figures and beyond", () => {
+  it("groups thousands, because the locale says to", () => {
     /*
-     * Deliberate: the module header rules out `Intl.NumberFormat` so the demo
-     * renders identically on every machine. The cost is no thousands
-     * separator — £1234.50, not £1,234.50.
+     * The old implementation refused `Intl.NumberFormat` to keep the demo
+     * byte-identical on every machine, and paid for it with £1234.50. The
+     * grouping separator is now the reader's: "," in en-US, "." in de-DE, a
+     * narrow space in fr-FR.
      */
-    expect(money(1234.5)).toBe("£1234.50");
-    expect(money(1_000_000)).toBe("£1000000.00");
+    expect(money(1234.5)).toBe("£1,234.50");
+    expect(money(1_000_000)).toBe("£1,000,000.00");
   });
 
-  it("hands back whatever `toFixed` does for absurd magnitudes", () => {
-    /* Above 1e21 `toFixed` gives up and returns exponential notation. There is
-     * no guard, and no reachable path that produces such a price. */
-    expect(money(1e21)).toBe("£1e+21");
+  it("copes with magnitudes no price can reach", () => {
+    /* `toFixed` used to give up above 1e21 and emit "£1e+21". `Intl` does not. */
+    expect(money(1e21)).toBe("£1,000,000,000,000,000,000,000.00");
     expect(money(NaN)).toBe("£NaN");
   });
 });
@@ -128,8 +130,8 @@ describe("moneyLoose", () => {
 
   it("treats a negative whole number as whole", () => {
     /* `-50 % 1` is -0, which is falsy, so the whole-number branch wins. */
-    expect(moneyLoose(-50)).toBe("£-50");
-    expect(moneyLoose(-12.5)).toBe("£-12.50");
+    expect(moneyLoose(-50)).toBe("-£50");
+    expect(moneyLoose(-12.5)).toBe("-£12.50");
   });
 
   it("shows £0.00 for a non-zero amount below half a penny", () => {
@@ -139,6 +141,10 @@ describe("moneyLoose", () => {
      * gift-card screen's custom field is the only way to type such a value.
      */
     expect(moneyLoose(0.004)).toBe("£0.00");
+  });
+
+  it("groups a loose whole number too", () => {
+    expect(moneyLoose(1_500)).toBe("£1,500");
   });
 });
 
@@ -150,14 +156,18 @@ describe("poundsWhole", () => {
   });
 
   it("breaks ties toward +∞, so negatives round the other way — rule 2", () => {
-    /* Math.round(-149.5) is -149, not -150. Symmetry is the intuitive answer
-     * and the wrong one. */
-    expect(poundsWhole(-149.5)).toBe("£-149");
-    expect(poundsWhole(-150.5)).toBe("£-150");
+    /*
+     * Math.round(-149.5) is -149, not -150. Symmetry is the intuitive answer
+     * and the wrong one. This is why the value is rounded before `Intl` sees
+     * it: `Intl`'s own half-expand rounding would give -150 and quietly change
+     * the comp's arithmetic.
+     */
+    expect(poundsWhole(-149.5)).toBe("-£149");
+    expect(poundsWhole(-150.5)).toBe("-£150");
   });
 
   it("never prints a negative zero", () => {
-    /* Math.round(-0.4) is -0, but template interpolation stringifies it "0". */
+    /* Math.round(-0.4) is -0, which `Intl` would sign; `noNegZero` folds it. */
     expect(poundsWhole(-0.4)).toBe("£0");
     expect(poundsWhole(0)).toBe("£0");
   });
@@ -183,22 +193,24 @@ describe("planPrice", () => {
 });
 
 describe("signedMoney — rule 3", () => {
-  it("uses a real U+2212 MINUS SIGN for negatives, before the symbol", () => {
-    expect(signedMoney(-129)).toBe("−£129.00");
-    /* Spelled out so a hyphen substitution cannot pass unnoticed. */
-    expect(signedMoney(-1).charCodeAt(0)).toBe(0x2212);
-    expect(signedMoney(-1)).not.toContain("-");
+  it("lets the locale sign the number", () => {
+    /*
+     * Was a hand-rolled `−£` with a U+2212 MINUS SIGN. That is the right glyph
+     * for en-GB typography and the wrong one for a locale that signs with
+     * `؜-` and puts it elsewhere, so the choice now belongs to `Intl`.
+     */
+    expect(signedMoney(-129)).toBe("-£129.00");
   });
 
   it("leaves positives and zero unsigned", () => {
     expect(signedMoney(129)).toBe("£129.00");
     expect(signedMoney(0)).toBe("£0.00");
-    /* -0 < 0 is false, so negative zero takes the positive branch. */
+    /* `noNegZero` keeps a signed zero off the invoice. */
     expect(signedMoney(-0)).toBe("£0.00");
   });
 
-  it("agrees with `money` on magnitude", () => {
-    expect(signedMoney(-12.345)).toBe(`−${money(12.345)}`);
+  it("is `money` — one formatter, so an invoice cannot drift from a price", () => {
+    expect(signedMoney(-12.345)).toBe(money(-12.345));
   });
 });
 
@@ -206,35 +218,72 @@ describe("signedMoney — rule 3", () => {
  * counting
  * ------------------------------------------------------------------ */
 
-describe("pluralise", () => {
+describe("counted", () => {
+  /*
+   * The replacement for `pluralise(n, noun)`, which appended an English "s".
+   * With no provider mounted the ambient bridge serves the en-US bundle and
+   * English's two categories, so these assert the English forms; the point of
+   * the change is that Czech gets three variants and Arabic six from exactly
+   * the same call.
+   */
   it("uses the singular at exactly one and the plural everywhere else", () => {
-    expect(pluralise(0, "ticket")).toBe("0 tickets");
-    expect(pluralise(1, "ticket")).toBe("1 ticket");
-    expect(pluralise(2, "ticket")).toBe("2 tickets");
+    expect(counted("count.ticket", 0)).toBe("0 tickets");
+    expect(counted("count.ticket", 1)).toBe("1 ticket");
+    expect(counted("count.ticket", 2)).toBe("2 tickets");
   });
 
-  it("pluralises fractions and negatives — only 1 exactly is singular", () => {
-    expect(pluralise(1.5, "ticket")).toBe("1.5 tickets");
-    /* English agrees: "-1 degrees". */
-    expect(pluralise(-1, "ticket")).toBe("-1 tickets");
-    expect(pluralise(1.0, "ticket")).toBe("1 ticket");
+  it("takes an irregular plural from the bundle, not from a call site", () => {
+    /* No `plural` argument to forget: "people" is authored once, in the
+     * message, where a translator can see it. */
+    expect(counted("count.person", 1)).toBe("1 person");
+    expect(counted("count.person", 3)).toBe("3 people");
   });
 
-  it("takes an irregular plural", () => {
-    expect(pluralise(2, "reply", "replies")).toBe("2 replies");
-    expect(pluralise(1, "reply", "replies")).toBe("1 reply");
+  it("follows CLDR, so a fraction is `other` in English", () => {
+    expect(counted("count.ticket", 1.5)).toBe("1.5 tickets");
+    expect(counted("count.ticket", -1)).toBe("-1 tickets");
   });
 
-  it("honours an empty override, because the fallback is ?? not ||", () => {
-    /* `"" ?? x` is "", so an empty plural really does suppress the noun. */
-    expect(pluralise(2, "ticket", "")).toBe("2 ");
+  it("falls back to the key when a noun has no message", () => {
+    /* A missing key renders itself rather than throwing — a wrong label is
+     * recoverable in a demo, a blank screen is not.
+     *
+     * `counted()` itself can no longer be handed one: its parameter is
+     * `MessageKey`, so `counted("count.nonesuch", 2)` is a COMPILE error now,
+     * which is a strictly stronger guarantee than this test was making. The
+     * one seam an unchecked key still travels is `tOr()` — the lookup for keys
+     * assembled at runtime from catalogue data — so the runtime behaviour is
+     * asserted there. `tOr` can only return its fallback by observing that
+     * `t()` handed the key straight back. */
+    expect(tOr("count.nonesuch", "no such noun")).toBe("no such noun");
+    /* …and an authored key resolves, so the miss above is a real miss and not
+     * `tOr` returning its fallback unconditionally. */
+    expect(tOr("count.ticket", "no such noun")).not.toBe("no such noun");
   });
 
-  it("wires the two named counters through the same rule", () => {
-    expect(resultCount(1)).toBe("1 result");
-    expect(resultCount(4)).toBe("4 results");
-    expect(articleCount(1)).toBe("1 article");
-    expect(articleCount(0)).toBe("0 articles");
+  it("carries every noun the app counts", () => {
+    /* `as const satisfies` keeps these as literal keys: a noun that is deleted
+     * from the bundle fails to compile here before it can fail to render. */
+    const NOUNS = [
+      "count.article",
+      "count.camera",
+      "count.clip",
+      "count.device",
+      "count.installer",
+      "count.item",
+      "count.location",
+      "count.part",
+      "count.person",
+      "count.result",
+      "count.screen",
+      "count.service",
+      "count.thing",
+      "count.ticket",
+    ] as const satisfies readonly MessageKey[];
+
+    for (const key of NOUNS) {
+      expect(counted(key, 2)).not.toBe(key);
+    }
   });
 });
 
@@ -244,6 +293,8 @@ describe("read times", () => {
     expect(readTime(5)).toBe("5 min read");
     expect(readTimeShort(1)).toBe("1 min");
     expect(readTime(0)).toBe("0 min read");
+    /* The number is `Intl`'s, so it groups and uses the locale's digits. */
+    expect(readTime(1200)).toBe("1,200 min read");
   });
 });
 
@@ -277,8 +328,10 @@ describe("relativeTime", () => {
 
 describe("date bits", () => {
   it("adds three years to the injected clock's year", () => {
-    expect(warrantyExpiry(new Date(2026, 6, 27))).toBe("27 Jul 2029");
-    expect(warrantyExpiry(new Date(2019, 0, 1))).toBe("27 Jul 2022");
+    /* Rendered by `Intl` in the ambient locale — en-US here, which orders the
+     * fields month-day-year. The *date* is the contract, not that order. */
+    expect(warrantyExpiry(new Date(2026, 6, 27))).toBe("Jul 27, 2029");
+    expect(warrantyExpiry(new Date(2019, 0, 1))).toBe("Jul 27, 2022");
   });
 
   it("keeps the day and month fixed whatever the clock says", () => {
@@ -288,7 +341,15 @@ describe("date bits", () => {
      * expires "27 Jul". Deriving the real anniversary would be a behaviour
      * change, not a bug fix.
      */
-    expect(warrantyExpiry(new Date(2026, 11, 31))).toBe("27 Jul 2029");
+    expect(warrantyExpiry(new Date(2026, 11, 31))).toBe("Jul 27, 2029");
+  });
+
+  it("lets the locale decide whether a clock has an AM/PM", () => {
+    /* en-US is a 12-hour locale; de-DE is not. The hand-rolled "14:26:08"
+     * asserted one of those on every reader. */
+    const noon = new Date(2026, 6, 27, 14, 26, 8);
+    expect(clockTime(noon)).toBe("02:26 PM");
+    expect(clockTime(noon, true)).toBe("02:26:08 PM");
   });
 
   it("takes the day half of a stamp, and copes when there is no comma", () => {

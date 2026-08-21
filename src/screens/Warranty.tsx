@@ -27,12 +27,14 @@ import {
   TextInput,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useT } from "../i18n";
 import { nextRegisteredId, warrantyExpiry } from "../lib/format";
 import { useAppStore } from "../state/store";
 import type { RegisteredDevice } from "../data/types";
 import "../styles/screen-warranty.css";
 
 export default function Warranty() {
+  const t = useT();
   const registered = useAppStore((s) => s.registered);
   const wProd = useAppStore((s) => s.wProd);
   const wSerial = useAppStore((s) => s.wSerial);
@@ -52,15 +54,15 @@ export default function Warranty() {
 
   function submitWarranty() {
     if (!wProd) {
-      showToast("Pick which device you're registering", "warn");
+      showToast(t("screensB.warranty.needDevice"), "warn");
       return;
     }
     if (wSerial.trim().length < 8) {
-      showToast("Enter the full serial number", "warn");
+      showToast(t("screensB.warranty.needSerial"), "warn");
       return;
     }
     if (!wRetailer) {
-      showToast("Tell us where you bought it", "warn");
+      showToast(t("screensB.warranty.needRetailer"), "warn");
       return;
     }
     const expires = warrantyExpiry();
@@ -68,16 +70,16 @@ export default function Warranty() {
       id: nextRegisteredId(registered.length),
       prod: wProd,
       serial: wSerial.trim(),
-      purchased: "Today",
+      purchased: t("screensB.warranty.purchasedToday"),
       expires,
-      left: "3y left",
+      left: t("screensB.warranty.coverLeft"),
       pct: 100,
     };
     set({
       registered: [device, ...registered],
       wDone: { name: dataSource.product(wProd).model, expires },
     });
-    showToast("Warranty registered");
+    showToast(t("screensB.warranty.registered"));
   }
 
   function wReset() {
@@ -92,42 +94,41 @@ export default function Warranty() {
 
   return (
     <main className="fx-screen fx-page w-820 scr-warranty">
-      <h1 className="scr-warranty__h1">Register your warranty</h1>
-      <p className="scr-warranty__lede">
-        Registering takes a minute and adds a third year of cover for free.
-        You'll also get firmware notes for the devices you own, and nothing
-        else.
-      </p>
+      <h1 className="scr-warranty__h1">{t("screensB.warranty.h1")}</h1>
+      <p className="scr-warranty__lede">{t("screensB.warranty.lede")}</p>
 
       {wDone ? (
         <Card variant="form" className="wr-done">
           <span className="wr-done__tile">
             <Icon name="shield-check" size={26} color="var(--pos)" />
           </span>
-          <h2 className="wr-done__title">{wDone.name} registered</h2>
+          <h2 className="wr-done__title">
+            {t("screensB.warranty.doneTitle", { name: wDone.name })}
+          </h2>
           <p className="wr-done__body">
-            Cover runs to {wDone.expires}. We've emailed the certificate to
-            sam@example.com — keep it with your receipt.
+            {t("screensB.warranty.doneBody", { date: wDone.expires })}
           </p>
           <div className="wr-done__actions">
             <ButtonSecondary icon="plus" iconSize={15} onClick={wReset}>
-              Register another device
+              {t("screensB.warranty.registerAnother")}
             </ButtonSecondary>
             <ButtonSecondary
               icon="file-check"
               iconSize={15}
               onClick={() => gotoClaim()}
             >
-              Make a claim
+              {t("screensB.warranty.makeClaim")}
             </ButtonSecondary>
           </div>
         </Card>
       ) : (
         <Card variant="form" className="wr-form">
           <div className="wr-group">
-            <h2 className="wr-group__label">Which device?</h2>
+            <h2 className="wr-group__label">
+              {t("screensB.warranty.whichDevice")}
+            </h2>
             <ProductPicker
-              label="Which device?"
+              label={t("screensB.warranty.whichDevice")}
               products={dataSource.products()}
               value={wProd}
               onChange={(id) => set({ wProd: id })}
@@ -137,7 +138,7 @@ export default function Warranty() {
           <div className="wr-grid">
             <div>
               <label className="wr-group__label" htmlFor="w-serial">
-                Serial number
+                {t("screensB.warranty.serialNumber")}
               </label>
               <TextInput
                 id="w-serial"
@@ -149,12 +150,12 @@ export default function Warranty() {
               />
               <p className="wr-help">
                 <Icon name="info" size={13} />
-                On the back plate, and in the app under About.
+                {t("screensB.warranty.serialHelp")}
               </p>
             </div>
             <div>
               <label className="wr-group__label" htmlFor="w-date">
-                Date of purchase
+                {t("screensB.warranty.purchaseDate")}
               </label>
               <input
                 id="w-date"
@@ -168,20 +169,19 @@ export default function Warranty() {
 
           <div>
             <label className="wr-group__label" htmlFor="w-retailer">
-              Where did you buy it?
+              {t("screensB.warranty.whereBought")}
             </label>
             <SelectField
               id="w-retailer"
               value={wRetailer}
               onChange={(v) => set({ wRetailer: v })}
-              placeholder="Select a retailer…"
+              placeholder={t("screensB.warranty.selectRetailer")}
               options={dataSource.retailers()}
             />
           </div>
 
           <Callout tone="info" icon="lightbulb">
-            Bought it from us? Your order is already covered — registering just
-            adds the extra year and the receipt to your account.
+            {t("screensB.warranty.callout")}
           </Callout>
 
           <ButtonPrimary
@@ -190,12 +190,12 @@ export default function Warranty() {
             className="wr-submit"
             onClick={submitWarranty}
           >
-            Register warranty
+            {t("screensB.warranty.submit")}
           </ButtonPrimary>
         </Card>
       )}
 
-      <h2 className="wr-list__title">Your registered devices</h2>
+      <h2 className="wr-list__title">{t("screensB.warranty.listTitle")}</h2>
       <div className="wr-list">
         {registered.map((device) => {
           const product = dataSource.product(device.prod);
@@ -214,11 +214,15 @@ export default function Warranty() {
               </div>
               <div className="wr-dev__cover">
                 <div className="wr-dev__coverline">
-                  <span>Cover to {device.expires}</span>
+                  <span>
+                    {t("screensB.warranty.coverTo", { date: device.expires })}
+                  </span>
                   <span className="wr-dev__left">{device.left}</span>
                 </div>
                 <ProgressBar
-                  label={`Warranty remaining for ${product.model}`}
+                  label={t("screensB.warranty.remainingAria", {
+                    model: product.model,
+                  })}
                   pct={device.pct}
                   height={6}
                 />
@@ -229,11 +233,11 @@ export default function Warranty() {
                 className="wr-dev__claim"
                 onClick={() => gotoClaim(device.id)}
               >
-                Claim
+                {t("screensB.warranty.claim")}
               </ButtonSecondary>
               <IconButton
                 icon="repeat"
-                label="Transfer this warranty"
+                label={t("screensB.warranty.transferLabel")}
                 iconSize={16}
                 className="wr-dev__transfer"
                 onClick={gotoTransfer}
@@ -245,10 +249,10 @@ export default function Warranty() {
         {registered.length === 0 ? (
           <EmptyState
             icon="shield-off"
-            title="No registered devices"
-            body="Nothing is registered to this account yet. Registering adds a free third year of cover and takes about a minute."
+            title={t("screensB.warranty.emptyTitle")}
+            body={t("screensB.warranty.emptyBody")}
             action={{
-              label: "Register a device",
+              label: t("screensB.warranty.registerDevice"),
               icon: "shield-check",
               onClick: wReset,
             }}

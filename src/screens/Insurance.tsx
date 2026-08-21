@@ -31,8 +31,10 @@ import {
   columnClass,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useT } from "../i18n";
+import { longDate } from "../lib/format";
 import {
-  INSURANCE_STATE_META,
+  insuranceStateMeta,
   insurancePrimaryIcon,
   insurancePrimaryLabel,
 } from "../lib/derive";
@@ -42,12 +44,14 @@ import "../styles/screen-insurance.css";
 /*
  * The 90-day retention strip. `IN_RETENTION_WARNING` exists in demo.ts but is
  * not exposed on the DataSource seam, and screens must not import demo.ts —
- * so the copy is pinned here, verbatim.
+ * so the window and its cut-off date are pinned here and the sentence around
+ * them comes from the bundle.
  */
-const IN_RETENTION_WARNING =
-  "Your plan keeps clips for 90 days, so anything before 28 April 2026 has already gone. Ask us as early as you can — once a clip expires we can't recover it.";
+const RETENTION_DAYS = 90;
+const RETENTION_CUTOFF = new Date(2026, 3, 28);
 
 export default function Insurance() {
+  const t = useT();
   const inKind = useAppStore((s) => s.inKind);
   const inDate = useAppStore((s) => s.inDate);
   const inWindow = useAppStore((s) => s.inWindow);
@@ -72,12 +76,8 @@ export default function Insurance() {
 
   return (
     <main className={`fx-screen fx-page ${columnClass("insurance")} scr-insurance`}>
-      <h1 className="ins-h1">Insurance claims</h1>
-      <p className="ins-lede">
-        Insurers usually want the footage, the timestamps and proof the device
-        was working. We can put all three in one pack — free, and normally ready
-        within an hour.
-      </p>
+      <h1 className="ins-h1">{t("screensA.insurance.h1")}</h1>
+      <p className="ins-lede">{t("screensA.insurance.lede")}</p>
 
       <div className="ins-explainers">
         <div className="ins-explainer">
@@ -88,11 +88,10 @@ export default function Insurance() {
             iconSize={21}
           />
           <span className="ins-explainer__title">
-            What's in an evidence pack
+            {t("screensA.insurance.pack")}
           </span>
           <span className="ins-explainer__text">
-            Original clips, a signed timestamp log, device status history and a
-            PDF summary an adjuster can read.
+            {t("screensA.insurance.packText")}
           </span>
         </div>
         <div className="ins-explainer">
@@ -103,21 +102,20 @@ export default function Insurance() {
             iconSize={21}
           />
           <span className="ins-explainer__title">
-            We never talk to your insurer
+            {t("screensA.insurance.privacy")}
           </span>
           <span className="ins-explainer__text">
-            The pack goes to you. Nothing is shared with anyone unless you send
-            it, or a court orders it.
+            {t("screensA.insurance.privacyText")}
           </span>
         </div>
       </div>
 
       {claims.length ? (
         <>
-          <Eyebrow>Your claims</Eyebrow>
+          <Eyebrow>{t("screensA.insurance.yourClaims")}</Eyebrow>
           <div className="ins-claims">
             {claims.map((c) => {
-              const meta = INSURANCE_STATE_META[c.state];
+              const meta = insuranceStateMeta(c.state);
               const ready = c.state === "ready";
               return (
                 <Card key={c.id} className="ins-claim">
@@ -165,7 +163,7 @@ export default function Insurance() {
                       className="ins-secondary"
                       onClick={insuranceShare}
                     >
-                      Email to insurer
+                      {t("screensA.insurance.emailInsurer")}
                     </ButtonSecondary>
                   </div>
                 </Card>
@@ -176,10 +174,16 @@ export default function Insurance() {
       ) : null}
 
       <Card variant="form" className="ins-form">
-        <h2 className="ins-form__title">Request an evidence pack</h2>
+        <h2 className="ins-form__title">
+          {t("screensA.insurance.requestTitle")}
+        </h2>
 
-        <Field label="What happened?">
-          <div className="ins-kinds" role="radiogroup" aria-label="What happened?">
+        <Field label={t("screensA.insurance.what")}>
+          <div
+            className="ins-kinds"
+            role="radiogroup"
+            aria-label={t("screensA.insurance.what")}
+          >
             {kinds.map(([id, label, icon]) => {
               const on = inKind === id;
               return (
@@ -200,7 +204,7 @@ export default function Insurance() {
         </Field>
 
         <div className="ins-when">
-          <Field label="Date of the incident" htmlFor="in-date">
+          <Field label={t("screensA.insurance.date")} htmlFor="in-date">
             <input
               id="in-date"
               type="date"
@@ -210,7 +214,7 @@ export default function Insurance() {
             />
           </Field>
 
-          <Field label="Time window to cover" htmlFor="in-window">
+          <Field label={t("screensA.insurance.window")} htmlFor="in-window">
             <SelectField
               id="in-window"
               className="ins-select"
@@ -228,31 +232,38 @@ export default function Insurance() {
         </div>
 
         <Field
-          label="Insurer or reference"
+          label={t("screensA.insurance.ref")}
           htmlFor="in-ref"
-          aside={<span className="ins-optional">Optional</span>}
+          aside={
+            <span className="ins-optional">
+              {t("screensA.insurance.optional")}
+            </span>
+          }
         >
           <TextInput
             id="in-ref"
             className="ins-input"
             value={inRefInput}
-            placeholder="e.g. Aviva · claim 4471882"
+            placeholder={t("screensA.insurance.refPlaceholder")}
             onChange={(v) => set({ inRefInput: v })}
           />
         </Field>
 
-        <Field label="Anything the adjuster should know?" htmlFor="in-note">
+        <Field label={t("screensA.insurance.note")} htmlFor="in-note">
           <TextArea
             id="in-note"
             value={inNote}
             minHeight={110}
-            placeholder="What was damaged or taken, and roughly when you noticed."
+            placeholder={t("screensA.insurance.notePlaceholder")}
             onChange={setInsuranceNote}
           />
         </Field>
 
         <Callout tone="warn" icon="alert-triangle" className="ins-retention">
-          {IN_RETENTION_WARNING}
+          {t("screensA.insurance.retention", {
+            days: RETENTION_DAYS,
+            date: longDate(RETENTION_CUTOFF),
+          })}
         </Callout>
 
         <ButtonPrimary
@@ -261,7 +272,7 @@ export default function Insurance() {
           className="ins-submit"
           onClick={insuranceSubmit}
         >
-          Build my evidence pack
+          {t("screensA.insurance.submit")}
         </ButtonPrimary>
       </Card>
     </main>

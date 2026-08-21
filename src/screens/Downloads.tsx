@@ -14,19 +14,26 @@ import {
   ListCard,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useT, type MessageKey } from "../i18n";
 import { useAppStore } from "../state/store";
 import "../styles/screen-downloads.css";
 
-const APPS: { icon: string; title: string; sub: string }[] = [
-  { icon: "smartphone", title: "Hearth for iPhone", sub: "v6.4.1 · iOS 16+" },
+/* `title` is a message key; `sub` is a version string — a machine token. */
+const APPS: { icon: string; title: MessageKey; sub: string }[] = [
+  {
+    icon: "smartphone",
+    title: "screensA.downloads.appIphone",
+    sub: "v6.4.1 · iOS 16+",
+  },
   {
     icon: "tablet-smartphone",
-    title: "Hearth for Android",
+    title: "screensA.downloads.appAndroid",
     sub: "v6.4.0 · Android 11+",
   },
 ];
 
 export default function Downloads() {
+  const t = useT();
   const dlCat = useAppStore((s) => s.dlCat);
   const set = useAppStore((s) => s.set);
   const showToast = useAppStore((s) => s.showToast);
@@ -39,16 +46,13 @@ export default function Downloads() {
   );
 
   function appDownload() {
-    showToast("App store links are disabled in this demo", "info");
+    showToast(t("screensA.downloads.toastStore"), "info");
   }
 
   return (
     <main className="fx-screen fx-page w-900 dl">
-      <h1 className="dl__h1">Downloads &amp; manuals</h1>
-      <p className="dl__lede">
-        Manuals, quick-start cards, wiring diagrams and installer tools.
-        Everything here is free and doesn&rsquo;t need an account.
-      </p>
+      <h1 className="dl__h1">{t("screensA.downloads.h1")}</h1>
+      <p className="dl__lede">{t("screensA.downloads.lede")}</p>
 
       <ChipRow className="dl__chips">
         {cats.map((c) => (
@@ -79,15 +83,19 @@ export default function Downloads() {
               className="dl__get"
               icon="download"
               iconSize={14}
-              onClick={() => showToast(`Downloading ${f.file}`)}
+              onClick={() =>
+                showToast(t("screensA.downloads.toastFile", { file: f.file }))
+              }
             >
-              {f.kind === "firmware" ? "Get file" : "Download"}
+              {f.kind === "firmware"
+                ? t("screensA.downloads.getFile")
+                : t("screensA.downloads.download")}
             </ButtonSecondary>
           </div>
         ))}
       </ListCard>
 
-      <h2 className="dl__h2">Get the app</h2>
+      <h2 className="dl__h2">{t("screensA.downloads.getApp")}</h2>
       <div className="dl__apps">
         {APPS.map((a) => (
           <button
@@ -98,7 +106,7 @@ export default function Downloads() {
           >
             <AccentIconTile icon={a.icon} size={44} radius={13} iconSize={21} />
             <span className="sd-col">
-              <span className="dl__app-title">{a.title}</span>
+              <span className="dl__app-title">{t(a.title)}</span>
               <span className="dl__app-sub sd-mono">{a.sub}</span>
             </span>
           </button>

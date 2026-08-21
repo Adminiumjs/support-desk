@@ -16,6 +16,7 @@ import {
   ListCard,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useT } from "../i18n";
 import { readTime } from "../lib/format";
 import { kbSearch } from "../lib/search";
 import { useAppStore } from "../state/store";
@@ -56,6 +57,7 @@ function KbResultRow({
 }
 
 export default function Kb() {
+  const t = useT();
   const kbQ = useAppStore((s) => s.kbQ);
   const kbFacet = useAppStore((s) => s.kbFacet);
   const kbSort = useAppStore((s) => s.kbSort);
@@ -76,7 +78,7 @@ export default function Kb() {
 
   return (
     <main className="fx-screen fx-page w-820 kb">
-      <h1 className="kb__h1">Search the knowledge base</h1>
+      <h1 className="kb__h1">{t("screensA.kb.h1")}</h1>
 
       <div className="kb__field">
         <span className="kb__ico">
@@ -86,16 +88,16 @@ export default function Kb() {
           className="fx-fld kb__input"
           type="text"
           value={kbQ}
-          aria-label="Search the knowledge base"
-          placeholder={`Search ${articles.length} articles — try "reset" or "offline"`}
+          aria-label={t("screensA.kb.h1")}
+          placeholder={t("screensA.kb.placeholder", undefined, articles.length)}
           onChange={(e) => set({ kbQ: e.target.value })}
         />
         {kbQ ? (
           <button
             type="button"
             className="kb__clear fx-gi"
-            title="Clear"
-            aria-label="Clear"
+            title={t("screensA.kb.clear")}
+            aria-label={t("screensA.kb.clear")}
             onClick={() => set({ kbQ: "" })}
           >
             <Icon name="x" size={16} />
@@ -121,12 +123,12 @@ export default function Kb() {
         <select
           className="fx-fld kb__sort"
           value={kbSort}
-          aria-label="Sort results"
+          aria-label={t("screensA.kb.sortLabel")}
           onChange={(e) => set({ kbSort: e.target.value as KbSort })}
         >
-          <option value="relevance">Most relevant</option>
-          <option value="short">Quickest read</option>
-          <option value="az">A – Z</option>
+          <option value="relevance">{t("screensA.kb.sortRelevance")}</option>
+          <option value="short">{t("screensA.kb.sortShort")}</option>
+          <option value="az">{t("screensA.kb.sortAz")}</option>
         </select>
       </div>
 
@@ -143,14 +145,14 @@ export default function Kb() {
       ) : (
         <EmptyState
           icon="search-x"
-          title={`Nothing matched "${kbQ}"`}
-          body="Try fewer words, or one of these instead — most people find what they need in the first result."
+          title={t("screensA.kb.emptyTitle", { query: kbQ })}
+          body={t("screensA.kb.emptyBody")}
           suggestions={suggestions.map((term) => ({
             label: term,
             onClick: () => runSuggestion(term),
           }))}
           action={{
-            label: "Ask us instead",
+            label: t("screensA.kb.emptyAction"),
             icon: "pen-line",
             onClick: openTicket,
           }}
@@ -158,7 +160,7 @@ export default function Kb() {
       )}
 
       <div className="kb__related">
-        <span className="kb__related-label">People also search:</span>
+        <span className="kb__related-label">{t("screensA.kb.alsoSearch")}</span>
         {suggestions.slice(0, 4).map((term) => (
           <button
             key={term}

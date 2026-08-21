@@ -20,6 +20,7 @@ import {
   TextInput,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useI18n } from "../i18n";
 import { useAppStore } from "../state/store";
 import "../styles/screen-newticket.css";
 
@@ -27,6 +28,7 @@ import "../styles/screen-newticket.css";
 const DESC_MAX = 1000;
 
 export default function NewTicket() {
+  const { t, number } = useI18n();
   const form = useAppStore((s) => s.form);
   const errs = useAppStore((s) => s.errs);
   const setForm = useAppStore((s) => s.setForm);
@@ -36,21 +38,18 @@ export default function NewTicket() {
 
   return (
     <main className="fx-screen fx-page w-720 ntk">
-      <h1 className="ntk__title">Open a ticket</h1>
-      <p className="ntk__lede">
-        Tell us what's going on and we'll get back to you. The more detail, the
-        faster we can help.
-      </p>
+      <h1 className="ntk__title">{t("screensB.newTicket.title")}</h1>
+      <p className="ntk__lede">{t("screensB.newTicket.lede")}</p>
 
       <Card variant="form" className="ntk__form">
         {/* 1 — product */}
         <Field
-          label="Which product?"
+          label={t("screensB.newTicket.product")}
           error={errs.product}
           className="ntk__group"
         >
           <ProductPicker
-            label="Which product?"
+            label={t("screensB.newTicket.product")}
             products={dataSource.products()}
             value={form.product}
             onChange={(id) => setForm("product", id)}
@@ -58,11 +57,15 @@ export default function NewTicket() {
         </Field>
 
         {/* 2 — topic */}
-        <Field label="Topic" error={errs.topic} htmlFor="nt-topic">
+        <Field
+          label={t("screensB.newTicket.topic")}
+          error={errs.topic}
+          htmlFor="nt-topic"
+        >
           <SelectField
             id="nt-topic"
             value={form.topic}
-            placeholder="Choose a topic…"
+            placeholder={t("screensB.newTicket.topicPlaceholder")}
             options={dataSource.topics()}
             invalid={!!errs.topic}
             onChange={(v) => setForm("topic", v)}
@@ -70,24 +73,31 @@ export default function NewTicket() {
         </Field>
 
         {/* 3 — subject */}
-        <Field label="Subject" error={errs.subject} htmlFor="nt-subject">
+        <Field
+          label={t("screensB.newTicket.subject")}
+          error={errs.subject}
+          htmlFor="nt-subject"
+        >
           <TextInput
             id="nt-subject"
             value={form.subject}
             invalid={!!errs.subject}
-            placeholder={'A short summary, e.g. "Doorbell offline every night"'}
+            placeholder={t("screensB.newTicket.subjectPlaceholder")}
             onChange={(v) => setForm("subject", v)}
           />
         </Field>
 
         {/* 4 — description */}
         <Field
-          label="Description"
+          label={t("screensB.newTicket.description")}
           error={errs.desc}
           htmlFor="nt-desc"
           aside={
             <span className="sd-counter">
-              {form.desc.length}/{DESC_MAX}
+              {t("screensB.newTicket.counter", {
+                used: number(form.desc.length),
+                max: number(DESC_MAX),
+              })}
             </span>
           }
         >
@@ -97,7 +107,7 @@ export default function NewTicket() {
             invalid={!!errs.desc}
             maxLength={DESC_MAX}
             minHeight={130}
-            placeholder="What's happening? Include what you've already tried, any error messages, and when it started."
+            placeholder={t("screensB.newTicket.descPlaceholder")}
             onChange={(v) => setForm("desc", v)}
           />
         </Field>
@@ -105,7 +115,7 @@ export default function NewTicket() {
         {/* 5 — attachments */}
         <div className="ntk__group">
           <p className="sd-label" id="nt-attach-label">
-            Attachments
+            {t("screensB.newTicket.attachments")}
           </p>
           <div
             className="ntk__attach"
@@ -122,7 +132,7 @@ export default function NewTicket() {
               className="ntk__addfile"
               onClick={addAttachment}
             >
-              Add file
+              {t("screensB.newTicket.addFile")}
             </ButtonSecondary>
           </div>
         </div>
@@ -130,7 +140,7 @@ export default function NewTicket() {
         <div className="ntk__foot">
           <p className="ntk__note">
             <Icon name="info" size={14} />
-            Replies in this demo are simulated.
+            {t("screensB.newTicket.simulated")}
           </p>
           <ButtonPrimary
             icon="send"
@@ -138,7 +148,7 @@ export default function NewTicket() {
             className="ntk__submit"
             onClick={submitTicket}
           >
-            Submit ticket
+            {t("screensB.newTicket.submit")}
           </ButtonPrimary>
         </div>
       </Card>

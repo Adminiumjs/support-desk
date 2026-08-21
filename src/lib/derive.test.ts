@@ -56,9 +56,9 @@ import type {
   WishItem,
 } from "../data/types.ts";
 import {
-  INSURANCE_STATE_META,
-  INVOICE_STATUS_META,
-  WISH_STOCK_META,
+  insuranceStateMeta,
+  invoiceStatusMeta,
+  wishStockMeta,
   billingEmpty,
   filterGiftPicks,
   filterInvoices,
@@ -375,14 +375,19 @@ describe("billingEmpty", () => {
 
   it("is only ever reached for a real kind filter", () => {
     /*
-     * `billingEmpty(n, "all")` produces "No all invoices in this period" —
-     * nonsense, but unreachable: Billing.tsx renders the empty state only when
+     * "all" is unreachable here: Billing.tsx renders the empty state only when
      * `filterInvoices(inPeriod, blFilter)` is empty, and for "all" that is
      * `inPeriod` itself, which forces the periodCount === 0 branch above.
+     *
+     * It now degrades to the plan wording. The old code spliced the filter id
+     * straight into the sentence and read "No all invoices in this period" —
+     * which only ever looked like English because the id happened to be an
+     * English word, and which no translator could have rendered at all.
      * Pinned so that anyone who makes the second branch reachable (a new
      * "everything" chip, say) sees this test and writes the copy.
      */
-    expect(billingEmpty(4, "all").text).toContain("No all invoices");
+    expect(billingEmpty(4, "all").text).toBe(billingEmpty(4, "plan").text);
+    expect(billingEmpty(4, "all").text).not.toContain("all invoices");
   });
 });
 
@@ -408,26 +413,29 @@ describe("plan lines", () => {
     expect(planPriceLine(3.99, "annual")).toBe("£39.90 / year");
   });
 
-  it("pads the annual figure to two decimals but not the monthly one", () => {
+  it("pads a fractional price on both cycles now, and neither on a whole one", () => {
     /*
-     * Asymmetry inside one function, and the obvious "fix" would change what
-     * the seeded plans render: `£3.99 / month` only looks padded because the
-     * seed happens to have two decimals. A one-decimal price leaks straight
-     * through — `format.planPrice` would have shown "£4.50". Flagged in the
-     * report; pinned here so the behaviour is a decision, not an accident.
+     * Was an asymmetry inside one function: the annual branch used `toFixed(2)`
+     * and the monthly branch interpolated the raw number, so a one-decimal
+     * price leaked through as "£4.5 / month". Both branches now go through the
+     * money formatters — `money` for the annual figure, `moneyLoose` for the
+     * monthly one — so a fraction always gets its two decimals and a whole
+     * number still gets none.
      */
-    expect(planPriceLine(4.5, "monthly")).toBe("£4.5 / month");
+    expect(planPriceLine(4.5, "monthly")).toBe("£4.50 / month");
     expect(planPriceLine(4.5, "annual")).toBe("£45.00 / year");
     expect(planPriceLine(4, "monthly")).toBe("£4 / month");
   });
 
   it("moves the next charge a year out on the annual cycle", () => {
-    expect(nextChargeLine(3.99, "monthly")).toContain("12 Aug 2026");
-    expect(nextChargeLine(3.99, "annual")).toContain("12 Aug 2027");
+    /* Field order is the locale's — "Aug 12, 2026" with the ambient en-US that
+     * these tests run under, "12. Aug. 2026" for a German reader. */
+    expect(nextChargeLine(3.99, "monthly")).toContain("Aug 12, 2026");
+    expect(nextChargeLine(3.99, "annual")).toContain("Aug 12, 2027");
     /* Any unrecognised cycle is treated as monthly by both lines, so they
      * cannot disagree with each other. */
     expect(planPriceLine(3.99, "weekly")).toBe("£3.99 / month");
-    expect(nextChargeLine(3.99, "weekly")).toContain("12 Aug 2026");
+    expect(nextChargeLine(3.99, "weekly")).toContain("Aug 12, 2026");
   });
 
   it("quotes the same next-charge date on both screens, whatever the cycle", () => {
@@ -461,7 +469,7 @@ describe("invoiceDownloadToast", () => {
     /* The row shows "Retrying" (never "Failed"); the toast must not call it
      * something else. Driven off the pill so a relabel moves both. */
     const toast = invoiceDownloadToast(invoice("INV-9", "12 Apr 2026", "plan", "failed"));
-    expect(toast.startsWith(INVOICE_STATUS_META.failed.label)).toBe(true);
+    expect(toast.startsWith(invoiceStatusMeta("failed").label)).toBe(true);
     expect(toast).toBe("Retrying payment for INV-9");
   });
 
@@ -540,14 +548,14 @@ describe("wishAlert", () => {
     expect(wishAlert(visibleWish(items, ["w1"]))).toBeNull();
   });
 
-  it("subtracts raw, with no money formatting", () => {
+  it("formats the drop instead of interpolating the subtraction", () => {
     /*
-     * The singular branch interpolates `was - price` directly rather than
-     * going through `format.money`. Integer seed prices hide it; a decimal
-     * price would put binary float noise in the banner. Asserted as-is so the
-     * defect is visible in the suite — see the report.
+     * The singular branch used to interpolate `was - price` directly, so a
+     * decimal price put binary float noise in the banner — the seeded integer
+     * prices were the only thing hiding "£15.489999999999995". It now goes
+     * through `moneyLoose` like every other price in the app.
      */
-    expect(wishAlert([wish("w1", 74.5, 89.99)])).toContain("£15.489999999999995");
+    expect(wishAlert([wish("w1", 74.5, 89.99)])).toContain("£15.49");
   });
 });
 
@@ -568,11 +576,10 @@ describe("wishAddToast", () => {
   it("agrees with the stock pill about which state is unavailable", () => {
     /* The only stock state whose pill promises a future date is the only one
      * whose toast promises an email. */
-    const restocking = (Object.keys(WISH_STOCK_META) as PartStock[]).filter((s) =>
-      /back in/i.test(WISH_STOCK_META[s].label),
-    );
+    const stocks: PartStock[] = ["in", "low", "out"];
+    const restocking = stocks.filter((s) => /back in/i.test(wishStockMeta(s).label));
     expect(restocking).toEqual(["out"]);
-    for (const stock of Object.keys(WISH_STOCK_META) as PartStock[]) {
+    for (const stock of stocks) {
       const emailed = wishAddToast(wish("w1", 1, 1, stock)).includes("email you");
       expect(emailed).toBe(restocking.includes(stock));
     }
@@ -998,23 +1005,23 @@ describe("insurance pack state", () => {
   it("labels and icons the two states consistently with the pill", () => {
     expect(insurancePrimaryLabel("ready")).toBe("Download pack");
     expect(insurancePrimaryIcon("ready")).toBe("download");
-    expect(INSURANCE_STATE_META.ready.label).toBe("Ready");
+    expect(insuranceStateMeta("ready").label).toBe("Ready");
 
     expect(insurancePrimaryLabel("building")).toBe("Check progress");
     expect(insurancePrimaryIcon("building")).toBe("refresh-cw");
-    expect(INSURANCE_STATE_META.building.label).toBe("Building");
+    expect(insuranceStateMeta("building").label).toBe("Building");
   });
 
   it("treats anything that is not 'ready' as still building", () => {
     /*
-     * Both helpers test for "ready" rather than switching on the union, so an
-     * unknown state degrades to the safe half — you are offered progress, not
-     * a download that does not exist. Note the pill has no such fallback:
-     * `INSURANCE_STATE_META[unknown]` is undefined, so a third state would
-     * need a meta entry as well as these two branches.
+     * All three helpers test for "ready" rather than switching on the union,
+     * so an unknown state degrades to the safe half — you are offered
+     * progress, not a download that does not exist. The pill now degrades
+     * with them: the old lookup table returned `undefined` for an unknown
+     * state, which the screen dereferenced straight into a crash.
      */
     expect(insurancePrimaryLabel("queued")).toBe("Check progress");
     expect(insurancePrimaryIcon("")).toBe("refresh-cw");
-    expect(INSURANCE_STATE_META["queued"]).toBeUndefined();
+    expect(insuranceStateMeta("queued").label).toBe("Building");
   });
 });

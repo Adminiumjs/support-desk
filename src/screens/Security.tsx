@@ -29,10 +29,12 @@ import {
 } from "../components";
 import { dataSource } from "../data/source";
 import { SEC_PASSWORD_LINE } from "../data/demo";
+import { useT } from "../i18n";
 import { useAppStore } from "../state/store";
 import "../styles/screen-security.css";
 
 export default function Security() {
+  const t = useT();
   const secOn = useAppStore((s) => s.secOn);
   const secRetain = useAppStore((s) => s.secRetain);
   const secOut = useAppStore((s) => s.secOut);
@@ -55,22 +57,22 @@ export default function Security() {
 
   const flip = (id: string, label: string, was: boolean) => {
     set({ secOn: { ...secOn, [id]: !was } });
-    showToast(`${label}${was ? " off" : " on"}`);
+    showToast(
+      was
+        ? t("screensB.security.toggledOff", { label })
+        : t("screensB.security.toggledOn", { label }),
+    );
   };
 
   const revokeAll = () => {
     set({ secOut: allSessions.filter((s) => !s.current).map((s) => s.id) });
-    showToast("Signed out everywhere else");
+    showToast(t("screensB.security.signedOutEverywhere"));
   };
 
   return (
     <main className="fx-screen fx-page w-820 sec">
-      <h1 className="sec__h1">Security &amp; privacy</h1>
-      <p className="sec__lede">
-        {
-          "Clips are encrypted end to end — we can't watch them, and neither can anyone we work with. Everything below is yours to change or take with you."
-        }
-      </p>
+      <h1 className="sec__h1">{t("screensB.security.h1")}</h1>
+      <p className="sec__lede">{t("screensB.security.lede")}</p>
 
       <ListCard className="sec__card">
         <div className="sec__pw">
@@ -78,44 +80,46 @@ export default function Security() {
             <Icon name="key-round" size={21} />
           </span>
           <div className="sec__pw-text">
-            <span className="sec__row-label">Password</span>
+            <span className="sec__row-label">
+              {t("screensB.security.password")}
+            </span>
             <span className="sec__pw-line">{SEC_PASSWORD_LINE}</span>
           </div>
           <ButtonSecondary
             icon="pencil"
             onClick={() =>
-              showToast("Password changes need email confirmation", "info")
+              showToast(t("screensB.security.passwordToast"), "info")
             }
           >
-            Change
+            {t("screensB.security.change")}
           </ButtonSecondary>
         </div>
 
-        {toggles.map((t) => {
-          const on = secOn[t.id] ?? false;
+        {toggles.map((tg) => {
+          const on = secOn[tg.id] ?? false;
           return (
             <button
               type="button"
-              key={t.id}
+              key={tg.id}
               role="switch"
               aria-checked={on}
               className="fx-res sec__row"
-              onClick={() => flip(t.id, t.label, on)}
+              onClick={() => flip(tg.id, tg.label, on)}
             >
               <span className="sec__row-text">
                 <span className="sec__row-head">
-                  <span className="sec__row-label">{t.label}</span>
-                  {t.rec && !on ? (
+                  <span className="sec__row-label">{tg.label}</span>
+                  {tg.rec && !on ? (
                     <SoftPill
                       fg="--warn"
                       soft="--warn-soft"
                       icon="alert-triangle"
                     >
-                      Recommended
+                      {t("screensB.security.recommended")}
                     </SoftPill>
                   ) : null}
                 </span>
-                <span className="sec__row-note">{t.note}</span>
+                <span className="sec__row-note">{tg.note}</span>
               </span>
               <span className="sd-toggle" aria-checked={on} aria-hidden="true">
                 <span className="sd-toggle__knob" />
@@ -125,11 +129,11 @@ export default function Security() {
         })}
 
         <div className="sec__retain">
-          <span className="sec__row-label">Keep clips for</span>
+          <span className="sec__row-label">
+            {t("screensB.security.keepClipsFor")}
+          </span>
           <span className="sec__row-note">
-            {
-              "Older clips are deleted automatically. Anything you've downloaded stays yours."
-            }
+            {t("screensB.security.keepClipsNote")}
           </span>
           <ChipRow className="sec__retain-chips" gap={10}>
             {retains.map((r) => (
@@ -146,9 +150,9 @@ export default function Security() {
       </ListCard>
 
       <div className="sec__sessions-head">
-        <Eyebrow>{"Where you're signed in"}</Eyebrow>
+        <Eyebrow>{t("screensB.security.whereSignedIn")}</Eyebrow>
         <button type="button" className="fx-nav sec__revoke-all" onClick={revokeAll}>
-          Sign out everywhere else
+          {t("screensB.security.signOutEverywhere")}
         </button>
       </div>
 
@@ -163,12 +167,15 @@ export default function Security() {
                 <span className="sec__row-label">{s.device}</span>
                 {s.current ? (
                   <SoftPill fg="--pos" soft="--pos-soft">
-                    This device
+                    {t("screensB.security.thisDevice")}
                   </SoftPill>
                 ) : null}
               </span>
               <span className="sec__session-meta">
-                {s.where} · {s.when}
+                {t("screensB.security.sessionMeta", {
+                  where: s.where,
+                  when: s.when,
+                })}
               </span>
             </div>
             {s.current ? null : (
@@ -177,16 +184,18 @@ export default function Security() {
                 tone="var(--danger)"
                 onClick={() => {
                   set({ secOut: [...secOut, s.id] });
-                  undoToast(`Signed out of ${s.device}`, () =>
-                    set({
-                      secOut: useAppStore
-                        .getState()
-                        .secOut.filter((id) => id !== s.id),
-                    }),
+                  undoToast(
+                    t("screensB.security.signedOutOf", { device: s.device }),
+                    () =>
+                      set({
+                        secOut: useAppStore
+                          .getState()
+                          .secOut.filter((id) => id !== s.id),
+                      }),
                   );
                 }}
               >
-                Sign out
+                {t("screensB.security.signOut")}
               </ButtonSecondary>
             )}
           </div>
@@ -198,8 +207,8 @@ export default function Security() {
           compact
           className="sec__empty"
           icon="monitor-off"
-          title="No other devices signed in"
-          body="This is the only session on your account. Anything else that signs in will show up here with its location."
+          title={t("screensB.security.emptyTitle")}
+          body={t("screensB.security.emptyBody")}
         />
       ) : null}
 
@@ -207,19 +216,18 @@ export default function Security() {
         <Card variant="lg" className="sec__panel">
           <span className="sec__panel-head">
             <Icon name="download" size={19} />
-            <span className="sec__panel-title">Take your data</span>
+            <span className="sec__panel-title">
+              {t("screensB.security.takeYourData")}
+            </span>
           </span>
           <p className="sec__panel-body">
-            A zip of your account, devices, schedules and clip index — usually
-            ready in about ten minutes.
+            {t("screensB.security.takeYourDataBody")}
           </p>
           <ButtonSecondary
             icon="package"
-            onClick={() =>
-              showToast("Export requested — we'll email a link")
-            }
+            onClick={() => showToast(t("screensB.security.exportToast"))}
           >
-            Request export
+            {t("screensB.security.requestExport")}
           </ButtonSecondary>
         </Card>
 
@@ -227,12 +235,11 @@ export default function Security() {
           <span className="sec__panel-head">
             <Icon name="trash-2" size={19} color="var(--danger)" />
             <span className="sec__panel-title sec__panel-title--danger">
-              Delete your account
+              {t("screensB.security.deleteAccount")}
             </span>
           </span>
           <p className="sec__panel-body">
-            Removes your account, clips and schedules for good after 30 days.
-            Your devices keep working locally.
+            {t("screensB.security.deleteAccountBody")}
           </p>
           <ButtonSecondary
             icon="alert-triangle"
@@ -240,7 +247,7 @@ export default function Security() {
             className="sec__danger-btn"
             onClick={gotoDelete}
           >
-            Start deletion
+            {t("screensB.security.startDeletion")}
           </ButtonSecondary>
         </Card>
       </div>

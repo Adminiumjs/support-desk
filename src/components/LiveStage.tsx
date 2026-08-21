@@ -8,14 +8,15 @@
  */
 
 import {
-  LIVE_CLOCK,
+  liveClock,
   clipMeta,
   liveFile,
   liveLastSeen,
   liveNoFeedTitle,
-  LIVE_NO_FEED_TEXT,
-  CLIP_TYPE_META,
+  liveNoFeedText,
+  clipTypeMeta,
 } from "../lib/clips";
+import { useT } from "../i18n";
 import { Icon } from "./Icon";
 import { phBg, phIco, useIsDark } from "./PlaceholderTile";
 import { ButtonPrimary, ButtonSecondary, IconButton } from "./Primitives";
@@ -32,6 +33,7 @@ export interface LiveStageProps {
 
 /** `<LiveStage camera={cam} onRetry={liveRetry} onTroubleshoot={…} />` */
 export function LiveStage({ camera, onRetry, onTroubleshoot }: LiveStageProps) {
+  const t = useT();
   const dark = useIsDark();
 
   if (camera.offline) {
@@ -41,13 +43,13 @@ export function LiveStage({ camera, onRetry, onTroubleshoot }: LiveStageProps) {
           <Icon name="video-off" size={28} />
         </span>
         <h2 className="live-off__title">{liveNoFeedTitle(camera)}</h2>
-        <p className="live-off__text">{LIVE_NO_FEED_TEXT}</p>
+        <p className="live-off__text">{liveNoFeedText()}</p>
         <div className="live-off__actions">
           <ButtonPrimary icon="refresh-cw" onClick={onRetry}>
-            Try again
+            {t("chrome.action.tryAgain")}
           </ButtonPrimary>
           <ButtonSecondary icon="wrench" onClick={onTroubleshoot}>
-            Fix an offline camera
+            {t("chrome.live.fix")}
           </ButtonSecondary>
         </div>
         <span className="live-off__seen">{liveLastSeen(camera)}</span>
@@ -63,13 +65,13 @@ export function LiveStage({ camera, onRetry, onTroubleshoot }: LiveStageProps) {
       <Icon name="video" size={74} color={phIco(camera.tint, dark)} />
       <span className="live-stage__badge live-stage__badge--live">
         <span className="live-stage__dot" />
-        LIVE
+        {t("chrome.live.badge")}
       </span>
       <span className="live-stage__badge live-stage__badge--name">
         {camera.name}
       </span>
       <span className="live-stage__badge live-stage__badge--clock">
-        {LIVE_CLOCK}
+        {liveClock()}
       </span>
       <span className="live-stage__file">{liveFile(camera.id)}</span>
       <span className="live-stage__badge live-stage__badge--signal">
@@ -99,8 +101,9 @@ export function ClipCard({
   onShare,
   onDelete,
 }: ClipCardProps) {
+  const t = useT();
   const dark = useIsDark();
-  const meta = CLIP_TYPE_META[clip.type];
+  const meta = clipTypeMeta(clip.type);
 
   return (
     <div className="sd-card fx-card clip">
@@ -109,8 +112,8 @@ export function ClipCard({
         className="clip__thumb"
         style={{ background: phBg(camera.tint, dark, "150deg") }}
         onClick={onPlay}
-        title="Play clip"
-        aria-label={`Play ${clip.title}`}
+        title={t("chrome.clip.play")}
+        aria-label={t("chrome.clip.playNamed", { title: clip.title })}
       >
         <Icon name="play" size={24} color={phIco(camera.tint, dark)} />
         <span className="clip__dur">{clip.dur}</span>
@@ -126,11 +129,16 @@ export function ClipCard({
         <span className="clip__meta">{clipMeta(clip, camera)}</span>
       </div>
       <div className="clip__actions">
-        <IconButton icon="download" label="Download clip" small onClick={onDownload} />
-        <IconButton icon="share-2" label="Share clip" small onClick={onShare} />
+        <IconButton
+          icon="download"
+          label={t("chrome.clip.download")}
+          small
+          onClick={onDownload}
+        />
+        <IconButton icon="share-2" label={t("chrome.clip.share")} small onClick={onShare} />
         <IconButton
           icon="trash-2"
-          label="Delete clip"
+          label={t("chrome.clip.delete")}
           small
           onClick={onDelete}
           style={{ color: "var(--danger)" }}

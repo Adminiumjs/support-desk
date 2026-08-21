@@ -9,6 +9,8 @@
  */
 
 import type { A11yFlags, A11yPalette, A11ySettings } from "../data/types";
+import { locale as activeLocale, t } from "../i18n/ambient";
+import { percentText } from "./format";
 
 /* -------------------------------------------------------------- defaults */
 
@@ -205,20 +207,38 @@ export function chime(kind: "ok" | "warn" | "info", settings: A11ySettings): voi
 
 /* ------------------------------------------------------------ the note */
 
-/** The live summary line on the accessibility screen. */
+/**
+ * The live summary line on the accessibility screen.
+ *
+ * The bits are joined by `Intl.ListFormat`, not by a hard-coded `", "`. The
+ * separator is a property of the language — Arabic uses `،` and Chinese `、` —
+ * and only the runtime's locale knows which. The frame around the list is a
+ * single message so the translator owns the word order.
+ */
 export function a11yActiveNote(settings: A11ySettings): string {
   const bits: string[] = [];
   if (settings.size !== 1)
-    bits.push(`${Math.round(settings.size * 100)}% display size`);
-  if (settings.on.contrast) bits.push("higher contrast");
-  if (settings.on.motion) bits.push("reduced motion");
-  if (settings.palette === "deuter") bits.push("red-green friendly palette");
-  if (settings.palette === "mono") bits.push("monochrome palette");
-  if (settings.on.labels) bits.push("icon labels");
-  if (settings.on.chime) bits.push("alert sound");
-  if (!bits.length)
-    return "Nothing changed from the defaults yet — pick an option and the whole portal updates.";
-  return `Applied across the portal: ${bits.join(", ")}.`;
+    bits.push(t("lib.a11y.noteSize", { percent: percentText(settings.size * 100) }));
+  if (settings.on.contrast) bits.push(t("lib.a11y.noteContrast"));
+  if (settings.on.motion) bits.push(t("lib.a11y.noteMotion"));
+  if (settings.palette === "deuter") bits.push(t("lib.a11y.noteDeuter"));
+  if (settings.palette === "mono") bits.push(t("lib.a11y.noteMono"));
+  if (settings.on.labels) bits.push(t("lib.a11y.noteLabels"));
+  if (settings.on.chime) bits.push(t("lib.a11y.noteChime"));
+  if (!bits.length) return t("lib.a11y.noteNone");
+  return t("lib.a11y.noteApplied", { list: joinList(bits) });
+}
+
+/** `Intl.ListFormat` where it exists, a plain comma join where it does not. */
+function joinList(items: string[]): string {
+  try {
+    return new Intl.ListFormat(activeLocale(), {
+      style: "long",
+      type: "unit",
+    }).format(items);
+  } catch {
+    return items.join(", ");
+  }
 }
 
 /* ------------------------------------------------------------ focus trap */

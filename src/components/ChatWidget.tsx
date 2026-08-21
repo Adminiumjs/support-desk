@@ -9,13 +9,18 @@
 
 import { useEffect, useRef } from "react";
 import { AGENT, BRAND, CHAT_QUICK } from "../data/demo";
+import { useI18n } from "../i18n";
 import { selectCanEscalate, useAppStore } from "../state/store";
 import { Avatar } from "./Avatar";
 import { Icon } from "./Icon";
 import { AccentIconTile, IconButton } from "./Primitives";
 import { TypingDots } from "./TypingDots";
 
+/** The reply promise the status line quotes, in minutes. */
+const REPLY_MINUTES = 2;
+
 export function ChatWidget() {
+  const { t, number } = useI18n();
   const enabled = useAppStore((s) => s.chatEnabled);
   const open = useAppStore((s) => s.chatOpen);
   const input = useAppStore((s) => s.chatInput);
@@ -52,7 +57,7 @@ export function ChatWidget() {
     return (
       <button type="button" className="chat__fab fx-btn" onClick={openChat}>
         <Icon name="message-circle" size={19} />
-        Chat with us
+        {t("chrome.chat.fab")}
         <span className="chat__dot" />
       </button>
     );
@@ -62,27 +67,29 @@ export function ChatWidget() {
     <div
       className="chat"
       role="dialog"
-      aria-label={`${BRAND} support chat`}
+      aria-label={t("chrome.chat.dialogAria", { brand: BRAND })}
     >
       <div className="chat__head">
         <Avatar initials={AGENT.initials} tint={AGENT.tint} size={38} fontSize={14} />
         <div className="sd-grow sd-col">
-          <span className="chat__title">{BRAND} support</span>
+          <span className="chat__title">
+            {t("chrome.chat.title", { brand: BRAND })}
+          </span>
           <span className="chat__status">
             <span className="chat__online" />
-            Online · replies in ~2 min
+            {t("chrome.chat.status", { minutes: number(REPLY_MINUTES) })}
           </span>
         </div>
         <IconButton
           icon="ticket"
-          label="Move this chat to a ticket"
+          label={t("chrome.chat.escalate")}
           small
           iconSize={17}
           onClick={escalateChat}
         />
         <IconButton
           icon="x"
-          label="Close chat"
+          label={t("chrome.chat.close")}
           small
           iconSize={17}
           onClick={closeChat}
@@ -110,17 +117,23 @@ export function ChatWidget() {
           </div>
         ))}
 
-        {typing ? <TypingDots variant="chat" bubble label="Maya is typing" /> : null}
+        {typing ? (
+          <TypingDots
+            variant="chat"
+            bubble
+            label={t("chrome.chat.typing", { name: AGENT.name })}
+          />
+        ) : null}
 
         {canEscalate ? (
           <button type="button" className="chat__escalate fx-gi" onClick={escalateChat}>
             <AccentIconTile icon="ticket" size={32} radius={10} iconSize={16} />
             <span className="sd-col">
               <span style={{ fontSize: 13, fontWeight: 700, letterSpacing: "-0.01em" }}>
-                Need this in writing?
+                {t("chrome.chat.escalateTitle")}
               </span>
               <span style={{ fontSize: 12, color: "var(--fg-muted)", lineHeight: 1.45 }}>
-                Move the chat to a ticket — transcript included, email updates on.
+                {t("chrome.chat.escalateText")}
               </span>
             </span>
           </button>
@@ -128,7 +141,7 @@ export function ChatWidget() {
 
         {quick ? (
           <div className="chat__quick">
-            <p className="sd-eyebrow">Common questions</p>
+            <p className="sd-eyebrow">{t("chrome.chat.quickHead")}</p>
             {CHAT_QUICK.map((qr, i) => (
               <button
                 key={qr.label}
@@ -147,8 +160,8 @@ export function ChatWidget() {
         <input
           className="fx-fld"
           value={input}
-          aria-label="Type a message"
-          placeholder="Type a message…"
+          aria-label={t("chrome.chat.inputLabel")}
+          placeholder={t("chrome.chat.inputPlaceholder")}
           onChange={(e) => set({ chatInput: e.target.value })}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
@@ -160,8 +173,8 @@ export function ChatWidget() {
         <button
           type="button"
           className="chat__send fx-btn"
-          title="Send"
-          aria-label="Send message"
+          title={t("chrome.chat.send")}
+          aria-label={t("chrome.chat.sendLabel")}
           disabled={!input.trim()}
           onClick={chatSubmit}
         >
@@ -169,7 +182,7 @@ export function ChatWidget() {
         </button>
       </div>
 
-      <p className="chat__note">Simulated chat · no messages leave this demo</p>
+      <p className="chat__note">{t("chrome.chat.note")}</p>
     </div>
   );
 }

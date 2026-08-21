@@ -134,6 +134,7 @@ export { AttachmentChip } from "./AttachmentChip";
 export type { AttachmentChipProps } from "./AttachmentChip";
 
 export { Header } from "./Header";
+export { LocalePicker } from "./LocalePicker";
 export { MobileSheet } from "./MobileSheet";
 export { Footer } from "./Footer";
 export { Breadcrumbs } from "./Breadcrumbs";

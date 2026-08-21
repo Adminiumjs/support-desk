@@ -15,11 +15,13 @@ import {
 } from "../components";
 import { dataSource } from "../data/source";
 import type { ProductId } from "../data/types";
-import { money, pluralise, poundsWhole } from "../lib/format";
+import { useT } from "../i18n";
+import { counted, money, poundsWhole } from "../lib/format";
 import { useAppStore } from "../state/store";
 import "../styles/screen-bundles.css";
 
 export default function Bundles() {
+  const t = useT();
   const byoOn = useAppStore((s) => s.byoOn);
   const set = useAppStore((s) => s.set);
   const showToast = useAppStore((s) => s.showToast);
@@ -33,10 +35,10 @@ export default function Bundles() {
   const total = discounted ? sum * 0.9 : sum;
 
   const note = discounted
-    ? "10% bundle discount applied"
+    ? t("screensA.bundles.noteDiscount")
     : byoOn.length > 0
-      ? `${3 - byoOn.length} more for 10% off`
-      : "pick three or more";
+      ? t("screensA.bundles.noteMore", undefined, 3 - byoOn.length)
+      : t("screensA.bundles.notePick");
 
   const toggle = (id: ProductId) =>
     set({
@@ -47,24 +49,20 @@ export default function Bundles() {
 
   const byoAdd = () => {
     if (byoOn.length < 2) {
-      showToast("Pick at least two devices", "warn");
+      showToast(t("screensA.bundles.toastMin"), "warn");
       return;
     }
     showToast(
       discounted
-        ? "Bundle added — 10% off applied"
-        : "Bundle added — no discount yet",
+        ? t("screensA.bundles.toastAddedDiscount")
+        : t("screensA.bundles.toastAddedPlain"),
     );
   };
 
   return (
     <main className="fx-screen fx-page w-1000 fx-wide">
-      <h1 className="bundles-title">Bundle deals</h1>
-      <p className="bundles-lede">
-        Buy devices together and the discount is applied at checkout — no codes.
-        Bundles ship as one parcel and share a single two-year warranty start
-        date.
-      </p>
+      <h1 className="bundles-title">{t("screensA.bundles.title")}</h1>
+      <p className="bundles-lede">{t("screensA.bundles.lede")}</p>
 
       <div className="bundles-grid">
         {bundles.map((b) => (
@@ -76,7 +74,7 @@ export default function Bundles() {
             <div className="bundles-card__head">
               <span className="bundles-card__name">{b.name}</span>
               <SoftPill fg="--pos" soft="--pos-soft" icon="tag">
-                Save {b.save}
+                {t("screensA.bundles.save", { save: b.save })}
               </SoftPill>
             </div>
             <p className="bundles-card__blurb">{b.blurb}</p>
@@ -109,11 +107,16 @@ export default function Bundles() {
               type="button"
               className="fx-chip bundles-card__btn"
               onClick={() =>
-                showToast(`${b.name} bundle added — saving ${b.save}`)
+                showToast(
+                  t("screensA.bundles.toastAddedNamed", {
+                    name: b.name,
+                    save: b.save,
+                  }),
+                )
               }
             >
               <Icon name="shopping-basket" size={16} />
-              Add bundle
+              {t("screensA.bundles.add")}
             </button>
           </Card>
         ))}
@@ -122,10 +125,10 @@ export default function Bundles() {
       <Card className="bundles-byo">
         <div className="bundles-byo__head">
           <div>
-            <p className="bundles-byo__title">Build your own</p>
-            <p className="bundles-byo__sub">
-              Three or more devices takes 10% off automatically.
+            <p className="bundles-byo__title">
+              {t("screensA.bundles.byoTitle")}
             </p>
+            <p className="bundles-byo__sub">{t("screensA.bundles.byoSub")}</p>
           </div>
           <span
             className="bundles-byo__note"
@@ -138,7 +141,7 @@ export default function Bundles() {
         <div
           className="bundles-byo__grid"
           role="group"
-          aria-label="Devices in your bundle"
+          aria-label={t("screensA.bundles.groupLabel")}
         >
           {products.map((p) => {
             const on = byoOn.includes(p.id);
@@ -173,7 +176,9 @@ export default function Bundles() {
 
         <div className="bundles-byo__total">
           <span className="bundles-byo__count">
-            {pluralise(byoOn.length, "device")} selected
+            {t("screensA.bundles.selected", {
+              devices: counted("count.device", byoOn.length),
+            })}
           </span>
           <span className="bundles-byo__sum">{money(total)}</span>
           {discounted ? (
@@ -184,7 +189,7 @@ export default function Bundles() {
             className="bundles-byo__add"
             onClick={byoAdd}
           >
-            Add my bundle
+            {t("screensA.bundles.addMine")}
           </ButtonPrimary>
         </div>
       </Card>

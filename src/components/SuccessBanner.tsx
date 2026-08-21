@@ -5,12 +5,14 @@
  * body, auto-dismisses after 7 s, and always offers an explicit dismiss.
  */
 
+import { useT } from "../i18n";
 import { useAppStore } from "../state/store";
 import { Icon } from "./Icon";
 import { IconButton } from "./Primitives";
 import { columnClass } from "./chrome";
 
 export function SuccessBanner() {
+  const t = useT();
   const view = useAppStore((s) => s.view);
   const succ = useAppStore((s) => s.succ);
   const dismissSuccess = useAppStore((s) => s.dismissSuccess);
@@ -33,7 +35,12 @@ export function SuccessBanner() {
             {succ.action.label}
           </button>
         ) : null}
-        <IconButton icon="x" label="Dismiss" small onClick={dismissSuccess} />
+        <IconButton
+          icon="x"
+          label={t("chrome.action.dismiss")}
+          small
+          onClick={dismissSuccess}
+        />
       </div>
     </div>
   );

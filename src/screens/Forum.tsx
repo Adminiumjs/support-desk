@@ -23,10 +23,18 @@ import {
   Icon,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useI18n } from "../i18n";
+import { percentText } from "../lib/format";
 import { useAppStore } from "../state/store";
 import "../styles/screen-forum.css";
 
+/* Ruling R2: the sidebar figures are authored in the comp, not derived — kept
+ * as numbers so `Intl` renders the digits and the percent sign. */
+const WEEK_POSTS = 128;
+const WEEK_ANSWERED_PCT = 91;
+
 export default function Forum() {
+  const { t, number } = useI18n();
   const fcat = useAppStore((s) => s.fcat);
   const fopen = useAppStore((s) => s.fopen);
   const set = useAppStore((s) => s.set);
@@ -48,7 +56,7 @@ export default function Forum() {
     id === "all" ? threads.length : threads.filter((t) => t.cat === id).length;
 
   /* Posting is a demo dead end everywhere it appears (§8.2). */
-  const newPost = () => showToast("Posting is disabled in this demo", "info");
+  const newPost = () => showToast(t("screensA.forum.toastPost"), "info");
 
   const toggle = (id: string) => set({ fopen: fopen === id ? null : id });
 
@@ -56,14 +64,11 @@ export default function Forum() {
     <main className="fx-screen fx-page w-1120 fx-wide">
       <div className="forum-head">
         <div className="forum-head__text">
-          <h1 className="forum-head__title">Community forum</h1>
-          <p className="forum-head__lede">
-            Swap setups, automations and fixes with other Hearth owners. Hearth
-            staff drop in daily — look for the badge.
-          </p>
+          <h1 className="forum-head__title">{t("screensA.forum.h1")}</h1>
+          <p className="forum-head__lede">{t("screensA.forum.lede")}</p>
         </div>
         <ButtonPrimary icon="pen-line" onClick={newPost}>
-          Start a discussion
+          {t("screensA.forum.start")}
         </ButtonPrimary>
       </div>
 
@@ -83,64 +88,66 @@ export default function Forum() {
 
       <div className="forum-body">
         <div className="forum-list">
-          {list.map((t) => {
-            const open = fopen === t.id;
+          {list.map((thread) => {
+            const open = fopen === thread.id;
             return (
-              <div key={t.id} className="fx-card forum-thread">
+              <div key={thread.id} className="fx-card forum-thread">
                 <button
                   type="button"
                   className="forum-thread__head"
                   aria-expanded={open}
-                  onClick={() => toggle(t.id)}
+                  onClick={() => toggle(thread.id)}
                 >
                   <Avatar
-                    initials={t.initials}
-                    tint={t.tint}
+                    initials={thread.initials}
+                    tint={thread.tint}
                     size={40}
                     fontSize={14}
                   />
                   <span className="forum-thread__main">
                     <span className="forum-thread__titleline">
-                      {t.pinned ? (
+                      {thread.pinned ? (
                         <Icon name="pin" size={14} color="var(--accent)" />
                       ) : null}
-                      <span className="forum-thread__title">{t.title}</span>
-                      {t.solved ? (
+                      <span className="forum-thread__title">{thread.title}</span>
+                      {thread.solved ? (
                         <span className="forum-thread__answered">
                           <Icon name="check-circle-2" size={12} />
-                          Answered
+                          {t("screensA.forum.answered")}
                         </span>
                       ) : null}
                     </span>
                     <span className="forum-thread__meta">
-                      <b>{t.author}</b>
-                      {t.staff ? (
+                      <b>{thread.author}</b>
+                      {thread.staff ? (
                         <span className="forum-thread__staff">
                           <Icon name="badge-check" size={11} />
                           Hearth
                         </span>
                       ) : null}
-                      <span>in {catName(t.cat)}</span>
-                      <span>· {t.time}</span>
+                      <span>
+                        {t("screensA.forum.inCat", { cat: catName(thread.cat) })}
+                      </span>
+                      <span>· {thread.time}</span>
                     </span>
                   </span>
                   <span className="forum-thread__stats">
                     <span className="forum-thread__stat">
                       <Icon name="reply" size={14} />
-                      {t.replies}
+                      {number(thread.replies)}
                     </span>
                     <span className="forum-thread__stat">
                       <Icon name="eye" size={14} />
-                      {t.views}
+                      {thread.views}
                     </span>
                   </span>
                 </button>
 
                 {open ? (
                   <div className="forum-thread__panel">
-                    <p className="forum-thread__first">{t.first}</p>
+                    <p className="forum-thread__first">{thread.first}</p>
 
-                    {t.answer && t.answerBy ? (
+                    {thread.answer && thread.answerBy ? (
                       <div className="forum-answer">
                         <Icon
                           name="check-circle-2"
@@ -149,9 +156,11 @@ export default function Forum() {
                         />
                         <div>
                           <p className="forum-answer__by">
-                            Answer from {t.answerBy}
+                            {t("screensA.forum.answerFrom", {
+                              name: thread.answerBy,
+                            })}
                           </p>
-                          <p className="forum-answer__body">{t.answer}</p>
+                          <p className="forum-answer__body">{thread.answer}</p>
                         </div>
                       </div>
                     ) : null}
@@ -162,7 +171,7 @@ export default function Forum() {
                         iconSize={15}
                         onClick={newPost}
                       >
-                        Reply in thread
+                        {t("screensA.forum.reply")}
                       </ButtonSecondary>
                       <ButtonSecondary
                         icon="life-buoy"
@@ -170,7 +179,7 @@ export default function Forum() {
                         tone="var(--fg-muted)"
                         onClick={openTicket}
                       >
-                        Ask support instead
+                        {t("screensA.forum.askSupport")}
                       </ButtonSecondary>
                     </div>
                   </div>
@@ -182,10 +191,10 @@ export default function Forum() {
           {list.length === 0 ? (
             <EmptyState
               icon="messages-square"
-              title="No discussions here yet"
-              body="Nothing in this category so far. Start the first thread and it will sit at the top for everyone."
+              title={t("screensA.forum.emptyTitle")}
+              body={t("screensA.forum.emptyBody")}
               action={{
-                label: "Start a discussion",
+                label: t("screensA.forum.start"),
                 icon: "pen-line",
                 onClick: newPost,
               }}
@@ -195,22 +204,28 @@ export default function Forum() {
 
         <aside className="forum-side">
           <Card className="forum-side__card">
-            <Eyebrow>This week</Eyebrow>
+            <Eyebrow>{t("screensA.forum.thisWeek")}</Eyebrow>
             {/* Ruling R2: hard-coded in the comp, kept as authored. */}
             <div className="forum-stats">
               <div>
-                <div className="forum-stats__n">128</div>
-                <div className="forum-stats__l">new posts</div>
+                <div className="forum-stats__n">{number(WEEK_POSTS)}</div>
+                <div className="forum-stats__l">
+                  {t("screensA.forum.newPosts")}
+                </div>
               </div>
               <div>
-                <div className="forum-stats__n">91%</div>
-                <div className="forum-stats__l">answered</div>
+                <div className="forum-stats__n">
+                  {percentText(WEEK_ANSWERED_PCT)}
+                </div>
+                <div className="forum-stats__l">
+                  {t("screensA.forum.answeredStat")}
+                </div>
               </div>
             </div>
           </Card>
 
           <Card className="forum-side__card">
-            <Eyebrow>Top contributors</Eyebrow>
+            <Eyebrow>{t("screensA.forum.topContributors")}</Eyebrow>
             <div className="forum-contribs">
               {contributors.map((c) => (
                 <div key={c.name} className="forum-contrib">
@@ -223,7 +238,7 @@ export default function Forum() {
                   <div className="sd-grow">
                     <div className="forum-contrib__name">{c.name}</div>
                     <div className="forum-contrib__posts">
-                      {c.posts} helpful posts
+                      {t("screensA.forum.helpfulPosts", undefined, c.posts)}
                     </div>
                   </div>
                   <Icon name={c.icon} size={15} />
@@ -235,12 +250,9 @@ export default function Forum() {
           <div className="forum-rules">
             <p className="forum-rules__head">
               <Icon name="shield-check" size={16} color="var(--fg-muted)" />
-              House rules
+              {t("screensA.forum.rules")}
             </p>
-            <p className="forum-rules__body">
-              Be kind, keep it on-topic, and never post serial numbers or order
-              details in public threads.
-            </p>
+            <p className="forum-rules__body">{t("screensA.forum.rulesBody")}</p>
           </div>
         </aside>
       </div>

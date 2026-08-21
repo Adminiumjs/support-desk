@@ -5,6 +5,7 @@
  */
 
 import { AGENT, CUSTOMER } from "../data/demo";
+import { useT } from "../i18n";
 import { Avatar } from "./Avatar";
 import type { TicketMessage } from "../data/types";
 
@@ -15,6 +16,7 @@ export interface ThreadBubbleProps {
 
 /** `<ThreadBubble message={m} />` */
 export function ThreadBubble({ message, className }: ThreadBubbleProps) {
+  const t = useT();
   const mine = message.who === "customer";
   return (
     <div
@@ -30,7 +32,7 @@ export function ThreadBubble({ message, className }: ThreadBubbleProps) {
       />
       <div className="bubble-col">
         <span className="bubble-meta">
-          <b>{mine ? "You" : AGENT.full}</b>
+          <b>{mine ? t("chrome.thread.you") : AGENT.full}</b>
           <span>{message.time}</span>
         </span>
         <div className={`bubble${mine ? " bubble--customer" : ""}`}>

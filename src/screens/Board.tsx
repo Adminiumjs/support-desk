@@ -22,8 +22,9 @@ import {
 } from "../components";
 import { dataSource } from "../data/source";
 import type { LeaderPeriod } from "../data/types";
+import { useT } from "../i18n";
 import {
-  LB_UPDATED,
+  lbUpdated,
   leaderEarned,
   leaderLine,
   leaderPrize,
@@ -31,15 +32,19 @@ import {
   leaderTitle,
   sortLeaders,
 } from "../lib/derive";
+import { moneyLoose } from "../lib/format";
 import { useAppStore } from "../state/store";
 import "../styles/screen-board.css";
 
-const PERIODS: { id: LeaderPeriod; label: string }[] = [
-  { id: "quarter", label: "This quarter" },
-  { id: "alltime", label: "All time" },
-];
+/** The per-friend referral fee the copy quotes, in Hearth's own currency. */
+const FRIEND_FEE = 20;
 
 export default function Board() {
+  const t = useT();
+  const PERIODS: { id: LeaderPeriod; label: string }[] = [
+    { id: "quarter", label: t("screensA.board.quarter") },
+    { id: "alltime", label: t("screensA.board.allTime") },
+  ];
   const lbPeriod = useAppStore((s) => s.lbPeriod);
   const set = useAppStore((s) => s.set);
   const go = useAppStore((s) => s.go);
@@ -56,14 +61,13 @@ export default function Board() {
     <main className="fx-screen fx-page w-820 scr-board">
       <div className="lb-head">
         <div className="lb-head__text">
-          <h1 className="lb-h1">Referral leaderboard</h1>
+          <h1 className="lb-h1">{t("screensA.board.title")}</h1>
           <p className="lb-lede">
-            Top referrers this quarter. Everyone still gets £20 a friend — the
-            leaderboard is just for the bonus prizes.
+            {t("screensA.board.lede", { amount: moneyLoose(FRIEND_FEE) })}
           </p>
         </div>
         <Tabs
-          label="Leaderboard period"
+          label={t("screensA.board.periodLabel")}
           options={PERIODS}
           value={lbPeriod}
           onChange={(id) => set({ lbPeriod: id })}
@@ -79,7 +83,7 @@ export default function Board() {
         <Avatar initials={you.initials} tint={you.tint} size={44} fontSize={15} />
         <div className="lb-you__mid">
           <div className="lb-you__head">
-            <span className="lb-you__name">You</span>
+            <span className="lb-you__name">{t("screensA.board.you")}</span>
             <SoftPill
               fg="--accent"
               soft="--accent-soft"
@@ -93,7 +97,9 @@ export default function Board() {
         </div>
         <div className="lb-you__score">
           <span className="lb-you__count">{you.count}</span>
-          <span className="lb-you__caption">friends joined</span>
+          <span className="lb-you__caption">
+            {t("screensA.board.friendsJoined")}
+          </span>
         </div>
         <ButtonPrimary
           icon="gift"
@@ -101,13 +107,13 @@ export default function Board() {
           className="lb-you__cta"
           onClick={() => go("refer")}
         >
-          Invite someone
+          {t("screensA.board.invite")}
         </ButtonPrimary>
       </section>
 
       <div className="lb-tablehead">
         <span className="lb-tablehead__title">{leaderTitle(lbPeriod)}</span>
-        <span className="lb-tablehead__updated">{LB_UPDATED}</span>
+        <span className="lb-tablehead__updated">{lbUpdated()}</span>
       </div>
 
       <ListCard>
@@ -150,7 +156,7 @@ export default function Board() {
         })}
       </ListCard>
 
-      <h2 className="lb-h2">Bonus prizes</h2>
+      <h2 className="lb-h2">{t("screensA.board.prizes")}</h2>
       <div className="lb-prizes">
         {prizes.map((p, i) => (
           <Card key={p.place} accent={i === 0} className="lb-prize">
@@ -166,11 +172,7 @@ export default function Board() {
         ))}
       </div>
 
-      <p className="lb-legal">
-        Only referrals whose order has shipped are counted, and self-referrals
-        are removed automatically. Prizes are credited to your account within a
-        week of the quarter ending. Ranks update hourly.
-      </p>
+      <p className="lb-legal">{t("screensA.board.legal")}</p>
     </main>
   );
 }

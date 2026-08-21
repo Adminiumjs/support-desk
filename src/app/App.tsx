@@ -38,6 +38,8 @@ import { CHORD_MAP } from "../components/chrome";
 import { applyA11ySettings, watchReducedMotion } from "../lib/a11y";
 import { forcedErrorMode, isOnline, viewGate, watchConnection } from "../lib/errors";
 import { systemTheme, watchSystemTheme } from "../lib/theme";
+import { useI18n } from "../i18n";
+import { setAmbient } from "../i18n/ambient";
 import { CHORD_MS, useAppStore } from "../state/store";
 import type { ViewId } from "../data/types";
 
@@ -229,6 +231,21 @@ export function App() {
   const a11y = useAppStore((s) => s.a11y);
   const busy = useAppStore((s) => s.busy);
   const failed = useAppStore((s) => s.failed);
+
+  /*
+   * Publish the live locale to the module-level bridge before anything below
+   * renders. `src/lib/` and the store produce customer-visible strings outside
+   * React and cannot hold a hook; this is the one place that knows both sides.
+   * Assigning during render (rather than in an effect) matters: children render
+   * after this line, so the first paint after a locale switch is already in the
+   * new locale instead of one frame behind.
+   *
+   * Consuming the context here is also what makes the switch felt: `children`
+   * is a stable element created in main.tsx, so React would otherwise bail out
+   * of re-rendering this subtree when only the provider's value changed.
+   */
+  const { locale, t, money, number, date } = useI18n();
+  setAmbient(locale, t, money, number, date);
 
   /* --- theme: an explicit stamp always beats prefers-color-scheme --- */
   useEffect(() => {

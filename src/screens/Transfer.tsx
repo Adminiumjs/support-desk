@@ -28,18 +28,20 @@ import {
   columnClass,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useI18n, type MessageKey } from "../i18n";
 import { transferDoneLine } from "../lib/derive";
 import { useAppStore } from "../state/store";
 import "../styles/screen-transfer.css";
 
-/** The numbered "How it works" list (spec A §4.2g). */
-const HOW_IT_WORKS = [
-  "We email the new owner a link — it's valid for 14 days.",
-  "They accept and add the device to their own Hearth account.",
-  "Remaining cover carries over with the original purchase date. Nothing to pay, and the extra registered year comes too.",
+/** The numbered "How it works" list (spec A §4.2g) — message keys. */
+const HOW_IT_WORKS: MessageKey[] = [
+  "screensB.transfer.how1",
+  "screensB.transfer.how2",
+  "screensB.transfer.how3",
 ];
 
 export default function Transfer() {
+  const { t, number } = useI18n();
   const registered = useAppStore((s) => s.registered);
   const trDev = useAppStore((s) => s.trDev);
   const trName = useAppStore((s) => s.trName);
@@ -60,7 +62,9 @@ export default function Transfer() {
           <span className="tr-done__tile">
             <Icon name="repeat" size={26} color="var(--pos)" />
           </span>
-          <h1 className="tr-done__title">Transfer started</h1>
+          <h1 className="tr-done__title">
+            {t("screensB.transfer.doneTitle")}
+          </h1>
           <p className="tr-done__body">{transferDoneLine(trDone)}</p>
           <div className="tr-done__chips">
             <span className="tr-done__chip">{trDone.ref}</span>
@@ -72,14 +76,14 @@ export default function Transfer() {
               iconSize={16}
               onClick={() => go("warranty")}
             >
-              Your registered devices
+              {t("screensB.transfer.registeredDevices")}
             </ButtonPrimary>
             <ButtonSecondary
               icon="rotate-ccw"
               iconSize={15}
               onClick={transferReset}
             >
-              Transfer another
+              {t("screensB.transfer.transferAnother")}
             </ButtonSecondary>
           </div>
         </Card>
@@ -89,21 +93,20 @@ export default function Transfer() {
 
   return (
     <main className={`fx-screen fx-page ${columnClass("transfer")} tr`}>
-      <h1 className="tr__h1">Transfer a warranty</h1>
-      <p className="tr__lede">
-        Selling a device or leaving it behind when you move? The remaining cover
-        goes with it, at no cost. The new owner just needs to accept by email.
-      </p>
+      <h1 className="tr__h1">{t("screensB.transfer.h1")}</h1>
+      <p className="tr__lede">{t("screensB.transfer.lede")}</p>
 
       <Card variant="form" className="tr-form">
         <div className="tr-group">
-          <h2 className="tr-group__label">Which device are you handing over?</h2>
+          <h2 className="tr-group__label">
+            {t("screensB.transfer.whichDevice")}
+          </h2>
 
           {registered.length ? (
             <div
               className="tr-devs"
               role="radiogroup"
-              aria-label="Which device are you handing over?"
+              aria-label={t("screensB.transfer.whichDevice")}
             >
               {registered.map((device) => {
                 const product = dataSource.product(device.prod);
@@ -114,7 +117,10 @@ export default function Transfer() {
                     className="tr-dev"
                     selected={trDev === device.id}
                     onSelect={() => set({ trDev: device.id })}
-                    note={`${device.serial} · ${device.left}`}
+                    note={t("screensB.transfer.deviceNote", {
+                      serial: device.serial,
+                      left: device.left,
+                    })}
                     leading={
                       <IconChip
                         tint={product.tint}
@@ -133,10 +139,10 @@ export default function Transfer() {
           ) : (
             <EmptyState
               icon="package-x"
-              title="Nothing left to transfer"
-              body="Every device on this account has already been transferred or removed. Register a device first and its cover becomes transferable straight away."
+              title={t("screensB.transfer.emptyTitle")}
+              body={t("screensB.transfer.emptyBody")}
               action={{
-                label: "Register a device",
+                label: t("screensB.transfer.registerDevice"),
                 icon: "shield-check",
                 onClick: () => go("warranty"),
               }}
@@ -145,7 +151,7 @@ export default function Transfer() {
         </div>
 
         <div className="tr-grid">
-          <Field label="New owner's name" htmlFor="tr-name">
+          <Field label={t("screensB.transfer.newOwnerName")} htmlFor="tr-name">
             <TextInput
               id="tr-name"
               value={trName}
@@ -153,7 +159,7 @@ export default function Transfer() {
               placeholder="Ines Bauer"
             />
           </Field>
-          <Field label="Their email" htmlFor="tr-email">
+          <Field label={t("screensB.transfer.theirEmail")} htmlFor="tr-email">
             <TextInput
               id="tr-email"
               type="email"
@@ -164,12 +170,12 @@ export default function Transfer() {
           </Field>
         </div>
 
-        <Field label="Why are you transferring it?" htmlFor="tr-reason">
+        <Field label={t("screensB.transfer.whyTransfer")} htmlFor="tr-reason">
           <SelectField
             id="tr-reason"
             value={trReason}
             onChange={(v) => set({ trReason: v })}
-            placeholder="Choose a reason…"
+            placeholder={t("screensB.transfer.chooseReason")}
             options={dataSource.transferReasons()}
           />
         </Field>
@@ -188,11 +194,7 @@ export default function Transfer() {
           ))}
         </div>
 
-        <Callout tone="warn">
-          Transferring removes the device from your household and wipes its clip
-          history for good. Factory reset it first if you haven't already — we
-          can't recover anything afterwards.
-        </Callout>
+        <Callout tone="warn">{t("screensB.transfer.warning")}</Callout>
 
         <ButtonPrimary
           icon="repeat"
@@ -200,16 +202,16 @@ export default function Transfer() {
           className="tr-submit"
           onClick={transferSubmit}
         >
-          Start transfer
+          {t("screensB.transfer.start")}
         </ButtonPrimary>
       </Card>
 
-      <h2 className="tr__h2">How it works</h2>
+      <h2 className="tr__h2">{t("screensB.transfer.howItWorks")}</h2>
       <ol className="tr-steps">
-        {HOW_IT_WORKS.map((text, i) => (
-          <li className="tr-steps__row" key={text}>
-            <span className="tr-steps__num">{i + 1}</span>
-            <span className="tr-steps__text">{text}</span>
+        {HOW_IT_WORKS.map((key, i) => (
+          <li className="tr-steps__row" key={key}>
+            <span className="tr-steps__num">{number(i + 1)}</span>
+            <span className="tr-steps__text">{t(key)}</span>
           </li>
         ))}
       </ol>

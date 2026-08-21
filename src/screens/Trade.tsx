@@ -28,10 +28,12 @@ import {
   columnClass,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useT } from "../i18n";
 import { useAppStore } from "../state/store";
 import "../styles/screen-trade.css";
 
 export default function Trade() {
+  const t = useT();
   const tdTier = useAppStore((s) => s.tdTier);
   const tdName = useAppStore((s) => s.tdName);
   const tdType = useAppStore((s) => s.tdType);
@@ -74,7 +76,7 @@ export default function Trade() {
           <span className="td-done__tile">
             <Icon name="hard-hat" size={26} />
           </span>
-          <h1 className="td-done__title">Application received</h1>
+          <h1 className="td-done__title">{t("screensB.trade.doneTitle")}</h1>
           <p className="td-done__body">{tdDone.text}</p>
           <div className="td-done__chips">
             <span className="td-chip">{tdDone.ref}</span>
@@ -86,14 +88,14 @@ export default function Trade() {
               iconSize={16}
               onClick={() => go("partner")}
             >
-              Preview the partner portal
+              {t("screensB.trade.previewPortal")}
             </ButtonPrimary>
             <ButtonSecondary
               icon="rotate-ccw"
               iconSize={16}
               onClick={tradeReset}
             >
-              Start another application
+              {t("screensB.trade.startAnother")}
             </ButtonSecondary>
           </div>
         </div>
@@ -103,14 +105,19 @@ export default function Trade() {
 
   /* -------------------------------------------------------- B. form */
 
+  /*
+   * The closing callout wraps a link mid-sentence. It is authored as one
+   * message with a `{link}` marker — no params are passed, so the marker
+   * survives lookup and is split on here, leaving word order to the
+   * translator.
+   */
+  const [footBefore, footAfter] = t("screensB.trade.foot").split("{link}");
+
   return (
     <main className={`fx-screen fx-page ${column} scr-trade`}>
-      <p className="td-eyebrow">FOR INSTALLERS, ELECTRICIANS AND LETTING AGENTS</p>
-      <h1 className="td-h1">Open a trade account</h1>
-      <p className="td-lede">
-        Trade pricing, 30-day terms and a named contact who answers the phone.
-        Approval takes two working days and there's nothing to pay to join.
-      </p>
+      <p className="td-eyebrow">{t("screensB.trade.eyebrow")}</p>
+      <h1 className="td-h1">{t("screensB.trade.h1")}</h1>
+      <p className="td-lede">{t("screensB.trade.lede")}</p>
 
       <div className="td-perks">
         {perks.map((p) => (
@@ -122,28 +129,32 @@ export default function Trade() {
         ))}
       </div>
 
-      <h2 className="td-h2">Pick a tier</h2>
-      <div className="td-tiers" role="radiogroup" aria-label="Pick a tier">
-        {tiers.map((t) => {
-          const on = tdTier === t.id;
+      <h2 className="td-h2">{t("screensB.trade.pickTier")}</h2>
+      <div
+        className="td-tiers"
+        role="radiogroup"
+        aria-label={t("screensB.trade.pickTier")}
+      >
+        {tiers.map((tier) => {
+          const on = tdTier === tier.id;
           return (
             <button
-              key={t.id}
+              key={tier.id}
               type="button"
               role="radio"
               aria-checked={on}
               className={`td-tier fx-chip${on ? " td-tier--on" : ""}`}
-              onClick={() => set({ tdTier: t.id })}
+              onClick={() => set({ tdTier: tier.id })}
             >
               <span className="td-tier__head">
-                <span className="td-tier__name">{t.name}</span>
+                <span className="td-tier__name">{tier.name}</span>
                 <span
                   className={`sd-radio${on ? " sd-radio--on" : ""}`}
                   aria-hidden="true"
                 />
               </span>
-              <span className="td-tier__discount">{t.discount}</span>
-              <span className="td-tier__req">{t.req}</span>
+              <span className="td-tier__discount">{tier.discount}</span>
+              <span className="td-tier__req">{tier.req}</span>
             </button>
           );
         })}
@@ -151,9 +162,9 @@ export default function Trade() {
 
       <Card variant="form" className="td-card">
         <div>
-          <Eyebrow>Business details</Eyebrow>
+          <Eyebrow>{t("screensB.trade.businessDetails")}</Eyebrow>
           <div className="td-grid">
-            <Field label="Trading name" htmlFor="td-name">
+            <Field label={t("screensB.trade.tradingName")} htmlFor="td-name">
               <TextInput
                 id="td-name"
                 value={tdName}
@@ -162,20 +173,24 @@ export default function Trade() {
               />
             </Field>
 
-            <Field label="Business type" htmlFor="td-type">
+            <Field label={t("screensB.trade.businessType")} htmlFor="td-type">
               <SelectField
                 id="td-type"
                 value={tdType}
-                placeholder="Choose one…"
+                placeholder={t("screensB.trade.chooseOne")}
                 options={types}
                 onChange={(v) => set({ tdType: v })}
               />
             </Field>
 
             <Field
-              label="Company number"
+              label={t("screensB.trade.companyNumber")}
               htmlFor="td-co"
-              aside={<span className="td-optional">Optional</span>}
+              aside={
+                <span className="td-optional">
+                  {t("screensB.trade.optional")}
+                </span>
+              }
             >
               <TextInput
                 id="td-co"
@@ -186,7 +201,7 @@ export default function Trade() {
               />
             </Field>
 
-            <Field label="VAT number" htmlFor="td-vat">
+            <Field label={t("screensB.trade.vatNumber")} htmlFor="td-vat">
               <TextInput
                 id="td-vat"
                 className="sd-mono"
@@ -194,18 +209,15 @@ export default function Trade() {
                 placeholder="GB 412 9930 77"
                 onChange={setTradeVat}
               />
-              <p className="td-hint">
-                Not VAT registered? Leave it blank — we’ll set the account up
-                gross.
-              </p>
+              <p className="td-hint">{t("screensB.trade.vatHint")}</p>
             </Field>
           </div>
         </div>
 
         <div>
-          <Eyebrow>Who we'll deal with</Eyebrow>
+          <Eyebrow>{t("screensB.trade.whoWeDealWith")}</Eyebrow>
           <div className="td-grid">
-            <Field label="Contact name" htmlFor="td-contact">
+            <Field label={t("screensB.trade.contactName")} htmlFor="td-contact">
               <TextInput
                 id="td-contact"
                 value={tdContact}
@@ -214,7 +226,7 @@ export default function Trade() {
               />
             </Field>
 
-            <Field label="Work email" htmlFor="td-email">
+            <Field label={t("screensB.trade.workEmail")} htmlFor="td-email">
               <TextInput
                 id="td-email"
                 type="email"
@@ -224,7 +236,7 @@ export default function Trade() {
               />
             </Field>
 
-            <Field label="Phone" htmlFor="td-phone">
+            <Field label={t("screensB.trade.phone")} htmlFor="td-phone">
               <TextInput
                 id="td-phone"
                 className="sd-mono"
@@ -234,7 +246,10 @@ export default function Trade() {
               />
             </Field>
 
-            <Field label="Installs a month" htmlFor="td-volume">
+            <Field
+              label={t("screensB.trade.installsAMonth")}
+              htmlFor="td-volume"
+            >
               <SelectField
                 id="td-volume"
                 value={
@@ -255,10 +270,16 @@ export default function Trade() {
         </div>
 
         <Field
-          label="What do you fit?"
-          aside={<span className="td-optional">Pick any</span>}
+          label={t("screensB.trade.whatDoYouFit")}
+          aside={
+            <span className="td-optional">{t("screensB.trade.pickAny")}</span>
+          }
         >
-          <div className="td-skills" role="group" aria-label="What do you fit?">
+          <div
+            className="td-skills"
+            role="group"
+            aria-label={t("screensB.trade.whatDoYouFit")}
+          >
             {skills.map(([label, icon]) => (
               <Chip
                 key={label}
@@ -273,15 +294,17 @@ export default function Trade() {
         </Field>
 
         <Field
-          label="Anything else we should know?"
+          label={t("screensB.trade.anythingElse")}
           htmlFor="td-note"
-          aside={<span className="td-optional">Optional</span>}
+          aside={
+            <span className="td-optional">{t("screensB.trade.optional")}</span>
+          }
         >
           <TextArea
             id="td-note"
             value={tdNote}
             minHeight={100}
-            placeholder="Accreditations, the areas you cover, or the volume you expect."
+            placeholder={t("screensB.trade.notePlaceholder")}
             onChange={setTradeNote}
           />
         </Field>
@@ -316,21 +339,20 @@ export default function Trade() {
           className="td-submit"
           onClick={tradeSubmit}
         >
-          Apply for a trade account
+          {t("screensB.trade.apply")}
         </ButtonPrimary>
       </Card>
 
       <Callout tone="info" icon="info" className="td-foot">
-        Already approved? The{" "}
+        {footBefore}
         <button
           type="button"
           className="td-link fx-nav"
           onClick={() => go("partner")}
         >
-          partner portal
-        </button>{" "}
-        has your job queue, payouts and training. Trade pricing shows
-        automatically once you're signed in.
+          {t("screensB.trade.footLink")}
+        </button>
+        {footAfter}
       </Callout>
     </main>
   );

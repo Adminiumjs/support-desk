@@ -12,12 +12,20 @@
  *     up front with their documented defaults.
  *
  * Routing is this `view` string. There is no router.
+ *
+ * i18n: the toasts, banners and command labels below are customer-visible, and
+ * an action creator has no hook to hold. They go through `../i18n/ambient` —
+ * the module-level mirror `<App>` refreshes on every render, and the bridge
+ * `src/lib/` already runs on — so a toast fired in Arabic is written in Arabic
+ * rather than in whatever locale the module happened to be evaluated under.
+ * Message *values* live in `../i18n/strings/chrome.ts`; nothing here is English.
  */
 
 import { useMemo } from "react";
 import { create } from "zustand";
 import {
   AGENT,
+  BRAND,
   BREACH_HIT_EMAIL,
   CHAT_ESCALATION_CLOSER,
   CHAT_QUICK,
@@ -31,6 +39,7 @@ import {
   SHARE_HOST,
 } from "../data/demo";
 import { dataSource } from "../data/source";
+import { date as fmtDate, number as fmtNumber, t } from "../i18n/ambient";
 import {
   A11Y_INITIAL,
   a11yReset,
@@ -38,10 +47,10 @@ import {
   chime,
 } from "../lib/a11y";
 import {
-  AU_ACTION_TOAST,
-  AU_CREATED_TOAST,
-  AU_NAME_TOAST,
-  AU_TRIGGER_TOAST,
+  auActionToast,
+  auCreatedToast,
+  auNameToast,
+  auTriggerToast,
   automationDeleteToast,
   automationToggleToast,
   buildAutomation,
@@ -49,8 +58,8 @@ import {
   nextAutomationId,
 } from "../lib/automations";
 import {
-  CLIP_DELETE_TOAST,
-  CLIP_SHARE_TOAST,
+  clipDeleteToast,
+  clipShareToast,
   LIVE_TROUBLESHOOT_ARTICLE,
   clipDownloadToast,
   clipPlayToast,
@@ -59,15 +68,15 @@ import {
   shareExtendToast,
 } from "../lib/clips";
 import {
-  OFFLINE_BACK_TOAST,
-  OFFLINE_STILL_TOAST,
-  REPORT_TOAST,
-  RETRY_TOAST,
-  SIMULATE_FAIL_TOAST,
+  offlineBackToast,
+  offlineStillToast,
+  reportToast,
+  retryToast,
+  simulateFailToast,
   isOnline,
 } from "../lib/errors";
 import {
-  FREE_DELIVERY_LINE,
+  freeDeliveryLine,
   filterStores,
   invoiceDownloadToast,
   storeKeyToast,
@@ -76,12 +85,13 @@ import {
   wishAddToast,
 } from "../lib/derive";
 import { BUSY_MOUNT_MS, BUSY_NAV_MS, BUSY_RETRY_MS } from "../lib/skeletons";
-import { FOLLOW_SYSTEM_TOAST, systemTheme } from "../lib/theme";
+import { followSystemToast, systemTheme } from "../lib/theme";
 import {
   NOW_STAMP,
+  counted,
   deleteRef,
   money,
-  pluralise,
+  readTimeShort,
   recycleRef,
   tradeRef,
   transferRef,
@@ -176,6 +186,29 @@ export const NOTE_MAX = 600;
 
 /** The `g`-chord window. */
 export const CHORD_MS = 1400;
+
+/** The shortest description the new-ticket form accepts. */
+const DESC_MIN = 15;
+
+/** The typed confirmation on the last deletion step. A machine token: the
+ * comparison is against these exact letters in every language. */
+const DELETE_PHRASE = "DELETE";
+
+/** How many boxes the deletion wizard wants ticked. */
+const DELETE_CHECKS = 3;
+
+/**
+ * The deletion date the comp hard-codes (ruling R2: no `Date.now()`). Only the
+ * instant is fixed — the rendering runs through `Intl` at call time, so the
+ * reader sees "26 August", "26. August" or "٢٦ أغسطس".
+ */
+const DELETE_ON = new Date(2026, 7, 26);
+
+/** The wait the evidence-pack toast quotes, in minutes. */
+const PACK_MINUTES_LEFT = 4;
+
+/** The day the breach notice went out. Fixed instant, localised rendering. */
+const BREACH_NOTICE_ON = new Date(2026, 6, 24);
 
 /** Blur-close delays for the two search dropdowns. */
 export const HEADER_BLUR_MS = 140;
@@ -965,7 +998,7 @@ export const useAppStore = create<Store>((set, get) => ({
 
   dismissOutage: () => {
     set({ obOut: true });
-    get().showToast("Banner hidden until the next update", "info");
+    get().showToast(t("chrome.toast.bannerHidden"), "info");
   },
 
   /* -------------------------------------------------------- navigation */
@@ -1007,7 +1040,7 @@ export const useAppStore = create<Store>((set, get) => ({
     const s = get();
     if (id === "chat") {
       set({ chatOpen: true, menu: false });
-      s.showToast("Chat opens over any screen", "info");
+      s.showToast(t("chrome.toast.chatOverlay"), "info");
       return;
     }
     if (id === "category") return s.openCategory("setup");
@@ -1036,12 +1069,12 @@ export const useAppStore = create<Store>((set, get) => ({
         ? s.savedIds.filter((x) => x !== id)
         : [id, ...s.savedIds],
     });
-    s.showToast(saved ? "Removed from saved" : "Saved for later");
+    s.showToast(t(saved ? "chrome.toast.unsaved" : "chrome.toast.saved"));
   },
 
   giveFeedback: (v) => {
     set({ feedback: v });
-    get().showToast("Thanks for the feedback!");
+    get().showToast(t("chrome.toast.feedback"));
   },
 
   /* -------------------------------------------------------- new ticket */
@@ -1059,7 +1092,7 @@ export const useAppStore = create<Store>((set, get) => ({
       .attachmentPool()
       .find((f) => !s.form.attachments.includes(f));
     if (!next) {
-      s.showToast("That's all the demo files", "warn");
+      s.showToast(t("chrome.toast.noMoreFiles"), "warn");
       return;
     }
     set({
@@ -1078,11 +1111,11 @@ export const useAppStore = create<Store>((set, get) => ({
   validateTicket: () => {
     const { form } = get();
     const errs: FormErrors = {};
-    if (!form.product) errs.product = "Pick the product this is about";
-    if (!form.topic) errs.topic = "Choose a topic";
-    if (form.subject.trim().length < 4) errs.subject = "Add a short subject";
-    if (form.desc.trim().length < 15)
-      errs.desc = "Tell us a little more (at least 15 characters)";
+    if (!form.product) errs.product = t("chrome.form.err.product");
+    if (!form.topic) errs.topic = t("chrome.form.err.topic");
+    if (form.subject.trim().length < 4) errs.subject = t("chrome.form.err.subject");
+    if (form.desc.trim().length < DESC_MIN)
+      errs.desc = t("chrome.form.err.desc", { min: fmtNumber(DESC_MIN) });
     return errs;
   },
 
@@ -1091,7 +1124,7 @@ export const useAppStore = create<Store>((set, get) => ({
     const errs = s.validateTicket();
     if (Object.keys(errs).length) {
       set({ errs });
-      s.showToast("Please fix the highlighted fields", "warn");
+      s.showToast(t("chrome.toast.fixFields"), "warn");
       return;
     }
     const res = threadReducer(s.thread, { type: "create", form: s.form });
@@ -1105,7 +1138,7 @@ export const useAppStore = create<Store>((set, get) => ({
       errs: {},
       menu: false,
     });
-    s.showToast(`Ticket ${res.ticketId} created`);
+    s.showToast(t("chrome.toast.ticketCreated", { id: res.ticketId ?? "" }));
     top();
   },
 
@@ -1119,7 +1152,7 @@ export const useAppStore = create<Store>((set, get) => ({
     if (res.noop) return;
 
     set({ thread: res.state, reply: "", typing: true });
-    if (res.reopened) s.showToast("Ticket reopened");
+    if (res.reopened) s.showToast(t("chrome.toast.ticketReopened"));
 
     cancelAgentReply?.();
     cancelAgentReply = delay(TYPING_DELAY_MS, () => {
@@ -1138,7 +1171,7 @@ export const useAppStore = create<Store>((set, get) => ({
     cancelAgentReply = null;
     const res = threadReducer(s.thread, { type: "markSolved", id });
     set({ thread: res.state, typing: false });
-    s.showToast("Marked as solved");
+    s.showToast(t("chrome.toast.markedSolved"));
   },
 
   /* -------------------------------------------------- command palette */
@@ -1168,6 +1201,11 @@ export const useAppStore = create<Store>((set, get) => ({
     const s = get();
     const out: Command[] = [];
 
+    /* `words` is the extra text the ranker matches on, so it is translated
+     * too — searching "dunkel" has to find the theme command in German. */
+    const ACTION_GROUP = t("chrome.cmd.group.actions");
+    const HINT_ACTION = t("chrome.cmd.hint.action");
+
     for (const group of OV_GROUPS) {
       for (const [id, name, icon, blurb] of group.items) {
         out.push({
@@ -1175,7 +1213,7 @@ export const useAppStore = create<Store>((set, get) => ({
           label: name,
           icon,
           group: group.name,
-          hint: "Screen",
+          hint: t("chrome.cmd.hint.screen"),
           words: blurb,
           run: () => s.ovGo(id),
         });
@@ -1185,89 +1223,90 @@ export const useAppStore = create<Store>((set, get) => ({
     out.push(
       {
         id: "act:theme",
-        label: "Toggle light / dark theme",
+        label: t("chrome.cmd.theme"),
         icon: "sun-moon",
-        group: "Actions",
+        group: ACTION_GROUP,
         hint: "t",
-        words: "theme dark light appearance",
+        words: t("chrome.cmd.theme.words"),
         run: () => s.toggleTheme(),
       },
       {
         id: "act:chat",
-        label: "Open live chat",
+        label: t("chrome.link.liveChatOpen"),
         icon: "message-circle",
-        group: "Actions",
+        group: ACTION_GROUP,
         hint: "c",
-        words: "chat agent talk human",
+        words: t("chrome.cmd.chat.words"),
         run: () => s.openChat(),
       },
       {
         id: "act:ticket",
-        label: "Open a new ticket",
+        label: t("chrome.cmd.newTicket"),
         icon: "pen-line",
-        group: "Actions",
+        group: ACTION_GROUP,
         hint: "n",
-        words: "support ask help ticket",
+        words: t("chrome.cmd.ticket.words"),
         run: () => s.openTicket(),
       },
       {
         id: "act:notifs",
-        label: "Mark all notifications read",
+        label: t("chrome.cmd.notifs"),
         icon: "check-check",
-        group: "Actions",
-        hint: "Action",
-        words: "notifications inbox clear",
+        group: ACTION_GROUP,
+        hint: HINT_ACTION,
+        words: t("chrome.cmd.notifs.words"),
         run: () => {
           set({ ntRead: dataSource.notifications().map((n) => n.id) });
-          s.showToast("All notifications marked read");
+          s.showToast(t("chrome.toast.notifsRead"));
         },
       },
       {
         id: "act:tour",
-        label: "Start the onboarding tour",
+        label: t("chrome.cmd.tour"),
         icon: "presentation",
-        group: "Actions",
-        hint: "Action",
-        words: "tour welcome guide getting started",
+        group: ACTION_GROUP,
+        hint: HINT_ACTION,
+        words: t("chrome.cmd.tour.words"),
         run: () => s.go("tour", { tourStep: 0 }),
       },
       {
         id: "act:shortcuts",
-        label: "Show keyboard shortcuts",
+        label: t("chrome.cmd.shortcuts"),
         icon: "keyboard",
-        group: "Actions",
+        group: ACTION_GROUP,
         hint: "?",
-        words: "shortcuts keys help",
+        words: t("chrome.cmd.shortcuts.words"),
         run: () => set({ shortcuts: true }),
       },
       {
         id: "act:fail",
-        label: "Simulate a failed load",
+        label: t("chrome.cmd.fail"),
         icon: "cloud-off",
-        group: "Actions",
-        hint: "Action",
-        words: "error failure retry broken offline",
+        group: ACTION_GROUP,
+        hint: HINT_ACTION,
+        words: t("chrome.cmd.fail.words"),
         run: () => s.failView(),
       },
       {
         id: "act:offline",
         /* A toggle, and deliberately silent. */
-        label: "Simulate being offline",
+        label: t("chrome.cmd.offline"),
         icon: "wifi-off",
-        group: "Actions",
-        hint: "Action",
-        words: "offline connection network",
+        group: ACTION_GROUP,
+        hint: HINT_ACTION,
+        words: t("chrome.cmd.offline.words"),
         run: () => s.toggleOffline(),
       },
     );
 
+    const articleGroup = t("chrome.cmd.group.articles");
     for (const a of dataSource.articles()) {
       out.push({
         id: `article:${a.id}`,
         label: a.title,
         icon: "file-text",
-        group: "Articles",
-        hint: `${a.read} min`,
+        group: articleGroup,
+        hint: readTimeShort(a.read),
         words: a.snippet,
         run: () => s.openArticle(a.id),
       });
@@ -1309,19 +1348,19 @@ export const useAppStore = create<Store>((set, get) => ({
 
   saveA11y: () => {
     const s = get();
-    s.showToast("Accessibility settings saved");
-    s.succeed(
-      "Settings saved",
-      "These now apply across the help centre and the Hearth app on this account.",
-      { label: "See it on Home", icon: "life-buoy", fn: () => get().goHome() },
-    );
+    s.showToast(t("chrome.toast.a11ySaved"));
+    s.succeed(t("chrome.succ.a11y.title"), t("chrome.succ.a11y.text", { brand: BRAND }), {
+      label: t("chrome.action.seeOnHome"),
+      icon: "life-buoy",
+      fn: () => get().goHome(),
+    });
   },
 
   resetA11y: () => {
     const next = a11yReset();
     applyA11ySettings(next);
     set({ a11y: next });
-    get().showToast("Reset to defaults");
+    get().showToast(t("chrome.toast.a11yReset"));
   },
 
   /* -------------------------------------------------------- live chat */
@@ -1391,7 +1430,7 @@ export const useAppStore = create<Store>((set, get) => ({
             ...(escalate
               ? {
                   act: "escalate",
-                  actLabel: "Move this chat to a ticket",
+                  actLabel: t("chrome.chat.escalate"),
                   actIcon: "ticket",
                 }
               : {}),
@@ -1417,7 +1456,7 @@ export const useAppStore = create<Store>((set, get) => ({
     if (!userMsgs.length) {
       set({ chatOpen: false });
       s.openTicket();
-      s.showToast("Tell us what's up and we'll open a ticket", "info");
+      s.showToast(t("chrome.toast.chatEmpty"), "info");
       return;
     }
 
@@ -1447,7 +1486,7 @@ export const useAppStore = create<Store>((set, get) => ({
       chatMsgs: [dataSource.chatGreeting()],
       menu: false,
     });
-    s.showToast(`Chat moved to ticket ${res.ticketId}`);
+    s.showToast(t("chrome.toast.chatMoved", { id: res.ticketId ?? "" }));
     top();
   },
 
@@ -1459,12 +1498,12 @@ export const useAppStore = create<Store>((set, get) => ({
 
   undoToast: (msg, undo) => {
     get().showToast(msg, "ok", {
-      label: "Undo",
+      label: t("chrome.action.undo"),
       fn: () => {
         undo();
         if (toastTimer) clearTimeout(toastTimer);
         set({ toast: null });
-        get().showToast("Put back");
+        get().showToast(t("chrome.toast.putBack"));
       },
     });
   },
@@ -1504,20 +1543,20 @@ export const useAppStore = create<Store>((set, get) => ({
     const s = get();
     set({ failed: null });
     s.startBusy(BUSY_RETRY_MS);
-    s.showToast(RETRY_TOAST, "info");
+    s.showToast(retryToast(), "info");
   },
 
   reportFailure: () => {
     const s = get();
     set({ failed: null });
     s.openTicket();
-    s.showToast(REPORT_TOAST, "info");
+    s.showToast(reportToast(), "info");
   },
 
   failView: () => {
     const s = get();
     set({ failed: s.view });
-    s.showToast(SIMULATE_FAIL_TOAST, "warn");
+    s.showToast(simulateFailToast(), "warn");
   },
 
   toggleOffline: () => set((s) => ({ offline: !s.offline })),
@@ -1528,10 +1567,10 @@ export const useAppStore = create<Store>((set, get) => ({
     const s = get();
     if (isOnline()) {
       set({ offline: false });
-      s.showToast(OFFLINE_BACK_TOAST);
+      s.showToast(offlineBackToast());
       return;
     }
-    s.showToast(OFFLINE_STILL_TOAST, "warn");
+    s.showToast(offlineStillToast(), "warn");
   },
 
   /* --------------------------------------------------------- theme R3 */
@@ -1542,7 +1581,7 @@ export const useAppStore = create<Store>((set, get) => ({
 
   followSystemTheme: () => {
     set({ themeManual: false, theme: systemTheme() });
-    get().showToast(FOLLOW_SYSTEM_TOAST);
+    get().showToast(followSystemToast());
   },
 
   /* -------------------------------------------------------- navigation */
@@ -1569,12 +1608,12 @@ export const useAppStore = create<Store>((set, get) => ({
 
   downloadClip: (clip) => get().showToast(clipDownloadToast(clip)),
 
-  shareClipLink: () => get().showToast(CLIP_SHARE_TOAST),
+  shareClipLink: () => get().showToast(clipShareToast()),
 
   deleteClip: (clip) => {
     const s = get();
     set({ lvOut: [...s.lvOut, clip.id] });
-    s.undoToast(CLIP_DELETE_TOAST, () =>
+    s.undoToast(clipDeleteToast(), () =>
       set((cur) => ({ lvOut: cur.lvOut.filter((id) => id !== clip.id) })),
     );
   },
@@ -1628,21 +1667,21 @@ export const useAppStore = create<Store>((set, get) => ({
   saveAutomation: () => {
     const s = get();
     if (!s.auName.trim()) {
-      s.showToast(AU_NAME_TOAST, "warn");
+      s.showToast(auNameToast(), "warn");
       return;
     }
     const trigger = dataSource
       .automationTriggers()
-      .find((t) => t.value === s.auTrigger);
+      .find((opt) => opt.value === s.auTrigger);
     if (!trigger) {
-      s.showToast(AU_TRIGGER_TOAST, "warn");
+      s.showToast(auTriggerToast(), "warn");
       return;
     }
     const action = dataSource
       .automationActions()
       .find((a) => a.value === s.auAction);
     if (!action) {
-      s.showToast(AU_ACTION_TOAST, "warn");
+      s.showToast(auActionToast(), "warn");
       return;
     }
     const rule = buildAutomation({
@@ -1658,7 +1697,7 @@ export const useAppStore = create<Store>((set, get) => ({
       auTrigger: "",
       auAction: "",
     });
-    s.showToast(AU_CREATED_TOAST);
+    s.showToast(auCreatedToast());
   },
 
   /* ----------------------------------------------------------- billing */
@@ -1666,15 +1705,17 @@ export const useAppStore = create<Store>((set, get) => ({
   applyCredit: () => {
     const s = get();
     if (s.blCredit > 0) {
-      s.showToast(`${money(s.blCredit)} will come off your next invoice`);
+      s.showToast(t("chrome.toast.creditApplied", { amount: money(s.blCredit) }));
       return;
     }
-    s.showToast("No credit on the account", "info");
+    s.showToast(t("chrome.toast.noCredit"), "info");
   },
 
-  updateCard: () => get().showToast("Card changes happen in the Hearth app", "info"),
+  updateCard: () =>
+    get().showToast(t("chrome.toast.cardInApp", { brand: BRAND }), "info"),
 
-  exportInvoices: () => get().showToast(`Downloading ${INVOICE_EXPORT_FILE}`),
+  exportInvoices: () =>
+    get().showToast(t("chrome.toast.downloading", { file: INVOICE_EXPORT_FILE })),
 
   downloadInvoice: (invoice) => get().showToast(invoiceDownloadToast(invoice)),
 
@@ -1685,7 +1726,7 @@ export const useAppStore = create<Store>((set, get) => ({
   wishRemove: (item) => {
     const s = get();
     set({ wlOut: [...s.wlOut, item.id] });
-    s.undoToast(`${item.name} removed`, () =>
+    s.undoToast(t("chrome.toast.itemRemoved", { name: item.name }), () =>
       set((cur) => ({ wlOut: cur.wlOut.filter((id) => id !== item.id) })),
     );
   },
@@ -1696,27 +1737,26 @@ export const useAppStore = create<Store>((set, get) => ({
       (w) => w.stock !== "out",
     );
     if (!inStock.length) {
-      s.showToast("Nothing in stock to add yet", "warn");
+      s.showToast(t("chrome.toast.nothingInStock"), "warn");
       return;
     }
-    const label = pluralise(inStock.length, "item");
-    s.showToast(`${label} added`);
-    s.succeed(`${label} in your basket`, FREE_DELIVERY_LINE, {
-      label: "View basket",
+    const label = counted("count.item", inStock.length);
+    s.showToast(t("chrome.toast.itemsAdded", { items: label }));
+    s.succeed(t("chrome.succ.basket.title", { items: label }), freeDeliveryLine(), {
+      label: t("chrome.action.viewBasket"),
       icon: "shopping-basket",
       fn: () => get().go("parts"),
     });
   },
 
-  wishShare: () =>
-    get().showToast("Wishlist link copied — anyone can view it"),
+  wishShare: () => get().showToast(t("chrome.toast.wishShared")),
 
   wishRestore: () => {
     set({ wlOut: [] });
-    get().showToast("Demo wishlist restored");
+    get().showToast(t("chrome.toast.wishRestored"));
   },
 
-  saveToWishlist: (name) => get().showToast(`${name} saved to your wishlist`),
+  saveToWishlist: (name) => get().showToast(t("chrome.toast.wishSaved", { name })),
 
   /* --------------------------------------------------- recently viewed */
 
@@ -1727,7 +1767,12 @@ export const useAppStore = create<Store>((set, get) => ({
       return;
     }
     s.go("parts");
-    s.showToast(`Opening ${entry.name ?? "it"} in the store`, "info");
+    s.showToast(
+      t("chrome.toast.openingInStore", {
+        name: entry.name ?? t("chrome.toast.thisItem"),
+      }),
+      "info",
+    );
   },
 
   recentSecondary: (entry) => {
@@ -1736,13 +1781,13 @@ export const useAppStore = create<Store>((set, get) => ({
       s.toggleSave(entry.ref);
       return;
     }
-    s.saveToWishlist(entry.name ?? "It");
+    s.saveToWishlist(entry.name ?? t("chrome.toast.thisItem"));
   },
 
   recentForget: (entry) => {
     const s = get();
     set({ rvOut: [...s.rvOut, entry.id] });
-    s.undoToast("Removed from history", () =>
+    s.undoToast(t("chrome.toast.historyItemRemoved"), () =>
       set((cur) => ({ rvOut: cur.rvOut.filter((id) => id !== entry.id) })),
     );
   },
@@ -1754,14 +1799,14 @@ export const useAppStore = create<Store>((set, get) => ({
       rvOut: dataSource.recentlyViewed().map((e) => e.id),
       rvCleared: true,
     });
-    s.undoToast("History cleared", () =>
+    s.undoToast(t("chrome.toast.historyCleared"), () =>
       set({ rvOut: before, rvCleared: false }),
     );
   },
 
   recentRestore: () => {
     set({ rvOut: [], rvCleared: false });
-    get().showToast("Demo history restored");
+    get().showToast(t("chrome.toast.historyRestored"));
   },
 
   /* ----------------------------------------------------- store locator */
@@ -1783,19 +1828,20 @@ export const useAppStore = create<Store>((set, get) => ({
 
   storeNearMe: () => {
     set({ stQ: "Bristol", stFilter: "all" });
-    get().showToast("Using your last known area — Bristol", "info");
+    get().showToast(t("chrome.toast.lastKnownArea", { area: "Bristol" }), "info");
   },
 
   storeReset: () => set({ stQ: "", stFilter: "all" }),
 
-  storeDirections: (name) => get().showToast(`Directions to ${name} copied`),
+  storeDirections: (name) =>
+    get().showToast(t("chrome.toast.directionsCopied", { name })),
 
-  storeCall: () => get().showToast("Calling isn't available in this demo", "info"),
+  storeCall: () => get().showToast(t("chrome.toast.noCalling"), "info"),
 
   storeBook: (store) => {
     const s = get();
     s.go("repair");
-    s.showToast(`Pick a walk-in slot at ${store.name}`, "info");
+    s.showToast(t("chrome.toast.pickWalkIn", { name: store.name }), "info");
   },
 
   /* ----------------------------------------------------- breach notice */
@@ -1812,7 +1858,7 @@ export const useAppStore = create<Store>((set, get) => ({
         brResult: {
           kind: "info",
           icon: "info",
-          text: "Enter the email address you use for your Hearth account.",
+          text: t("chrome.breach.needEmail", { brand: BRAND }),
         },
       });
       return;
@@ -1822,21 +1868,23 @@ export const useAppStore = create<Store>((set, get) => ({
       ? {
           kind: "hit",
           icon: "shield-alert",
-          text: "This address was in the exposed set. We emailed you on 24 July. Nothing else of yours was involved — the steps below are all we’d suggest.",
+          text: t("chrome.breach.hit", {
+            when: fmtDate(BREACH_NOTICE_ON, { day: "numeric", month: "long" }),
+          }),
         }
       : {
           kind: "clear",
           icon: "shield-check",
-          text: "This address wasn’t in the exposed set. Nothing to do, though two-factor authentication is always worth turning on.",
+          text: t("chrome.breach.clear"),
         };
     set({ brResult: result });
-    s.showToast("Checked against the exposed list");
+    s.showToast(t("chrome.toast.breachChecked"));
   },
 
   breachReport: () => {
     const s = get();
     s.openTicket();
-    s.showToast("Tell us what you received", "info");
+    s.showToast(t("chrome.toast.breachReport"), "info");
   },
 
   /* --------------------------------------------------------- recycling */
@@ -1853,30 +1901,31 @@ export const useAppStore = create<Store>((set, get) => ({
   recycleSubmit: () => {
     const s = get();
     if (!s.rcOn.length) {
-      s.showToast("Pick at least one thing to recycle", "warn");
+      s.showToast(t("chrome.toast.recyclePickItem"), "warn");
       return;
     }
     if (s.rcPostcode.trim().length < 3) {
-      s.showToast("Add your postcode", "warn");
+      s.showToast(t("chrome.toast.recyclePostcode"), "warn");
       return;
     }
     const method =
       dataSource.recycleMethods().find((m) => m.id === s.rcMethod) ??
       dataSource.recycleMethods()[0];
-    const title =
+    const title = t(
       s.rcMethod === "post"
-        ? "Label on its way"
+        ? "chrome.recycle.title.post"
         : s.rcMethod === "drop"
-          ? "Drop-off reserved"
-          : "Collection booked";
+          ? "chrome.recycle.title.drop"
+          : "chrome.recycle.title.collect",
+    );
     const booking: RecycleBooking = {
       ref: recycleRef(s.rcOn.length),
       method: method.label,
       title,
-      text: `${method.done} We’ll email a certificate once it’s processed, and confirm what was reused versus recycled.`,
+      text: t("chrome.recycle.text", { method: method.done }),
     };
     set({ rcBooked: booking });
-    s.showToast("Recycling arranged");
+    s.showToast(t("chrome.toast.recycleArranged"));
     top();
   },
 
@@ -1905,9 +1954,16 @@ export const useAppStore = create<Store>((set, get) => ({
       return;
     }
     const ok =
-      s.dlOn.length >= 3 && s.dlPhrase.trim().toUpperCase() === "DELETE";
+      s.dlOn.length >= DELETE_CHECKS &&
+      s.dlPhrase.trim().toUpperCase() === DELETE_PHRASE;
     if (!ok) {
-      s.showToast("Tick all three and type DELETE to confirm", "warn");
+      s.showToast(
+        t("chrome.toast.deleteConfirmFirst", {
+          count: fmtNumber(DELETE_CHECKS),
+          phrase: DELETE_PHRASE,
+        }),
+        "warn",
+      );
       return;
     }
     const scheduled: DeleteSchedule = {
@@ -1916,18 +1972,20 @@ export const useAppStore = create<Store>((set, get) => ({
     };
     set({ dlScheduled: scheduled });
     /* Deliberately `warn`, not `ok`. */
-    s.showToast("Deletion scheduled for 26 August", "warn");
+    s.showToast(
+      t("chrome.toast.deleteScheduled", {
+        when: fmtDate(DELETE_ON, { day: "numeric", month: "long" }),
+      }),
+      "warn",
+    );
     top();
   },
 
   deleteCancel: () => {
     const s = get();
     set({ dlScheduled: null, dlStep: 1, dlOn: [], dlPhrase: "" });
-    s.showToast("Deletion cancelled — welcome back");
-    s.succeed(
-      "Your account is staying",
-      "Nothing was deleted and everything is exactly where you left it.",
-    );
+    s.showToast(t("chrome.toast.deleteCancelled"));
+    s.succeed(t("chrome.succ.deleteCancelled.title"), t("chrome.succ.deleteCancelled.text"));
   },
 
   /* ------------------------------------------------------ shared clips */
@@ -1960,21 +2018,18 @@ export const useAppStore = create<Store>((set, get) => ({
       host: SHARE_HOST,
     });
     set({ shareLinks: [link, ...s.shareLinks], shNewOpen: false });
-    s.showToast("Share link created");
-    s.succeed(
-      "Link ready to send",
-      "Copy it from the top of the list. You can revoke it at any point and the link dies instantly.",
-    );
+    s.showToast(t("chrome.toast.shareCreated"));
+    s.succeed(t("chrome.succ.share.title"), t("chrome.succ.share.text"));
   },
 
-  shareCopy: () => get().showToast("Link copied"),
+  shareCopy: () => get().showToast(t("chrome.toast.linkCopied")),
 
   shareExtend: (link) => get().showToast(shareExtendToast(link.state)),
 
   shareRevoke: (link) => {
     const s = get();
     set({ shOut: [...s.shOut, link.id] });
-    s.undoToast("Link revoked", () =>
+    s.undoToast(t("chrome.toast.linkRevoked"), () =>
       set((cur) => ({ shOut: cur.shOut.filter((id) => id !== link.id) })),
     );
   },
@@ -1986,39 +2041,41 @@ export const useAppStore = create<Store>((set, get) => ({
   insurancePrimary: (claim) => {
     const s = get();
     if (claim.state === "ready") {
-      s.showToast(`Downloading ${claim.id.toUpperCase()}-evidence.zip`);
+      s.showToast(
+        t("chrome.toast.downloading", { file: `${claim.id.toUpperCase()}-evidence.zip` }),
+      );
       return;
     }
-    s.showToast("Still building — about 4 minutes left", "info");
+    s.showToast(
+      t("chrome.toast.packBuilding", { minutes: fmtNumber(PACK_MINUTES_LEFT) }),
+      "info",
+    );
   },
 
   insuranceShare: () => {
     const s = get();
     s.go("share");
-    s.showToast("Send it as an expiring link", "info");
+    s.showToast(t("chrome.toast.sendExpiringLink"), "info");
   },
 
   /* Nothing is appended to the claim list — only the banner appears. */
   insuranceSubmit: () => {
     const s = get();
     if (!s.inDate) {
-      s.showToast("When did it happen?", "warn");
+      s.showToast(t("chrome.toast.insuranceWhen"), "warn");
       return;
     }
     if (s.inNote.trim().length < 15) {
-      s.showToast("Add a line or two for the adjuster", "warn");
+      s.showToast(t("chrome.toast.insuranceNote"), "warn");
       return;
     }
-    s.showToast("Building your evidence pack");
-    s.succeed(
-      "Pack requested",
-      "We’re collecting the clips and signing the timestamp log. You’ll get an email when it’s ready — usually within the hour.",
-    );
+    s.showToast(t("chrome.toast.packBuildingStarted"));
+    s.succeed(t("chrome.succ.pack.title"), t("chrome.succ.pack.text"));
   },
 
   /* -------------------------------------------------------- gift guide */
 
-  addToBasketByName: (name) => get().showToast(`${name} added to your basket`),
+  addToBasketByName: (name) => get().showToast(t("chrome.toast.addedToBasket", { name })),
 
   /* ----------------------------------------------------- trade account */
 
@@ -2043,31 +2100,31 @@ export const useAppStore = create<Store>((set, get) => ({
   tradeSubmit: () => {
     const s = get();
     if (!s.tdName.trim()) {
-      s.showToast("What’s the trading name?", "warn");
+      s.showToast(t("chrome.toast.tradeName"), "warn");
       return;
     }
     if (!s.tdType) {
-      s.showToast("Pick a business type", "warn");
+      s.showToast(t("chrome.toast.tradeType"), "warn");
       return;
     }
     if (!s.tdContact.trim()) {
-      s.showToast("Who should we deal with?", "warn");
+      s.showToast(t("chrome.toast.tradeContact"), "warn");
       return;
     }
     if (!looksLikeEmail(s.tdEmail)) {
-      s.showToast("Add a work email address", "warn");
+      s.showToast(t("chrome.toast.tradeEmail"), "warn");
       return;
     }
     if (s.tdPhone.replace(/\D/g, "").length < 9) {
-      s.showToast("Add a phone number we can reach you on", "warn");
+      s.showToast(t("chrome.toast.tradePhone"), "warn");
       return;
     }
     if (!s.tdSkillsOn.length) {
-      s.showToast("Tell us what you fit", "warn");
+      s.showToast(t("chrome.toast.tradeSkills"), "warn");
       return;
     }
     if (s.tdOn.length < 2) {
-      s.showToast("Tick both confirmations to apply", "warn");
+      s.showToast(t("chrome.toast.tradeConfirm"), "warn");
       return;
     }
     const tier = dataSource.tradeTier(s.tdTier);
@@ -2075,11 +2132,11 @@ export const useAppStore = create<Store>((set, get) => ({
     const email = s.tdEmail.trim();
     const done: TradeApplication = {
       ref: tradeRef(name.length),
-      tier: `${tier.name} · ${tier.discount}`,
-      text: `We’ll review ${name} within two working days and email ${email} either way. If we need your insurance certificate, that email will say so — nothing else to send for now.`,
+      tier: t("chrome.trade.tierLine", { name: tier.name, discount: tier.discount }),
+      text: t("chrome.trade.doneText", { name, email }),
     };
     set({ tdDone: done });
-    s.showToast("Trade application sent");
+    s.showToast(t("chrome.toast.tradeSent"));
     top();
   },
 
@@ -2101,24 +2158,24 @@ export const useAppStore = create<Store>((set, get) => ({
   transferSubmit: () => {
     const s = get();
     if (!s.trName.trim()) {
-      s.showToast("Who are you transferring it to?", "warn");
+      s.showToast(t("chrome.toast.transferWho"), "warn");
       return;
     }
     if (!looksLikeEmail(s.trEmail)) {
-      s.showToast("Add the new owner's email", "warn");
+      s.showToast(t("chrome.toast.transferEmail"), "warn");
       return;
     }
     if (!s.trReason) {
-      s.showToast("Pick a reason for the transfer", "warn");
+      s.showToast(t("chrome.toast.transferReason"), "warn");
       return;
     }
     if (s.trOn.length < 2) {
-      s.showToast("Tick both confirmations to continue", "warn");
+      s.showToast(t("chrome.toast.transferConfirm"), "warn");
       return;
     }
     const device = s.registered.find((d) => d.id === s.trDev);
     if (!device) {
-      s.showToast("Pick the device you're handing over", "warn");
+      s.showToast(t("chrome.toast.transferDevice"), "warn");
       return;
     }
     const product = dataSource.product(device.prod);
@@ -2132,7 +2189,7 @@ export const useAppStore = create<Store>((set, get) => ({
     };
     const rest = s.registered.filter((d) => d.id !== device.id);
     set({ registered: rest, trDone: receipt, trDev: rest[0]?.id ?? null });
-    s.showToast(`${product.model} transfer started`);
+    s.showToast(t("chrome.toast.transferStarted", { name: product.model }));
     top();
   },
 
@@ -2180,9 +2237,9 @@ export const IDENTITY = { agent: AGENT, customer: CUSTOMER };
 
 /** First product whose name or id appears in the text; falls back to doorbell. */
 export function inferProduct(text: string): ProductId {
-  const t = text.toLowerCase();
+  const needle = text.toLowerCase();
   const hit = PRODUCTS.find(
-    (p) => t.includes(p.name.toLowerCase()) || t.includes(p.id),
+    (p) => needle.includes(p.name.toLowerCase()) || needle.includes(p.id),
   );
   return hit ? hit.id : "doorbell";
 }

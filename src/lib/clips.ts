@@ -7,7 +7,8 @@
  * of the clip id and the sequence number.
  */
 
-import { pluralise } from "./format";
+import { clockTime, counted, shortDate } from "./format";
+import { number as fmtNumber, t } from "../i18n/ambient";
 import type {
   Camera,
   Clip,
@@ -21,45 +22,79 @@ import type {
 
 /* ================================================================= live == */
 
-/** The overlay clock. Hard-coded, as the comp has it. */
-export const LIVE_CLOCK = "27 Jul · 14:26:08";
+/**
+ * The overlay clock. The *instant* is hard-coded, as the comp has it (ruling
+ * R2: no `Date.now()`); the rendering is not. A function rather than a const
+ * because a const would freeze at whatever locale happened to be active when
+ * this module was first evaluated — which is `en-US`, before React mounts.
+ *
+ * en-US reads "Jul 27 · 02:26:08 PM", de-DE "27. Juli · 14:26:08". Whether the
+ * clock has an AM/PM at all is the locale's call, not ours.
+ */
+export const LIVE_INSTANT = new Date(2026, 6, 27, 14, 26, 8);
+
+export function liveClock(): string {
+  return `${shortDate(LIVE_INSTANT)} · ${clockTime(LIVE_INSTANT, true)}`;
+}
 
 /** The mono retention caption beside "Clip history". */
-export const LIVE_RETENTION = "kept 90 days on Hearth Family";
+export function liveRetention(): string {
+  return t("lib.live.retention", { days: fmtNumber(90) });
+}
 
 /** `live-front-2160p.stream`. */
 export function liveFile(camId: string): string {
   return `live-${camId}-2160p.stream`;
 }
 
-/** The four always-rendered stage buttons. Every one toasts `info`. */
-export const LIVE_CONTROLS: LiveControl[] = [
-  { icon: "mic", label: "Talk", toast: "Two-way talk needs the Hearth app" },
-  { icon: "camera", label: "Snapshot", toast: "Snapshot saved to your clips" },
-  { icon: "volume-2", label: "Sound on", toast: "Audio is muted in this demo" },
-  { icon: "maximize", label: "Full screen", toast: "Full screen isn't available here" },
-];
+/**
+ * The four always-rendered stage buttons. Every one toasts `info`.
+ *
+ * A function, not a const: the labels have to be looked up at render time or
+ * they freeze in whatever locale was active at module evaluation.
+ */
+export function liveControls(): LiveControl[] {
+  return [
+    { icon: "mic", label: t("lib.live.ctlTalk"), toast: t("lib.live.ctlTalkToast") },
+    {
+      icon: "camera",
+      label: t("lib.live.ctlSnapshot"),
+      toast: t("lib.live.ctlSnapshotToast"),
+    },
+    {
+      icon: "volume-2",
+      label: t("lib.live.ctlSound"),
+      toast: t("lib.live.ctlSoundToast"),
+    },
+    {
+      icon: "maximize",
+      label: t("lib.live.ctlFullscreen"),
+      toast: t("lib.live.ctlFullscreenToast"),
+    },
+  ];
+}
 
 export function liveIntro(cam: Camera): string {
   return cam.offline
-    ? `${cam.name} isn't reachable. Clips recorded before it dropped off are still here — nothing is lost.`
-    : `Streaming from ${cam.name}. Live view is peer-to-peer, so it keeps working even when our cloud doesn't.`;
+    ? t("lib.live.introOffline", { name: cam.name })
+    : t("lib.live.introOnline", { name: cam.name });
 }
 
 export function liveNoFeedTitle(cam: Camera): string {
-  return `No feed from ${cam.name}`;
+  return t("lib.live.noFeedTitle", { name: cam.name });
 }
 
-export const LIVE_NO_FEED_TEXT =
-  "The camera hasn't checked in, so there's nothing live to show. It's almost always power or Wi-Fi range rather than a fault.";
+export function liveNoFeedText(): string {
+  return t("lib.live.noFeedText");
+}
 
 export function liveLastSeen(cam: Camera): string {
-  return cam.since ?? "last seen a while ago";
+  return cam.since ?? t("lib.live.lastSeenUnknown");
 }
 
 /** Deliberately never succeeds — the offline camera stays offline. */
 export function liveRetryToast(cam: Camera): string {
-  return `Still no answer from ${cam.name}`;
+  return t("lib.live.retryToast", { name: cam.name });
 }
 
 /** The troubleshooting link target on the offline stage. */
@@ -75,12 +110,21 @@ export interface ClipTypeMeta {
   icon: string;
 }
 
-export const CLIP_TYPE_META: Record<ClipType, ClipTypeMeta> = {
-  person: { label: "Person", fg: "--info", soft: "--info-soft", icon: "user-round" },
-  parcel: { label: "Parcel", fg: "--pos", soft: "--pos-soft", icon: "package" },
-  press: { label: "Pressed", fg: "--accent", soft: "--accent-soft", icon: "bell-ring" },
-  motion: { label: "Motion", fg: "--warn", soft: "--warn-soft", icon: "radar" },
-};
+export function clipTypeMeta(type: ClipType): ClipTypeMeta {
+  const labels: Record<ClipType, string> = {
+    person: t("lib.clips.typePerson"),
+    parcel: t("lib.clips.typeParcel"),
+    press: t("lib.clips.typePress"),
+    motion: t("lib.clips.typeMotion"),
+  };
+  const style: Record<ClipType, Omit<ClipTypeMeta, "label">> = {
+    person: { fg: "--info", soft: "--info-soft", icon: "user-round" },
+    parcel: { fg: "--pos", soft: "--pos-soft", icon: "package" },
+    press: { fg: "--accent", soft: "--accent-soft", icon: "bell-ring" },
+    motion: { fg: "--warn", soft: "--warn-soft", icon: "radar" },
+  };
+  return { label: labels[type], ...style[type] };
+}
 
 /** Every clip on one camera, minus the ones deleted this session. */
 export function clipsForCamera(
@@ -126,7 +170,7 @@ export function groupClipsByDay(clips: Clip[]): ClipGroup[] {
     if (group) group.clips.push(clip);
     else out.push({ day: clip.day, clips: [clip], count: "" });
   }
-  for (const g of out) g.count = pluralise(g.clips.length, "clip");
+  for (const g of out) g.count = counted("count.clip", g.clips.length);
   return out;
 }
 
@@ -142,15 +186,15 @@ export interface LiveEmptyCopy {
 export function liveEmpty(cam: Camera, hasAnyClips: boolean): LiveEmptyCopy {
   if (hasAnyClips) {
     return {
-      title: "No clips in this filter",
-      text: "Try another event type, or another camera. Clips are kept for as long as your plan allows.",
+      title: t("lib.clips.emptyFilterTitle"),
+      text: t("lib.clips.emptyFilterText"),
     };
   }
   return {
-    title: `No clips from ${cam.name} yet`,
+    title: t("lib.clips.emptyCamTitle", { name: cam.name }),
     text: cam.offline
-      ? `Nothing was recorded before ${cam.name} went offline. Once it's back, new events appear here within a minute.`
-      : `Nothing recorded on ${cam.name} so far. Motion and doorbell events start a clip automatically.`,
+      ? t("lib.clips.emptyCamOfflineText", { name: cam.name })
+      : t("lib.clips.emptyCamOnlineText", { name: cam.name }),
   };
 }
 
@@ -158,19 +202,27 @@ export function liveEmpty(cam: Camera, hasAnyClips: boolean): LiveEmptyCopy {
 
 /** "Front door · 14:12". */
 export function clipMeta(clip: Clip, cam: Camera): string {
-  return `${cam.name} · ${clip.time}`;
+  return t("lib.clips.meta", { cam: cam.name, time: clip.time });
 }
 
 export function clipPlayToast(clip: Clip): string {
-  return `Playing ${clip.title.toLowerCase()} · ${clip.dur}`;
+  return t("lib.clips.playToast", {
+    title: clip.title.toLowerCase(),
+    duration: clip.dur,
+  });
 }
 
 export function clipDownloadToast(clip: Clip): string {
-  return `Downloading clip-${clip.id}.mp4`;
+  return t("lib.clips.downloadToast", { file: `clip-${clip.id}.mp4` });
 }
 
-export const CLIP_SHARE_TOAST = "Share link copied — expires in 7 days";
-export const CLIP_DELETE_TOAST = "Clip deleted";
+export function clipShareToast(): string {
+  return t("lib.clips.shareToast", { days: fmtNumber(7) });
+}
+
+export function clipDeleteToast(): string {
+  return t("lib.clips.deleteToast");
+}
 
 /* ================================================================ share == */
 
@@ -181,11 +233,19 @@ export interface ShareStateMeta {
   icon: string;
 }
 
-export const SHARE_STATE_META: Record<ShareState, ShareStateMeta> = {
-  live: { label: "Active", fg: "--pos", soft: "--pos-soft", icon: "link" },
-  expiring: { label: "Expires soon", fg: "--warn", soft: "--warn-soft", icon: "clock" },
-  expired: { label: "Expired", fg: "--fg-subtle", soft: "--surface-3", icon: "link-2-off" },
-};
+export function shareStateMeta(state: ShareState): ShareStateMeta {
+  const labels: Record<ShareState, string> = {
+    live: t("lib.share.stateActive"),
+    expiring: t("lib.share.stateExpiring"),
+    expired: t("lib.share.stateExpired"),
+  };
+  const style: Record<ShareState, Omit<ShareStateMeta, "label">> = {
+    live: { fg: "--pos", soft: "--pos-soft", icon: "link" },
+    expiring: { fg: "--warn", soft: "--warn-soft", icon: "clock" },
+    expired: { fg: "--fg-subtle", soft: "--surface-3", icon: "link-2-off" },
+  };
+  return { label: labels[state], ...style[state] };
+}
 
 /**
  * A stable six-character base36 slug (FNV-1a). Replaces the comp's
@@ -202,23 +262,41 @@ export function shareSlug(seed: string): string {
 
 /** "Reactivate" once the link has expired, else "Extend 7 days". */
 export function shareExtendLabel(state: ShareState): string {
-  return state === "expired" ? "Reactivate" : "Extend 7 days";
+  return state === "expired"
+    ? t("lib.share.reactivate")
+    : t("lib.share.extendDays", { days: fmtNumber(7) });
 }
 
 export function shareExtendToast(state: ShareState): string {
-  return state === "expired" ? "Link reactivated for 7 days" : "Extended by 7 days";
+  return state === "expired"
+    ? t("lib.share.reactivatedToast", { days: fmtNumber(7) })
+    : t("lib.share.extendedToast", { days: fmtNumber(7) });
 }
 
-/** "no expiry" / "expires in 7 days". */
+/**
+ * "no expiry" / "expires in 7 days".
+ *
+ * Keyed off `expiry.value` — the machine token — rather than lower-casing
+ * `expiry.label`, which was an English typographic habit: German nouns stay
+ * capitalised mid-sentence, and the seed labels are English either way.
+ */
 export function shareExpiryLine(expiry: ShareOption): string {
-  return expiry.value === "never"
-    ? "no expiry"
-    : `expires in ${expiry.label.toLowerCase()}`;
+  if (expiry.value === "never") return t("lib.share.expiryNever");
+  if (expiry.value === "24h")
+    return t("lib.share.expiry24h", { hours: fmtNumber(24) });
+  if (expiry.value === "30d")
+    return t("lib.share.expiry30d", { days: fmtNumber(30) });
+  return t("lib.share.expiry7d", { days: fmtNumber(7) });
 }
 
 /** "Front door · today 14:12 · 0:06" — the composer's clip sub-line. */
 export function shareClipMeta(clip: Clip, cam: Camera): string {
-  return `${cam.name} · ${clip.day.toLowerCase()} ${clip.time} · ${clip.dur}`;
+  return t("lib.share.clipMeta", {
+    cam: cam.name,
+    day: clip.day.toLowerCase(),
+    time: clip.time,
+    duration: clip.dur,
+  });
 }
 
 /** Links minus the ones revoked this session. */

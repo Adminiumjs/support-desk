@@ -16,12 +16,14 @@ import {
   SoftPill,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useT, type MessageKey } from "../i18n";
 import { useAppStore } from "../state/store";
 import type { Appointment, ApptStatus, IconName } from "../data/types";
 import "../styles/screen-appts.css";
 
 interface ApptMeta {
-  label: string;
+  /** Message key — resolved at the render site, never at module scope. */
+  label: MessageKey;
   fg: string;
   soft: string;
   icon: IconName;
@@ -29,19 +31,19 @@ interface ApptMeta {
 
 const APPT_META: Record<ApptStatus, ApptMeta> = {
   confirmed: {
-    label: "Confirmed",
+    label: "screensA.appts.confirmed",
     fg: "--pos",
     soft: "--pos-soft",
     icon: "check-circle-2",
   },
   awaiting: {
-    label: "Awaiting parcel",
+    label: "screensA.appts.awaiting",
     fg: "--warn",
     soft: "--warn-soft",
     icon: "clock",
   },
   completed: {
-    label: "Completed",
+    label: "screensA.appts.completed",
     fg: "--fg-subtle",
     soft: "--surface-3",
     icon: "check",
@@ -49,6 +51,7 @@ const APPT_META: Record<ApptStatus, ApptMeta> = {
 };
 
 export default function Appts() {
+  const t = useT();
   const appts = useAppStore((s) => s.appts);
   const apptCancelled = useAppStore((s) => s.apptCancelled);
   const set = useAppStore((s) => s.set);
@@ -66,18 +69,18 @@ export default function Appts() {
   const gotoRepair = () => go("repair");
 
   function onCal() {
-    showToast("Calendar invite sent");
+    showToast(t("screensA.appts.toastCalendar"));
   }
 
   function onReschedule() {
-    showToast("Pick a new slot below", "info");
+    showToast(t("screensA.appts.toastReschedule"), "info");
     go("repair");
   }
 
   /* Delta §6.3: same copy, now undoable. */
   function onCancel(a: Appointment) {
     set({ apptCancelled: [...apptCancelled, a.id] });
-    undoToast(`Appointment ${a.id} cancelled`, () =>
+    undoToast(t("screensA.appts.toastCancelled", { id: a.id }), () =>
       set({
         apptCancelled: useAppStore
           .getState()
@@ -87,29 +90,26 @@ export default function Appts() {
   }
 
   function onReport() {
-    showToast("Service reports aren't available in this demo", "info");
+    showToast(t("screensA.appts.toastReport"), "info");
   }
 
   return (
     <main className="fx-screen fx-page w-820 ap">
       <div className="ap__head">
         <div className="ap__head-text">
-          <h1 className="ap__h1">Service appointments</h1>
-          <p className="ap__lede">
-            Engineer visits, mail-in repairs and installs, all in one place.
-            Reschedule free up to 24 hours before.
-          </p>
+          <h1 className="ap__h1">{t("screensA.appts.title")}</h1>
+          <p className="ap__lede">{t("screensA.appts.lede")}</p>
         </div>
         <ButtonPrimary
           className="ap__book"
           icon="calendar-plus"
           onClick={gotoRepair}
         >
-          Book a visit
+          {t("screensA.appts.book")}
         </ButtonPrimary>
       </div>
 
-      <Eyebrow>Upcoming</Eyebrow>
+      <Eyebrow>{t("screensA.appts.upcoming")}</Eyebrow>
       {upcoming.length ? (
         <div className="ap__list">
           {upcoming.map((a) => {
@@ -129,7 +129,7 @@ export default function Appts() {
                     <div className="ap__kindrow">
                       <span className="ap__kind">{a.kind}</span>
                       <SoftPill fg={meta.fg} soft={meta.soft} icon={meta.icon}>
-                        {meta.label}
+                        {t(meta.label)}
                       </SoftPill>
                     </div>
                     <p className="ap__when">{a.when}</p>
@@ -160,7 +160,7 @@ export default function Appts() {
                       iconSize={14}
                       onClick={onCal}
                     >
-                      Add to calendar
+                      {t("screensA.appts.addCalendar")}
                     </ButtonSecondary>
                     <ButtonSecondary
                       className="ap__act"
@@ -168,7 +168,7 @@ export default function Appts() {
                       iconSize={14}
                       onClick={onReschedule}
                     >
-                      Reschedule
+                      {t("screensA.appts.reschedule")}
                     </ButtonSecondary>
                     <ButtonSecondary
                       className="ap__act ap__act--danger"
@@ -176,7 +176,7 @@ export default function Appts() {
                       iconSize={14}
                       onClick={() => onCancel(a)}
                     >
-                      Cancel
+                      {t("screensA.appts.cancel")}
                     </ButtonSecondary>
                   </div>
                 </div>
@@ -189,10 +189,10 @@ export default function Appts() {
           <EmptyState
             compact
             icon="calendar-off"
-            title="Nothing booked"
-            body="When you book a repair or an install, it'll show up here with the engineer's details."
+            title={t("screensA.appts.emptyTitle")}
+            body={t("screensA.appts.emptyBody")}
             action={{
-              label: "Book a visit",
+              label: t("screensA.appts.book"),
               icon: "calendar-plus",
               onClick: gotoRepair,
             }}
@@ -202,7 +202,7 @@ export default function Appts() {
 
       {past.length ? (
         <>
-          <Eyebrow>Past</Eyebrow>
+          <Eyebrow>{t("screensA.appts.past")}</Eyebrow>
           <div className="ap__pastlist">
             {past.map((a) => {
               const prod = dataSource.product(a.prod);
@@ -221,7 +221,7 @@ export default function Appts() {
                     <p className="ap__pastwhen">{a.when}</p>
                   </div>
                   <SoftPill fg={meta.fg} soft={meta.soft} icon={meta.icon}>
-                    {meta.label}
+                    {t(meta.label)}
                   </SoftPill>
                   <ButtonSecondary
                     className="ap__act"
@@ -229,7 +229,7 @@ export default function Appts() {
                     iconSize={14}
                     onClick={onReport}
                   >
-                    Report
+                    {t("screensA.appts.report")}
                   </ButtonSecondary>
                 </div>
               );

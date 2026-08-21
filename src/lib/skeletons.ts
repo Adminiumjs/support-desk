@@ -10,6 +10,7 @@
  */
 
 import type { SkeletonShape, ViewId } from "../data/types";
+import { t } from "../i18n/ambient";
 
 /* -------------------------------------------------------------- timings */
 
@@ -89,8 +90,14 @@ export function skeletonIsGrid(shape: SkeletonShape): boolean {
   return shape === "grid";
 }
 
-/** The mono caption under the blocks. British spelling, lower case. */
+/**
+ * The mono caption under the blocks. Lower case in the languages that have
+ * case; the view id itself is a machine token and stays as authored.
+ */
 export function skeletonNote(view: ViewId): string {
-  const name = view === "home" ? "help centre" : view.replace(/([a-z])([A-Z])/g, "$1 $2");
-  return `loading ${name}…`;
+  const name =
+    view === "home"
+      ? t("lib.skeletons.helpCentre")
+      : view.replace(/([a-z])([A-Z])/g, "$1 $2");
+  return t("lib.skeletons.note", { name });
 }

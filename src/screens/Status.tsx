@@ -20,13 +20,15 @@ import {
 } from "../components";
 import { dataSource } from "../data/source";
 import { ST_CHECKED, ST_DEGRADED_SUB, ST_OK_SUB } from "../data/demo";
-import { pluralise } from "../lib/format";
+import { useT, type MessageKey } from "../i18n";
+import { counted } from "../lib/format";
 import { looksLikeEmail, useAppStore } from "../state/store";
 import type { ComponentHealth, IconName } from "../data/types";
 import "../styles/screen-status.css";
 
 interface HealthMeta {
-  label: string;
+  /** A message key — this table is module scope, so it is resolved on render. */
+  label: MessageKey;
   fg: string;
   soft: string;
   icon: IconName;
@@ -34,19 +36,19 @@ interface HealthMeta {
 
 const HEALTH: Record<ComponentHealth, HealthMeta> = {
   ok: {
-    label: "Operational",
+    label: "screensB.status.healthOk",
     fg: "--pos",
     soft: "--pos-soft",
     icon: "check-circle-2",
   },
   degraded: {
-    label: "Degraded",
+    label: "screensB.status.healthDegraded",
     fg: "--warn",
     soft: "--warn-soft",
     icon: "alert-triangle",
   },
   down: {
-    label: "Outage",
+    label: "screensB.status.healthDown",
     fg: "--danger",
     soft: "--danger-soft",
     icon: "x-circle",
@@ -54,6 +56,7 @@ const HEALTH: Record<ComponentHealth, HealthMeta> = {
 };
 
 export default function Status() {
+  const t = useT();
   const stEmail = useAppStore((s) => s.stEmail);
   const set = useAppStore((s) => s.set);
   const showToast = useAppStore((s) => s.showToast);
@@ -65,26 +68,25 @@ export default function Status() {
   const bad = comps.filter((c) => c.st !== "ok").length;
   const ok = bad === 0;
   const headline = ok
-    ? "All systems operational"
-    : `${pluralise(bad, "service")} degraded`;
+    ? t("screensB.status.allOperational")
+    : t("screensB.status.someDegraded", {
+        services: counted("count.service", bad),
+      });
   const sub = ok ? ST_OK_SUB : ST_DEGRADED_SUB;
 
   function stSubscribe() {
     if (!looksLikeEmail(stEmail)) {
-      showToast("Enter an email to subscribe", "warn");
+      showToast(t("screensB.status.needEmail"), "warn");
       return;
     }
     set({ stEmail: "" });
-    showToast("Subscribed to status updates");
+    showToast(t("screensB.status.subscribed"));
   }
 
   return (
     <main className="fx-screen fx-page w-820 st">
-      <h1 className="st__h1">Service status</h1>
-      <p className="st__lede">
-        Live health of the Hearth app, cloud and website. Your devices keep
-        working locally even when our cloud doesn&rsquo;t.
-      </p>
+      <h1 className="st__h1">{t("screensB.status.h1")}</h1>
+      <p className="st__lede">{t("screensB.status.lede")}</p>
 
       <Card className={`st__banner${ok ? " st__banner--ok" : " st__banner--bad"}`}>
         <span className="st__banner-ico">
@@ -106,9 +108,11 @@ export default function Status() {
                 <p className="st__comp-name">{c.name}</p>
                 <p className="st__comp-note">{c.note}</p>
               </div>
-              <span className="st__uptime sd-mono">{c.uptime} · 90d</span>
+              <span className="st__uptime sd-mono">
+                {t("screensB.status.uptimeLine", { uptime: c.uptime })}
+              </span>
               <SoftPill fg={m.fg} soft={m.soft} icon={m.icon}>
-                {m.label}
+                {t(m.label)}
               </SoftPill>
             </div>
           );
@@ -119,10 +123,10 @@ export default function Status() {
         <Card className="st__incident">
           <span className="st__open">
             <Icon name="activity" size={13} />
-            Open incident
+            {t("screensB.status.openIncident")}
           </span>
           <h2 className="st__incident-title">
-            Video clip playback is slow for some homes
+            {t("screensB.status.incidentTitle")}
           </h2>
           <div className="tl-v st__timeline">
             {updates.map((u, i) => (
@@ -159,10 +163,8 @@ export default function Status() {
 
       <div className="st__subscribe">
         <div className="st__sub-text">
-          <p className="st__sub-title">Get status updates by email</p>
-          <p className="st__sub-note">
-            One email when something breaks, one when it&rsquo;s fixed.
-          </p>
+          <p className="st__sub-title">{t("screensB.status.subscribeTitle")}</p>
+          <p className="st__sub-note">{t("screensB.status.subscribeNote")}</p>
         </div>
         <TextInput
           className="st__input"
@@ -170,24 +172,27 @@ export default function Status() {
           value={stEmail}
           onChange={(v) => set({ stEmail: v })}
           placeholder="you@example.com"
-          ariaLabel="Email address for status updates"
+          ariaLabel={t("screensB.status.emailAria")}
         />
         <ButtonPrimary className="st__go" icon="bell" onClick={stSubscribe}>
-          Subscribe
+          {t("screensB.status.subscribe")}
         </ButtonPrimary>
       </div>
 
-      <Eyebrow>Past incidents</Eyebrow>
+      <Eyebrow>{t("screensB.status.pastIncidents")}</Eyebrow>
       <div className="st__history">
         {history.map((h) => (
           <Card key={h.title} className="st__hcard">
             <div className="st__hhead">
               <p className="st__htitle">{h.title}</p>
               <SoftPill fg="--pos" soft="--pos-soft" icon="check-circle-2">
-                Resolved
+                {t("screensB.status.resolved")}
               </SoftPill>
               <span className="st__hmeta sd-mono">
-                {h.date} · {h.dur}
+                {t("screensB.status.historyMeta", {
+                  date: h.date,
+                  duration: h.dur,
+                })}
               </span>
             </div>
             <p className="st__htext">{h.text}</p>

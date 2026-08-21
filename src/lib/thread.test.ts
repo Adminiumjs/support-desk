@@ -117,15 +117,20 @@ describe("status meta", () => {
   });
 
   it("falls back to the open meta for anything it does not know", () => {
-    /* Same object, not just the same shape — the pill reads `fg`/`soft` too. */
-    expect(statusMeta("archived")).toBe(statusMeta("open"));
-    expect(statusMeta("")).toBe(statusMeta("open"));
+    /*
+     * The whole pill, not just the label — it reads `fg`/`soft`/`icon` too.
+     * Compared by value rather than by identity: the label is now looked up
+     * per call so that it follows the reader's locale, so `statusMeta` builds
+     * a fresh object each time instead of handing back a frozen table row.
+     */
+    expect(statusMeta("archived")).toStrictEqual(statusMeta("open"));
+    expect(statusMeta("")).toStrictEqual(statusMeta("open"));
   });
 
   it("is case-sensitive: a capitalised status is an unknown status", () => {
     /* Worth pinning because the fallback hides it — "Solved" renders as Open,
      * green never appears, and nothing throws to say why. */
-    expect(statusMeta("Solved")).toBe(statusMeta("open"));
+    expect(statusMeta("Solved")).toStrictEqual(statusMeta("open"));
     expect(statusMeta("SOLVED").label).toBe("Open");
   });
 });

@@ -28,20 +28,30 @@ import {
 import { BRAND } from "../data/demo";
 import type { GiftWhen } from "../data/types";
 import { dataSource } from "../data/source";
+import { useT, type MessageKey } from "../i18n";
 import { giftCode, money, moneyLoose } from "../lib/format";
 import { top, useAppStore } from "../state/store";
 import "../styles/screen-gift.css";
 
-/* The select renders labels; the store keeps the id (§6.22). */
-const WHEN_LABEL: Record<GiftWhen, string> = {
-  now: "Right away",
-  tomorrow: "Tomorrow morning",
-  date: "On a date I choose",
+/* The select renders labels; the store keeps the id (§6.22). The map holds
+   message keys, so the labels follow the reader's locale. */
+const WHEN_KEY: Record<GiftWhen, MessageKey> = {
+  now: "screensA.gift.whenNow",
+  tomorrow: "screensA.gift.whenTomorrow",
+  date: "screensA.gift.whenDate",
 };
-const WHEN_IDS = Object.keys(WHEN_LABEL) as GiftWhen[];
-const WHEN_OPTIONS = WHEN_IDS.map((id) => WHEN_LABEL[id]);
+const WHEN_IDS = Object.keys(WHEN_KEY) as GiftWhen[];
+
+/** Gift-card bounds, in Hearth's own currency. */
+const MIN_AMOUNT = 10;
+const MAX_AMOUNT = 500;
+const REDEEM_TOP_UP = 25;
+const REDEEM_URL = "hearth.example/redeem";
+const REDEEM_MASK = "HEARTH-XXXX-XXXX";
 
 export default function Gift() {
+  const t = useT();
+  const whenLabel = (id: GiftWhen) => t(WHEN_KEY[id]);
   const gcDesign = useAppStore((s) => s.gcDesign);
   const gcAmount = useAppStore((s) => s.gcAmount);
   const gcCustom = useAppStore((s) => s.gcCustom);
@@ -68,36 +78,41 @@ export default function Gift() {
 
   const sentLine =
     gcWhen === "now"
-      ? `It's on its way to ${
-          gcEmail || "their inbox"
-        } right now, with your message attached.`
-      : "We'll deliver it on the morning you picked, with your message attached.";
+      ? t("screensA.gift.sentNow", {
+          where: gcEmail || t("screensA.gift.theirInbox"),
+        })
+      : t("screensA.gift.sentLater");
 
   const buy = () => {
-    if (!amt || amt < 10) {
-      showToast("Gift cards start at £10", "warn");
+    if (!amt || amt < MIN_AMOUNT) {
+      showToast(
+        t("screensA.gift.toastMin", { min: moneyLoose(MIN_AMOUNT) }),
+        "warn",
+      );
       return;
     }
     if (!gcTo.trim()) {
-      showToast("Who is it for?", "warn");
+      showToast(t("screensA.gift.toastWho"), "warn");
       return;
     }
     if (gcEmail.indexOf("@") < 1) {
-      showToast("Add their email address", "warn");
+      showToast(t("screensA.gift.toastEmail"), "warn");
       return;
     }
     set({ gcBought: giftCode(amt, gcTo) });
-    showToast("Gift card sent");
+    showToast(t("screensA.gift.toastSent"));
     top();
   };
 
   const redeem = () => {
     if (gcRedeem.trim().length < 8) {
-      showToast("Enter the full code from the email", "warn");
+      showToast(t("screensA.gift.toastCode"), "warn");
       return;
     }
-    set({ gcBal: gcBal + 25, gcRedeem: "" });
-    showToast("£25.00 added to your balance");
+    set({ gcBal: gcBal + REDEEM_TOP_UP, gcRedeem: "" });
+    showToast(
+      t("screensA.gift.toastBalance", { amount: money(REDEEM_TOP_UP) }),
+    );
   };
 
   /* ------------------------------------------------- A. confirmation */
@@ -109,7 +124,7 @@ export default function Gift() {
           <span className="gift-done__tile">
             <Icon name="gift" size={24} />
           </span>
-          <h1 className="gift-done__title">Gift card sent</h1>
+          <h1 className="gift-done__title">{t("screensA.gift.toastSent")}</h1>
           <p className="gift-done__body">{sentLine}</p>
           <div className="gift-done__codes">
             <span className="gift-done__code">{gcBought}</span>
@@ -120,7 +135,7 @@ export default function Gift() {
               icon="plus"
               onClick={() => set({ gcBought: null })}
             >
-              Buy another
+              {t("screensA.gift.buyAnother")}
             </ButtonSecondary>
           </div>
         </Card>
@@ -132,16 +147,17 @@ export default function Gift() {
 
   return (
     <main className="fx-screen fx-page w-900">
-      <h1 className="gift-title">Gift cards</h1>
-      <p className="gift-lede">
-        Spendable on any Hearth device, spare part or Hearth Care plan. No
-        expiry, no fees, and refundable within 14 days if it's unused.
-      </p>
+      <h1 className="gift-title">{t("screensA.gift.h1")}</h1>
+      <p className="gift-lede">{t("screensA.gift.lede")}</p>
 
       <div className="gift-split">
         <Card variant="form" className="gift-form">
-          <Field label="Pick a design">
-            <div className="gift-designs" role="group" aria-label="Pick a design">
+          <Field label={t("screensA.gift.design")}>
+            <div
+              className="gift-designs"
+              role="group"
+              aria-label={t("screensA.gift.design")}
+            >
               {designs.map((d) => (
                 <button
                   key={d.id}
@@ -165,8 +181,8 @@ export default function Gift() {
             </div>
           </Field>
 
-          <Field label="Amount">
-            <div role="group" aria-label="Amount">
+          <Field label={t("screensA.gift.amount")}>
+            <div role="group" aria-label={t("screensA.gift.amount")}>
               <ChipRow>
                 {amounts.map((a) => (
                   <Chip
@@ -181,7 +197,7 @@ export default function Gift() {
                   active={gcAmount === "custom"}
                   onClick={() => set({ gcAmount: "custom" })}
                 >
-                  Other
+                  {t("screensA.gift.other")}
                 </Chip>
               </ChipRow>
             </div>
@@ -189,14 +205,17 @@ export default function Gift() {
               <TextInput
                 className="sd-mono gift-custom"
                 value={gcCustom}
-                placeholder="Any amount from £10 to £500"
-                ariaLabel="Custom gift card amount"
+                placeholder={t("screensA.gift.customPlaceholder", {
+                  min: moneyLoose(MIN_AMOUNT),
+                  max: moneyLoose(MAX_AMOUNT),
+                })}
+                ariaLabel={t("screensA.gift.customAria")}
                 onChange={(v) => set({ gcCustom: v })}
               />
             ) : null}
           </Field>
 
-          <Field label="Recipient's name" htmlFor="gc-to">
+          <Field label={t("screensA.gift.recipient")} htmlFor="gc-to">
             <TextInput
               id="gc-to"
               value={gcTo}
@@ -205,7 +224,7 @@ export default function Gift() {
             />
           </Field>
 
-          <Field label="Their email" htmlFor="gc-email">
+          <Field label={t("screensA.gift.theirEmail")} htmlFor="gc-email">
             <TextInput
               id="gc-email"
               type="email"
@@ -216,29 +235,30 @@ export default function Gift() {
           </Field>
 
           <Field
-            label="Message"
+            label={t("screensA.gift.message")}
             htmlFor="gc-msg"
-            aside={<span className="gift-optional">Optional</span>}
+            aside={
+              <span className="gift-optional">{t("screensA.gift.optional")}</span>
+            }
           >
             <TextArea
               id="gc-msg"
               value={gcMsg}
               maxLength={180}
               minHeight={88}
-              placeholder="Happy birthday — go make the house clever."
+              placeholder={t("screensA.gift.messagePlaceholder")}
               onChange={(v) => set({ gcMsg: v })}
             />
           </Field>
 
-          <Field label="When should we send it?" htmlFor="gc-when">
+          <Field label={t("screensA.gift.whenLabel")} htmlFor="gc-when">
             <SelectField
               id="gc-when"
-              value={WHEN_LABEL[gcWhen]}
-              options={WHEN_OPTIONS}
+              value={whenLabel(gcWhen)}
+              options={WHEN_IDS.map(whenLabel)}
               onChange={(label) =>
                 set({
-                  gcWhen:
-                    WHEN_IDS.find((id) => WHEN_LABEL[id] === label) ?? "now",
+                  gcWhen: WHEN_IDS.find((id) => whenLabel(id) === label) ?? "now",
                 })
               }
             />
@@ -246,13 +266,13 @@ export default function Gift() {
 
           <div>
             <ButtonPrimary icon="gift" className="gift-submit" onClick={buy}>
-              Buy {amountText} gift card
+              {t("screensA.gift.buy", { amount: amountText })}
             </ButtonPrimary>
           </div>
         </Card>
 
         <aside className="gift-aside">
-          <Eyebrow>Preview</Eyebrow>
+          <Eyebrow>{t("screensA.gift.preview")}</Eyebrow>
           <div
             className="gift-preview"
             style={{ background: phBg(design.tint, dark, "150deg") }}
@@ -274,31 +294,33 @@ export default function Gift() {
             </div>
             <div className="gift-preview__amount">{amountText}</div>
             <div className="gift-preview__to">
-              For {gcTo.trim() || "someone lucky"}
+              {t("screensA.gift.for", {
+                name: gcTo.trim() || t("screensA.gift.someoneLucky"),
+              })}
             </div>
             <div className="gift-preview__msg">
-              {gcMsg.trim() || "Your message appears here."}
+              {gcMsg.trim() || t("screensA.gift.messageHere")}
             </div>
             <div className="gift-preview__foot">
-              no expiry · hearth.example/redeem
+              {t("screensA.gift.foot", { url: REDEEM_URL })}
             </div>
           </div>
 
           <Card className="gift-redeem">
-            <Eyebrow>Redeem a card</Eyebrow>
+            <Eyebrow>{t("screensA.gift.redeem")}</Eyebrow>
             <TextInput
               className="sd-mono gift-redeem__field"
               value={gcRedeem}
               upper
-              placeholder="HEARTH-XXXX-XXXX"
-              ariaLabel="Gift card code"
+              placeholder={REDEEM_MASK}
+              ariaLabel={t("screensA.gift.codeAria")}
               onChange={(v) => set({ gcRedeem: v })}
             />
             <ButtonSecondary icon="ticket" onClick={redeem}>
-              Add to balance
+              {t("screensA.gift.addBalance")}
             </ButtonSecondary>
             <div className="gift-redeem__foot">
-              <span>Your balance</span>
+              <span>{t("screensA.gift.yourBalance")}</span>
               <span className="gift-redeem__bal">{money(gcBal)}</span>
             </div>
           </Card>

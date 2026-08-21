@@ -8,7 +8,8 @@
  * `Math.random()` or the clock.
  */
 
-import { pluralise } from "./format";
+import { counted, longDate, money, moneyLoose, shortDate } from "./format";
+import { number as fmtNumber, t } from "../i18n/ambient";
 import type {
   GiftFilterId,
   GiftPick,
@@ -38,11 +39,25 @@ export interface PillMeta {
 
 /* ============================================================== stores == */
 
-export const STORE_KIND_META: Record<StoreKind, PillMeta> = {
-  flagship: { label: "Hearth store", fg: "--accent", soft: "--accent-soft", icon: "store" },
-  stockist: { label: "Stockist", fg: "--info", soft: "--info-soft", icon: "shopping-bag" },
-  recycling: { label: "Recycling point", fg: "--pos", soft: "--pos-soft", icon: "recycle" },
-};
+/**
+ * Pill vocabularies are functions rather than frozen tables: a table built at
+ * module-evaluation time would hold whatever locale was active before React
+ * mounted (always `en-US`) and never move again. Only the `label` is
+ * locale-dependent; the token names and icons are machine identifiers.
+ */
+export function storeKindMeta(kind: StoreKind): PillMeta {
+  const labels: Record<StoreKind, string> = {
+    flagship: t("lib.stores.kindFlagship"),
+    stockist: t("lib.stores.kindStockist"),
+    recycling: t("lib.stores.kindRecycling"),
+  };
+  const style: Record<StoreKind, Omit<PillMeta, "label">> = {
+    flagship: { fg: "--accent", soft: "--accent-soft", icon: "store" },
+    stockist: { fg: "--info", soft: "--info-soft", icon: "shopping-bag" },
+    recycling: { fg: "--pos", soft: "--pos-soft", icon: "recycle" },
+  };
+  return { label: labels[kind], ...style[kind] };
+}
 
 /** Kind filter AND a substring match of the query against name + address. */
 export function filterStores(
@@ -60,7 +75,10 @@ export function filterStores(
 
 /** "Mon–Sat 9–6, Sun 11–5 · open now". */
 export function storeMeta(store: StoreLocation): string {
-  return `${store.hours} · ${store.open ? "open now" : "closed now"}`;
+  return t("lib.stores.meta", {
+    hours: store.hours,
+    state: store.open ? t("lib.stores.openNow") : t("lib.stores.closedNow"),
+  });
 }
 
 /** `map-stores-bristol.png`, or `map-stores-all.png` with no query. */
@@ -69,29 +87,52 @@ export function storeMapFile(query: string): string {
   return `map-stores-${q ? q.replace(/[^a-z0-9]+/g, "-") : "all"}.png`;
 }
 
-/** Curly quotes, as authored. */
+/** Quotation marks are the locale's own — “…”, „…“, « … », 「…」. */
 export function storeEmptyTitle(query: string): string {
   const q = query.trim();
-  return q ? `Nothing near “${q}”` : "No locations in this filter";
+  return q
+    ? t("lib.stores.emptyQuery", { query: q })
+    : t("lib.stores.emptyFilter");
 }
 
 export function storeSearchToast(count: number, query: string): string {
-  if (!count) return "Nothing matched that search";
-  return `${pluralise(count, "location")} near ${query.trim() || "you"}`;
+  if (!count) return t("lib.stores.searchNone");
+  const locations = counted("count.location", count);
+  const where = query.trim();
+  return where
+    ? t("lib.stores.searchNearQuery", { locations, query: where })
+    : t("lib.stores.searchNearYou", { locations });
 }
 
+/**
+ * `count` is passed as well as interpolated: French and Czech agree the past
+ * participle with the noun ("1 adresse trouvée" / "2 adresses trouvées"), and
+ * only `Intl.PluralRules` knows which form the number selects.
+ */
 export function storeKeyToast(count: number): string {
-  return `${pluralise(count, "location")} found`;
+  return t(
+    "lib.stores.foundToast",
+    { locations: counted("count.location", count) },
+    count,
+  );
 }
 
 /* ============================================================= billing == */
 
-export const INVOICE_STATUS_META: Record<InvoiceStatus, PillMeta> = {
-  paid: { label: "Paid", fg: "--pos", soft: "--pos-soft", icon: "check-circle-2" },
-  refunded: { label: "Refunded", fg: "--info", soft: "--info-soft", icon: "rotate-ccw" },
-  /* Deliberately not "Failed". */
-  failed: { label: "Retrying", fg: "--warn", soft: "--warn-soft", icon: "alert-triangle" },
-};
+export function invoiceStatusMeta(status: InvoiceStatus): PillMeta {
+  const labels: Record<InvoiceStatus, string> = {
+    paid: t("lib.billing.statusPaid"),
+    refunded: t("lib.billing.statusRefunded"),
+    /* Deliberately not "Failed". */
+    failed: t("lib.billing.statusRetrying"),
+  };
+  const style: Record<InvoiceStatus, Omit<PillMeta, "label">> = {
+    paid: { fg: "--pos", soft: "--pos-soft", icon: "check-circle-2" },
+    refunded: { fg: "--info", soft: "--info-soft", icon: "rotate-ccw" },
+    failed: { fg: "--warn", soft: "--warn-soft", icon: "alert-triangle" },
+  };
+  return { label: labels[status], ...style[status] };
+}
 
 const PERIOD_RE: Record<string, RegExp> = {
   "2026": /2026$/,
@@ -121,26 +162,35 @@ export interface EmptyCopy {
 export function billingEmpty(periodCount: number, filter: string): EmptyCopy {
   if (!periodCount) {
     return {
-      title: "No invoices in that period",
-      text: "Nothing was issued while you were on this account in that period. Invoices appear the day they're raised, and we keep seven years of them.",
+      title: t("lib.billing.emptyPeriodTitle"),
+      text: t("lib.billing.emptyPeriodText"),
     };
   }
-  const what = filter === "refund" ? "refunds" : `${filter} invoices`;
-  return {
-    title: "Nothing in this filter",
-    text: `No ${what} in this period — try another filter, or export everything as a CSV.`,
-  };
+  /*
+   * One whole sentence per filter rather than a noun spliced into a frame:
+   * "No refunds in this period" and "No plan invoices in this period" do not
+   * share a skeleton once the article, gender and word order are the
+   * translator's to choose.
+   */
+  const text =
+    filter === "refund"
+      ? t("lib.billing.emptyFilterRefund")
+      : filter === "hardware"
+        ? t("lib.billing.emptyFilterHardware")
+        : t("lib.billing.emptyFilterPlan");
+  return { title: t("lib.billing.emptyFilterTitle"), text };
 }
 
-export const BL_INTRO =
-  "Every invoice since you joined, plus what's coming next. Downloads are PDFs with VAT broken out.";
+export function blIntro(): string {
+  return t("lib.billing.intro");
+}
 
 /** `free` / `£3.99 / month` / `£39.90 / year`. */
 export function planPriceLine(monthly: number, cycle: string): string {
-  if (monthly === 0) return "free";
+  if (monthly === 0) return t("lib.billing.planFree");
   return cycle === "annual"
-    ? `£${(monthly * 10).toFixed(2)} / year`
-    : `£${monthly} / month`;
+    ? t("lib.billing.perYear", { price: money(monthly * 10) })
+    : t("lib.billing.perMonth", { price: moneyLoose(monthly) });
 }
 
 /**
@@ -150,29 +200,40 @@ export function planPriceLine(monthly: number, cycle: string): string {
  * used to derive it independently — Billing from the cycle, Plans from a
  * hard-coded suffix in `demo.ts` — so switching to annual made the same
  * account show 12 Aug 2026 on one screen and 12 Aug 2027 on the other.
+ *
+ * The day and month are the comp's; the rendering is the reader's — "Aug 12,
+ * 2026" in en-US, "12. Aug. 2026" in de-DE, "٢٠٢٦/٨/١٢" in ar-EG.
  */
 export function nextChargeDate(cycle: string): string {
-  return cycle === "annual" ? "12 Aug 2027" : "12 Aug 2026";
+  return longDate(new Date(cycle === "annual" ? 2027 : 2026, 7, 12));
 }
 
 export function nextChargeLine(monthly: number, cycle: string): string {
-  if (monthly === 0) return "Nothing to bill — the free tier has no charges.";
-  return `Next charge ${nextChargeDate(cycle)}, taken from the card below.`;
+  if (monthly === 0) return t("lib.billing.noCharge");
+  return t("lib.billing.nextCharge", { date: nextChargeDate(cycle) });
 }
 
 export function invoiceDownloadToast(invoice: Invoice): string {
   return invoice.status === "failed"
-    ? `Retrying payment for ${invoice.id}`
-    : `Downloading ${invoice.id.toLowerCase()}.pdf`;
+    ? t("lib.billing.retryingPayment", { id: invoice.id })
+    : t("lib.billing.downloading", { file: `${invoice.id.toLowerCase()}.pdf` });
 }
 
 /* ============================================================ wishlist == */
 
-export const WISH_STOCK_META: Record<PartStock, PillMeta> = {
-  in: { label: "In stock", fg: "--pos", soft: "--pos-soft", icon: "check" },
-  low: { label: "Low stock", fg: "--warn", soft: "--warn-soft", icon: "alert-triangle" },
-  out: { label: "Back in 2 weeks", fg: "--fg-subtle", soft: "--surface-3", icon: "clock" },
-};
+export function wishStockMeta(stock: PartStock): PillMeta {
+  const labels: Record<PartStock, string> = {
+    in: t("lib.wish.stockIn"),
+    low: t("lib.wish.stockLow"),
+    out: t("lib.wish.stockOut"),
+  };
+  const style: Record<PartStock, Omit<PillMeta, "label">> = {
+    in: { fg: "--pos", soft: "--pos-soft", icon: "check" },
+    low: { fg: "--warn", soft: "--warn-soft", icon: "alert-triangle" },
+    out: { fg: "--fg-subtle", soft: "--surface-3", icon: "clock" },
+  };
+  return { label: labels[stock], ...style[stock] };
+}
 
 export function visibleWish(items: WishItem[], out: string[]): WishItem[] {
   return items.filter((w) => !out.includes(w.id));
@@ -184,8 +245,8 @@ export function wishDropped(item: WishItem): boolean {
 
 export function wishIntro(count: number): string {
   return count
-    ? `${count} saved · we watch the price and tell you when something moves.`
-    : "Nothing saved right now.";
+    ? t("lib.wish.intro", { n: fmtNumber(count) })
+    : t("lib.wish.introEmpty");
 }
 
 /** The price-drop band, or `null` when nothing has moved. */
@@ -194,15 +255,18 @@ export function wishAlert(items: WishItem[]): string | null {
   if (!drops.length) return null;
   if (drops.length === 1) {
     const one = drops[0];
-    return `${one.name} has dropped £${one.was - one.price} since you saved it.`;
+    return t("lib.wish.dropOne", {
+      name: one.name,
+      amount: moneyLoose(one.was - one.price),
+    });
   }
-  return `${drops.length} items have dropped in price since you saved them.`;
+  return t("lib.wish.dropMany", { n: fmtNumber(drops.length) }, drops.length);
 }
 
 export function wishAddToast(item: WishItem): string {
   return item.stock === "out"
-    ? "We'll email you when it's back"
-    : `${item.name} added to your basket`;
+    ? t("lib.wish.addOut")
+    : t("lib.wish.added", { name: item.name });
 }
 
 /* ====================================================== recently viewed == */
@@ -246,33 +310,35 @@ export function groupRecent(entries: RecentEntry[]): RecentGroup[] {
     if (group) group.rows.push(e);
     else out.push({ when: e.when, rows: [e], count: "" });
   }
-  for (const g of out) g.count = pluralise(g.rows.length, "item");
+  for (const g of out) g.count = counted("count.item", g.rows.length);
   return out;
 }
 
 export function recentIntro(count: number): string {
-  /* Every other count in this module goes through `pluralise`; this one
+  /* Every other count in this module goes through `counted`; this one
    * interpolated a hard-coded plural, so forgetting all but one row left the
    * lede reading "1 things you've looked at recently". */
   return count
-    ? `${pluralise(count, "thing")} you've looked at recently, newest first. Stored on this device only.`
-    : "Nothing here — your history is empty.";
+    ? t("lib.recent.intro", { things: counted("count.thing", count) }, count)
+    : t("lib.recent.introEmpty");
 }
 
 /** Filtered-to-nothing reads differently from a cleared history. */
 export function recentEmpty(hasHistory: boolean): EmptyCopy {
   return hasHistory
     ? {
-        title: "Nothing in this filter",
-        text: "Try another category — articles and products are tracked separately.",
+        title: t("lib.recent.emptyFilterTitle"),
+        text: t("lib.recent.emptyFilterText"),
       }
     : {
-        title: "Your history is clear",
-        text: "We've forgotten what you looked at. New visits will start appearing here again.",
+        title: t("lib.recent.emptyClearTitle"),
+        text: t("lib.recent.emptyClearText"),
       };
 }
 
-export const RECENT_PRODUCT_SUB = "Viewed in the Hearth store";
+export function recentProductSub(): string {
+  return t("lib.recent.productSub");
+}
 
 /* ========================================================= leaderboard == */
 
@@ -285,37 +351,45 @@ export function sortLeaders(rows: Leader[]): Leader[] {
 }
 
 export function leaderTitle(period: LeaderPeriod): string {
-  return period === "quarter" ? "Top referrers, this quarter" : "Top referrers, all time";
+  return period === "quarter"
+    ? t("lib.board.titleQuarter")
+    : t("lib.board.titleAllTime");
 }
 
-export const LB_UPDATED = "updated 12 minutes ago";
+export function lbUpdated(): string {
+  return t("lib.board.updated", { minutes: fmtNumber(12) });
+}
 
 /** `£250` / `£120` / `£60`, or null outside the top three. */
 export function leaderPrize(rank: number): string | null {
-  if (rank === 1) return "£250";
-  if (rank === 2) return "£120";
-  if (rank === 3) return "£60";
+  if (rank === 1) return moneyLoose(250);
+  if (rank === 2) return moneyLoose(120);
+  if (rank === 3) return moneyLoose(60);
   return null;
 }
 
 /** `£20` a friend. */
 export function leaderEarned(count: number): string {
-  return `£${count * 20}`;
+  return moneyLoose(count * 20);
 }
 
 export function leaderTier(count: number): string {
-  if (count >= 10) return "Gold referrer";
-  if (count >= 5) return "Silver referrer";
-  return "Bronze referrer";
+  if (count >= 10) return t("lib.board.tierGold");
+  if (count >= 5) return t("lib.board.tierSilver");
+  return t("lib.board.tierBronze");
 }
 
 /** The line under "You" — the gap to third place, or a hold-your-place nudge. */
 export function leaderLine(sorted: Leader[], you: Leader, rank: number): string {
   if (rank > 3 && sorted[2]) {
     const gap = sorted[2].count - you.count + 1;
-    return `${gap} more and you're into the prize places. Every friend is still £20 either way.`;
+    return t(
+      "lib.board.gapLine",
+      { n: fmtNumber(gap), amount: moneyLoose(20) },
+      gap,
+    );
   }
-  return "You're in the prizes — hold your place until the quarter ends.";
+  return t("lib.board.holdLine");
 }
 
 /* ========================================================== gift guide == */
@@ -329,29 +403,59 @@ export function giftHasWas(pick: GiftPick): boolean {
   return pick.was > pick.price;
 }
 
-export const GG_SEASON = "WINTER 2026 GIFT GUIDE";
-export const GG_TITLE = "Presents that make the house quieter, not busier.";
-export const GG_BLURB =
-  "Six things worth wrapping, picked by the people who answer the phone when they go wrong. Everything here installs in an evening without an electrician.";
-export const GG_CUTOFF = "Free delivery, order by 19 Dec";
+export function ggSeason(): string {
+  return t("lib.guide.season");
+}
+
+export function ggTitle(): string {
+  return t("lib.guide.title");
+}
+
+export function ggBlurb(): string {
+  return t("lib.guide.blurb");
+}
+
+/** The order-by day, ordered and named by the reader's locale. */
+export const GG_CUTOFF_DATE = new Date(2026, 11, 19);
+
+export function ggCutoff(): string {
+  return t("lib.guide.cutoff", { date: shortDate(GG_CUTOFF_DATE) });
+}
 
 /* ============================================================ transfer == */
 
 /** The confirmation paragraph. */
 export function transferDoneLine(receipt: TransferReceipt): string {
-  return `We've emailed ${receipt.to} at ${receipt.email}. Once they accept, the remaining cover on your ${receipt.name} moves across — it has already left your household.`;
+  return t("lib.transfer.done", {
+    name: receipt.to,
+    email: receipt.email,
+    product: receipt.name,
+  });
 }
 
 /* =========================================================== insurance == */
 
-export const INSURANCE_STATE_META: Record<string, PillMeta> = {
-  ready: { label: "Ready", fg: "--pos", soft: "--pos-soft", icon: "check-circle-2" },
-  building: { label: "Building", fg: "--warn", soft: "--warn-soft", icon: "loader" },
-};
+export function insuranceStateMeta(state: string): PillMeta {
+  return state === "ready"
+    ? {
+        label: t("lib.insurance.stateReady"),
+        fg: "--pos",
+        soft: "--pos-soft",
+        icon: "check-circle-2",
+      }
+    : {
+        label: t("lib.insurance.stateBuilding"),
+        fg: "--warn",
+        soft: "--warn-soft",
+        icon: "loader",
+      };
+}
 
 /** `Download pack` / `Check progress`. */
 export function insurancePrimaryLabel(state: string): string {
-  return state === "ready" ? "Download pack" : "Check progress";
+  return state === "ready"
+    ? t("lib.insurance.download")
+    : t("lib.insurance.checkProgress");
 }
 
 export function insurancePrimaryIcon(state: string): string {
@@ -361,5 +465,6 @@ export function insurancePrimaryIcon(state: string): string {
 /* ============================================================== basket == */
 
 /** The wishlist "Add all in stock" success banner body. */
-export const FREE_DELIVERY_LINE =
-  "Delivery is free over £25 and everything ships together next working day.";
+export function freeDeliveryLine(): string {
+  return t("lib.basket.freeDelivery", { amount: moneyLoose(25) });
+}

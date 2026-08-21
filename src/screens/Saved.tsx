@@ -15,7 +15,8 @@ import {
   ListCard,
 } from "../components";
 import { dataSource } from "../data/source";
-import { pluralise, readTime } from "../lib/format";
+import { useT } from "../i18n";
+import { counted, readTime } from "../lib/format";
 import { useAppStore } from "../state/store";
 import type { Article } from "../data/types";
 import "../styles/screen-saved.css";
@@ -23,6 +24,7 @@ import "../styles/screen-saved.css";
 const SUGGEST_LIMIT = 3;
 
 export default function Saved() {
+  const t = useT();
   const savedIds = useAppStore((s) => s.savedIds);
   const openArticle = useAppStore((s) => s.openArticle);
   const toggleSave = useAppStore((s) => s.toggleSave);
@@ -47,15 +49,14 @@ export default function Saved() {
 
   const has = rows.length > 0;
   const intro = has
-    ? `Kept for later on this account — ${pluralise(
-        rows.length,
-        "article",
-      )}. They sync to the Hearth app too.`
-    : "Nothing saved yet. Anything you bookmark shows up here and in the app.";
+    ? t("screensB.saved.introHas", {
+        articles: counted("count.article", rows.length),
+      })
+    : t("screensB.saved.introEmpty");
 
   return (
     <main className="fx-screen fx-page w-820 svd">
-      <h1 className="svd__h1">Saved articles</h1>
+      <h1 className="svd__h1">{t("screensB.saved.h1")}</h1>
       <p className="svd__lede">{intro}</p>
 
       {has ? (
@@ -84,7 +85,7 @@ export default function Saved() {
                 </button>
                 <IconButton
                   icon="bookmark-x"
-                  label="Remove"
+                  label={t("screensB.saved.remove")}
                   iconSize={17}
                   className="svd__rm"
                   onClick={() => toggleSave(a.id)}
@@ -97,15 +98,17 @@ export default function Saved() {
         <EmptyState
           compact
           icon="bookmark"
-          title="Nothing saved yet"
-          body={
-            'Tap "Save for later" on any article and it\'ll wait for you here — handy before you get up a ladder.'
-          }
-          action={{ label: "Browse articles", icon: "library", onClick: goHome }}
+          title={t("screensB.saved.emptyTitle")}
+          body={t("screensB.saved.emptyBody")}
+          action={{
+            label: t("screensB.saved.browse"),
+            icon: "library",
+            onClick: goHome,
+          }}
         />
       )}
 
-      <h2 className="svd__h2">Suggested next</h2>
+      <h2 className="svd__h2">{t("screensB.saved.suggested")}</h2>
       <div className="svd__suggest">
         {suggestions.map((s) => (
           <div className="sd-card fx-card svd__sug" key={s.id}>
@@ -119,7 +122,7 @@ export default function Saved() {
             </button>
             <IconButton
               icon="bookmark-plus"
-              label="Save"
+              label={t("screensB.saved.save")}
               small
               iconSize={16}
               onClick={() => toggleSave(s.id)}

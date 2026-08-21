@@ -12,6 +12,7 @@
 import { AGENT_REPLIES, TOPICS } from "../data/demo";
 import { dataSource } from "../data/source";
 import { NOW_STAMP, subjectFromMessage, ticketCode } from "./format";
+import { t } from "../i18n/ambient";
 import type {
   NewTicketForm,
   ProductId,
@@ -62,26 +63,25 @@ export const CHAT_TYPING_DELAY_MS = 1300;
 
 /* ---------------------------------------------------------- status meta */
 
-const STATUS_META: Record<TicketStatus, StatusMeta> = {
-  open: { label: "Open", fg: "--info", soft: "--info-soft", icon: "circle-dot" },
-  pending: { label: "Pending", fg: "--warn", soft: "--warn-soft", icon: "clock" },
-  solved: {
-    label: "Solved",
-    fg: "--pos",
-    soft: "--pos-soft",
-    icon: "check-circle-2",
-  },
-  closed: {
-    label: "Closed",
-    fg: "--fg-subtle",
-    soft: "--surface-3",
-    icon: "archive",
-  },
+/** Style only — the four status ids are machine tokens, never translated. */
+const STATUS_STYLE: Record<TicketStatus, Omit<StatusMeta, "label">> = {
+  open: { fg: "--info", soft: "--info-soft", icon: "circle-dot" },
+  pending: { fg: "--warn", soft: "--warn-soft", icon: "clock" },
+  solved: { fg: "--pos", soft: "--pos-soft", icon: "check-circle-2" },
+  closed: { fg: "--fg-subtle", soft: "--surface-3", icon: "archive" },
 };
 
 /** Falls back to `open`, exactly as the comp does. */
 export function statusMeta(status: string): StatusMeta {
-  return STATUS_META[status as TicketStatus] ?? STATUS_META.open;
+  const labels: Record<TicketStatus, string> = {
+    open: t("lib.thread.statusOpen"),
+    pending: t("lib.thread.statusPending"),
+    solved: t("lib.thread.statusSolved"),
+    closed: t("lib.thread.statusClosed"),
+  };
+  const id: TicketStatus =
+    status in STATUS_STYLE ? (status as TicketStatus) : "open";
+  return { label: labels[id], ...STATUS_STYLE[id] };
 }
 
 /** A `closed` ticket has no Solve button, but a reply still reopens it. */
@@ -243,7 +243,7 @@ export function threadReducer(
       const ticket: Ticket = {
         id,
         product: action.product,
-        subject: subjectFromMessage(first?.text ?? "Live chat"),
+        subject: subjectFromMessage(first?.text ?? t("lib.thread.chatSubject")),
         status: "pending",
         updated: NOW_STAMP,
         rank,
@@ -359,9 +359,11 @@ export function threadTimeline(ticket: Ticket): TimelineNode[] {
   const done = [true, hasAgent, resolved];
   const cur = resolved ? -1 : hasAgent ? 2 : 1;
   const labels = [
-    "Opened",
-    "First reply",
-    ticket.status === "closed" ? "Closed" : "Solved",
+    t("lib.thread.timelineOpened"),
+    t("lib.thread.timelineFirstReply"),
+    ticket.status === "closed"
+      ? t("lib.thread.timelineClosed")
+      : t("lib.thread.timelineSolved"),
   ];
   return labels.map((label, i) => ({
     label,

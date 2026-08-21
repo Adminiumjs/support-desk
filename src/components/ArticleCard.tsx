@@ -6,7 +6,7 @@
  * `<ArticleCard>` is the standalone bordered card used by "Related articles".
  */
 
-import { readTime } from "../lib/format";
+import { readTime, readTimeShort } from "../lib/format";
 import { dataSource } from "../data/source";
 import { Icon } from "./Icon";
 import { IconChip } from "./PlaceholderTile";
@@ -68,7 +68,7 @@ export function ArticleCard({ article, onClick, className }: ArticleCardProps) {
         {article.title}
       </span>
       <span className="sd-mono" style={{ fontSize: 11, color: "var(--fg-subtle)" }}>
-        {article.read} min
+        {readTimeShort(article.read)}
       </span>
       <Icon name="arrow-right" size={16} />
     </button>

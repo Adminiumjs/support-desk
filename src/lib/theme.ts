@@ -13,6 +13,7 @@
  */
 
 import type { ThemeName } from "../data/types";
+import { t } from "../i18n/ambient";
 
 const QUERY = "(prefers-color-scheme: dark)";
 
@@ -61,10 +62,10 @@ export function watchSystemTheme(
 
 /** The note under the Accessibility screen's Appearance card. */
 export function themeModeNote(manual: boolean): string {
-  return manual
-    ? "You've set the theme by hand, so it stays put. Switch back to following your device whenever you like."
-    : "Matching your device — it flips automatically when your system does, including on a schedule.";
+  return manual ? t("lib.theme.noteManual") : t("lib.theme.noteSystem");
 }
 
 /** The toast `followSystemTheme()` fires. */
-export const FOLLOW_SYSTEM_TOAST = "Following your system theme";
+export function followSystemToast(): string {
+  return t("lib.theme.followToast");
+}

@@ -29,8 +29,9 @@ import {
   columnClass,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useT } from "../i18n";
 import {
-  BL_INTRO,
+  blIntro,
   billingEmpty,
   filterInvoices,
   invoicesInPeriod,
@@ -41,7 +42,11 @@ import { money } from "../lib/format";
 import { useAppStore } from "../state/store";
 import "../styles/screen-billing.css";
 
+/** The seeded card's expiry, as printed on the card — a machine token. */
+const CARD_EXPIRY = "09/28";
+
 export default function Billing() {
+  const t = useT();
   const blFilter = useAppStore((s) => s.blFilter);
   const blPeriod = useAppStore((s) => s.blPeriod);
   const blCredit = useAppStore((s) => s.blCredit);
@@ -69,17 +74,17 @@ export default function Billing() {
     <main className={`fx-screen fx-page ${columnClass("billing")} bl`}>
       <div className="bl__head">
         <div className="bl__head-text">
-          <h1 className="bl__h1">Billing &amp; invoices</h1>
-          <p className="bl__lede">{BL_INTRO}</p>
+          <h1 className="bl__h1">{t("screensA.billing.title")}</h1>
+          <p className="bl__lede">{blIntro()}</p>
         </div>
         <ButtonSecondary icon="download" onClick={exportInvoices}>
-          Export all as CSV
+          {t("screensA.billing.export")}
         </ButtonSecondary>
       </div>
 
       <div className="bl__cards">
         <Card className="bl-sum bl-sum--plan">
-          <Eyebrow>Current plan</Eyebrow>
+          <Eyebrow>{t("screensA.billing.currentPlan")}</Eyebrow>
           <div className="bl-sum__row">
             <span className="bl-sum__plan">{plan.name}</span>
             <span className="bl-sum__price">
@@ -94,7 +99,7 @@ export default function Billing() {
               className="bl-sum__btn"
               onClick={() => go("plans")}
             >
-              Change plan
+              {t("screensA.billing.changePlan")}
             </ButtonSecondary>
             <ButtonSecondary
               icon="ticket"
@@ -103,24 +108,28 @@ export default function Billing() {
               className="bl-sum__btn"
               onClick={applyCredit}
             >
-              Apply credit
+              {t("screensA.billing.applyCredit")}
             </ButtonSecondary>
           </div>
         </Card>
 
         <Card className="bl-sum bl-sum--card">
-          <Eyebrow>Payment method</Eyebrow>
+          <Eyebrow>{t("screensA.billing.paymentMethod")}</Eyebrow>
           <div className="bl-card__row">
             <span className="bl-card__tile">
               <Icon name="credit-card" size={19} />
             </span>
             <span className="bl-card__id">
               <span className="bl-card__num">•••• 4417</span>
-              <span className="bl-card__exp">Visa · expires 09/28</span>
+              <span className="bl-card__exp">
+                {t("screensA.billing.cardMeta", { exp: CARD_EXPIRY })}
+              </span>
             </span>
           </div>
           <div className="bl-card__credit">
-            <span className="bl-card__credit-label">Account credit</span>
+            <span className="bl-card__credit-label">
+              {t("screensA.billing.credit")}
+            </span>
             <span
               className="bl-card__credit-value"
               style={blCredit > 0 ? { color: "var(--pos)" } : undefined}
@@ -134,15 +143,15 @@ export default function Billing() {
             className="bl-card__update"
             onClick={updateCard}
           >
-            Update card
+            {t("screensA.billing.updateCard")}
           </ButtonSecondary>
         </Card>
       </div>
 
       <div className="bl__toolbar">
-        <h2 className="bl__h2">History</h2>
+        <h2 className="bl__h2">{t("screensA.billing.history")}</h2>
         <Tabs
-          label="Invoice period"
+          label={t("screensA.billing.periodLabel")}
           className="bl__periods"
           options={periods}
           value={blPeriod}
@@ -180,9 +189,7 @@ export default function Billing() {
       )}
 
       <Callout tone="info" icon="info" className="bl__note">
-        Hardware invoices are issued by Hearth Home Ltd. and include VAT at 20%.
-        Plan invoices show the period they cover — cancel mid-period and we
-        refund the unused days automatically.
+        {t("screensA.billing.note")}
       </Callout>
     </main>
   );

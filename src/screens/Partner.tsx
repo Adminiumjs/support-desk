@@ -22,19 +22,24 @@ import {
 import { PARTNER } from "../data/demo";
 import { dataSource } from "../data/source";
 import type { PartnerPay } from "../data/types";
+import { useI18n, type MessageKey } from "../i18n";
 import { percentText } from "../lib/format";
 import { useAppStore } from "../state/store";
 import "../styles/screen-partner.css";
 
-const PAY: Record<PartnerPay, { label: string; fg: string; soft: string; icon: string }> = {
+/** `label` is a message key — module scope has no hook (resolved on render). */
+const PAY: Record<
+  PartnerPay,
+  { label: MessageKey; fg: string; soft: string; icon: string }
+> = {
   warranty: {
-    label: "Paid by Hearth",
+    label: "screensB.partner.payWarranty",
     fg: "--info",
     soft: "--info-soft",
     icon: "shield-check",
   },
   customer: {
-    label: "Paid by customer",
+    label: "screensB.partner.payCustomer",
     fg: "--pos",
     soft: "--pos-soft",
     icon: "wallet",
@@ -42,6 +47,7 @@ const PAY: Record<PartnerPay, { label: string; fg: string; soft: string; icon: s
 };
 
 export default function Partner() {
+  const { t, number } = useI18n();
   const ptOut = useAppStore((s) => s.ptOut);
   const set = useAppStore((s) => s.set);
   const showToast = useAppStore((s) => s.showToast);
@@ -56,12 +62,12 @@ export default function Partner() {
 
   const accept = (id: string) => {
     remove(id);
-    showToast("Job accepted — customer notified");
+    showToast(t("screensB.partner.accepted"));
   };
 
   const decline = (id: string) => {
     remove(id);
-    showToast("Passed — back to the pool", "info");
+    showToast(t("screensB.partner.passed"), "info");
   };
 
   return (
@@ -78,20 +84,20 @@ export default function Partner() {
             <h1 className="pt-head__title">{PARTNER.name}</h1>
             <span className="pt-head__badge">
               <Icon name="badge-check" size={13} />
-              Approved partner
+              {t("screensB.partner.approved")}
             </span>
           </div>
           <p className="pt-head__meta">{PARTNER.meta}</p>
         </div>
         {/* Delta §6.13 — cross-link to the new trade-account signup. */}
         <ButtonSecondary icon="percent" onClick={gotoTrade}>
-          Trade account
+          {t("screensB.partner.tradeAccount")}
         </ButtonSecondary>
         <ButtonSecondary
           icon="headset"
           onClick={() => showToast(PARTNER.supportLine, "info")}
         >
-          Partner support line
+          {t("screensB.partner.supportLine")}
         </ButtonSecondary>
       </div>
 
@@ -99,27 +105,27 @@ export default function Partner() {
         <StatTile
           compact
           icon="clipboard-check"
-          label="Jobs this month"
-          value={String(PARTNER.jobsBase + done)}
+          label={t("screensB.partner.kpiJobs")}
+          value={number(PARTNER.jobsBase + done)}
         />
         <StatTile
           compact
           icon="star"
-          label="Rating"
+          label={t("screensB.partner.kpiRating")}
           value={PARTNER.rating}
           delta={PARTNER.reviewsNote}
         />
         <StatTile
           compact
           icon="banknote"
-          label="Next payout"
+          label={t("screensB.partner.kpiPayout")}
           value={PARTNER.payout}
           delta={PARTNER.payoutDue}
         />
         <StatTile
           compact
           icon="clock"
-          label="Response time"
+          label={t("screensB.partner.kpiResponse")}
           value={PARTNER.response}
           delta={PARTNER.responseNote}
         />
@@ -128,9 +134,11 @@ export default function Partner() {
       <div className="pt-body">
         <section className="pt-left">
           <div className="pt-left__head">
-            <Eyebrow>Job requests</Eyebrow>
+            <Eyebrow>{t("screensB.partner.jobRequests")}</Eyebrow>
             <span className="pt-queue">
-              {jobs.length} waiting · matched to your skills
+              {t("screensB.partner.queueLine", {
+                waiting: number(jobs.length),
+              })}
             </span>
           </div>
 
@@ -138,8 +146,8 @@ export default function Partner() {
             <EmptyState
               compact
               icon="inbox"
-              title="Queue clear"
-              body="New requests in your area land here. We match on distance, tier and the skills on your profile."
+              title={t("screensB.partner.queueClear")}
+              body={t("screensB.partner.queueClearBody")}
             />
           ) : (
             <div className="pt-jobs">
@@ -164,7 +172,7 @@ export default function Partner() {
                             soft={pay.soft}
                             icon={pay.icon}
                           >
-                            {pay.label}
+                            {t(pay.label)}
                           </SoftPill>
                         </div>
                         <p className="pt-job__detail">{j.detail}</p>
@@ -179,22 +187,22 @@ export default function Partner() {
                         icon="check"
                         onClick={() => accept(j.id)}
                       >
-                        Accept job
+                        {t("screensB.partner.acceptJob")}
                       </ButtonPrimary>
                       <ButtonSecondary icon="x" onClick={() => decline(j.id)}>
-                        Pass
+                        {t("screensB.partner.pass")}
                       </ButtonSecondary>
                       <ButtonSecondary
                         icon="message-square"
                         className="pt-job__msg"
                         onClick={() =>
                           showToast(
-                            "Partner messaging isn't available in this demo",
+                            t("screensB.partner.messagingToast"),
                             "info",
                           )
                         }
                       >
-                        Message customer
+                        {t("screensB.partner.messageCustomer")}
                       </ButtonSecondary>
                     </div>
                   </Card>
@@ -206,7 +214,7 @@ export default function Partner() {
 
         <aside className="pt-aside">
           <Card className="pt-card">
-            <Eyebrow>Certification</Eyebrow>
+            <Eyebrow>{t("screensB.partner.certification")}</Eyebrow>
             <div className="pt-cert__row">
               <span className="pt-cert__name">Hearth Pro 2026</span>
               <span className="pt-cert__pct">
@@ -219,22 +227,20 @@ export default function Partner() {
                 style={{ inlineSize: `${PARTNER.training}%` }}
               />
             </div>
-            <p className="pt-card__body">
-              Two modules left before your Gold tier renews in October.
-            </p>
+            <p className="pt-card__body">{t("screensB.partner.certBody")}</p>
             <ButtonSecondary
               icon="graduation-cap"
               className="pt-cert__cta"
               onClick={() =>
-                showToast("Training modules live in the partner app", "info")
+                showToast(t("screensB.partner.trainingToast"), "info")
               }
             >
-              Continue training
+              {t("screensB.partner.continueTraining")}
             </ButtonSecondary>
           </Card>
 
           <Card className="pt-card">
-            <Eyebrow>Partner resources</Eyebrow>
+            <Eyebrow>{t("screensB.partner.resources")}</Eyebrow>
             <div className="pt-links">
               {links.map(([label, icon]) => (
                 <button
@@ -242,7 +248,7 @@ export default function Partner() {
                   type="button"
                   className="fx-nav pt-link"
                   onClick={() =>
-                    showToast("Partner resources aren't in this demo", "info")
+                    showToast(t("screensB.partner.resourcesToast"), "info")
                   }
                 >
                   <Icon name={icon} size={15} />
@@ -255,7 +261,7 @@ export default function Partner() {
           <div className="pt-payout">
             <p className="pt-payout__head">
               <Icon name="banknote" size={16} />
-              Next payout
+              {t("screensB.partner.nextPayout")}
             </p>
             <p className="pt-card__body">{PARTNER.payoutBlurb}</p>
           </div>

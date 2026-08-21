@@ -18,18 +18,19 @@ import {
   Tabs,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useT } from "../i18n";
 import { percent } from "../lib/format";
 import { useAppStore } from "../state/store";
 import type { EnergyPeriod } from "../data/types";
 import "../styles/screen-energy.css";
 
-const PERIODS: { id: EnergyPeriod; label: string }[] = [
-  { id: "week", label: "Week" },
-  { id: "month", label: "Month" },
-  { id: "year", label: "Year" },
-];
-
 export default function Energy() {
+  const t = useT();
+  const PERIODS: { id: EnergyPeriod; label: string }[] = [
+    { id: "week", label: t("screensA.energy.week") },
+    { id: "month", label: t("screensA.energy.month") },
+    { id: "year", label: t("screensA.energy.year") },
+  ];
   const enPeriod = useAppStore((s) => s.enPeriod);
   const set = useAppStore((s) => s.set);
 
@@ -48,16 +49,12 @@ export default function Energy() {
 
   return (
     <main className="fx-screen fx-page w-900 en">
-      <h1 className="en__h1">Energy insights</h1>
-      <p className="en__lede">
-        {
-          "Worked out from your thermostat and plugs. Estimates use your tariff — change it in the app if it's out of date."
-        }
-      </p>
+      <h1 className="en__h1">{t("screensA.energy.h1")}</h1>
+      <p className="en__lede">{t("screensA.energy.lede")}</p>
 
       <div className="en__periods">
         <Tabs
-          label="Period"
+          label={t("screensA.energy.periodLabel")}
           options={PERIODS}
           value={enPeriod}
           onChange={(id) => set({ enPeriod: id })}
@@ -87,7 +84,7 @@ export default function Energy() {
 
       <div className="en__split">
         <Card variant="lg" className="en__rooms">
-          <Eyebrow>By room</Eyebrow>
+          <Eyebrow>{t("screensA.energy.byRoom")}</Eyebrow>
           <div className="en__room-list">
             {rooms.map(([name, value]) => (
               <div className="en__room" key={name}>
@@ -106,12 +103,12 @@ export default function Energy() {
         </Card>
 
         <div className="en__tips">
-          {tips.map((t) => (
-            <div className="en__tip" key={t.text}>
-              <Icon name={t.icon} size={18} color="var(--pos)" />
+          {tips.map((tip) => (
+            <div className="en__tip" key={tip.text}>
+              <Icon name={tip.icon} size={18} color="var(--pos)" />
               <div className="en__tip-body">
-                <p className="en__tip-text">{t.text}</p>
-                <span className="en__tip-saving">{t.saving}</span>
+                <p className="en__tip-text">{tip.text}</p>
+                <span className="en__tip-saving">{tip.saving}</span>
               </div>
             </div>
           ))}

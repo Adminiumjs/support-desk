@@ -19,11 +19,13 @@ import {
   Radio,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useI18n } from "../i18n";
 import { poundsWhole, tradeInRef } from "../lib/format";
 import { top, useAppStore } from "../state/store";
 import "../styles/screen-tradein.css";
 
 export default function TradeIn() {
+  const { t, number } = useI18n();
   const tiProd = useAppStore((s) => s.tiProd);
   const tiCond = useAppStore((s) => s.tiCond);
   const tiAge = useAppStore((s) => s.tiAge);
@@ -41,20 +43,37 @@ export default function TradeIn() {
   const quote = Math.max(3, Math.round(base * condition.f * age.f));
   const quoteText = poundsWhole(quote);
 
+  /** `× 0.80` — two decimals, in the reader's own numbering system. */
+  const factor = (f: number) =>
+    t("screensB.tradein.factor", {
+      factor: number(f, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }),
+    });
+
   const breakdown: [string, string][] = [
-    [`Base value, ${product.name}`, `£${base}`],
-    [`Condition: ${condition.label.split(" —")[0]}`, `× ${condition.f.toFixed(2)}`],
-    [`Age: ${age.label}`, `× ${age.f.toFixed(2)}`],
+    [
+      t("screensB.tradein.baseValue", { product: product.name }),
+      poundsWhole(base),
+    ],
+    [
+      t("screensB.tradein.conditionRow", {
+        condition: condition.label.split(" —")[0],
+      }),
+      factor(condition.f),
+    ],
+    [t("screensB.tradein.ageRow", { age: age.label }), factor(age.f)],
   ];
 
   function tiAccept() {
     set({ tiSent: tradeInRef(quote) });
-    showToast("Prepaid pack ordered");
+    showToast(t("screensB.tradein.packOrdered"));
     top();
   }
 
   function tiRecycle() {
-    showToast("We'll email you a free recycling label");
+    showToast(t("screensB.tradein.recycleToast"));
   }
 
   if (tiSent) {
@@ -64,15 +83,15 @@ export default function TradeIn() {
           <span className="ti-done__tile">
             <Icon name="package-check" size={26} color="var(--pos)" />
           </span>
-          <h1 className="ti-done__title">Prepaid pack on its way</h1>
-          <p className="ti-done__body">
-            It arrives in two to three working days. Post the device back in the
-            same box — postage is covered, and the credit lands within a week of
-            it reaching us.
-          </p>
+          <h1 className="ti-done__title">
+            {t("screensB.tradein.doneTitle")}
+          </h1>
+          <p className="ti-done__body">{t("screensB.tradein.doneBody")}</p>
           <div className="ti-done__chips">
             <span className="ti-chip">{tiSent}</span>
-            <span className="ti-chip">{quoteText} credit</span>
+            <span className="ti-chip">
+              {t("screensB.tradein.creditChip", { amount: quoteText })}
+            </span>
           </div>
           <ButtonSecondary
             icon="rotate-ccw"
@@ -80,7 +99,7 @@ export default function TradeIn() {
             className="ti-done__again"
             onClick={() => set({ tiSent: null })}
           >
-            Value another device
+            {t("screensB.tradein.valueAnother")}
           </ButtonSecondary>
         </Card>
       </main>
@@ -89,17 +108,14 @@ export default function TradeIn() {
 
   return (
     <main className="fx-screen fx-page w-820 scr-tradein">
-      <h1 className="scr-tradein__h1">What's your old Hearth worth?</h1>
-      <p className="scr-tradein__lede">
-        Trade any working Hearth device against your next one. We refurbish what
-        we can and recycle the rest — you get store credit either way.
-      </p>
+      <h1 className="scr-tradein__h1">{t("screensB.tradein.h1")}</h1>
+      <p className="scr-tradein__lede">{t("screensB.tradein.lede")}</p>
 
       <Card variant="form" className="ti-form">
         <div>
-          <h2 className="ti-label">Which device are you trading in?</h2>
+          <h2 className="ti-label">{t("screensB.tradein.whichDevice")}</h2>
           <ProductPicker
-            label="Which device are you trading in?"
+            label={t("screensB.tradein.whichDevice")}
             products={dataSource.products()}
             value={tiProd}
             onChange={(id) => set({ tiProd: id })}
@@ -107,7 +123,7 @@ export default function TradeIn() {
         </div>
 
         <div>
-          <h2 className="ti-label">What condition is it in?</h2>
+          <h2 className="ti-label">{t("screensB.tradein.whatCondition")}</h2>
           <div className="ti-rows">
             {conditions.map((c) => (
               <Radio
@@ -126,7 +142,7 @@ export default function TradeIn() {
 
         <div>
           <label className="ti-label" htmlFor="ti-age">
-            How old is it?
+            {t("screensB.tradein.howOld")}
           </label>
           <select
             id="ti-age"
@@ -144,9 +160,11 @@ export default function TradeIn() {
       </Card>
 
       <div className="ti-quote">
-        <Eyebrow>Your quote</Eyebrow>
+        <Eyebrow>{t("screensB.tradein.yourQuote")}</Eyebrow>
         <p className="ti-quote__value">{quoteText}</p>
-        <p className="ti-quote__for">store credit for your {product.name}</p>
+        <p className="ti-quote__for">
+          {t("screensB.tradein.creditFor", { product: product.name })}
+        </p>
 
         <div className="ti-break">
           {breakdown.map(([label, value]) => (
@@ -157,18 +175,14 @@ export default function TradeIn() {
           ))}
         </div>
 
-        <p className="ti-quote__note">
-          Quote valid 14 days. We check the device on arrival — if the condition
-          doesn't match we'll re-quote before doing anything, and send it back
-          free if you'd rather not proceed.
-        </p>
+        <p className="ti-quote__note">{t("screensB.tradein.quoteNote")}</p>
 
         <div className="ti-quote__actions">
           <ButtonPrimary icon="package" iconSize={16} onClick={tiAccept}>
-            Send me a prepaid pack
+            {t("screensB.tradein.sendPack")}
           </ButtonPrimary>
           <ButtonSecondary icon="recycle" iconSize={16} onClick={tiRecycle}>
-            Just recycle it
+            {t("screensB.tradein.justRecycle")}
           </ButtonSecondary>
         </div>
       </div>

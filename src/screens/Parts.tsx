@@ -24,7 +24,8 @@ import {
   SoftPill,
 } from "../components";
 import { dataSource } from "../data/source";
-import { money, pluralise } from "../lib/format";
+import { useI18n, type MessageKey } from "../i18n";
+import { counted, money } from "../lib/format";
 import { useAppStore } from "../state/store";
 import type { PartStock } from "../data/types";
 import "../styles/screen-parts.css";
@@ -32,7 +33,8 @@ import "../styles/screen-parts.css";
 /* ------------------------------------------------------- stock vocabulary */
 
 interface StockMeta {
-  label: string;
+  /** A message key — this table is module scope, so it is resolved on render. */
+  label: MessageKey;
   fg: string;
   soft: string;
   icon: string;
@@ -40,15 +42,20 @@ interface StockMeta {
 
 /** Parts stock pills (port spec §4.2). */
 const STOCK: Record<PartStock, StockMeta> = {
-  in: { label: "In stock", fg: "--pos", soft: "--pos-soft", icon: "check" },
+  in: {
+    label: "screensB.parts.stockIn",
+    fg: "--pos",
+    soft: "--pos-soft",
+    icon: "check",
+  },
   low: {
-    label: "Low stock",
+    label: "screensB.parts.stockLow",
     fg: "--warn",
     soft: "--warn-soft",
     icon: "alert-triangle",
   },
   out: {
-    label: "Back in 2 weeks",
+    label: "screensB.parts.stockOut",
     fg: "--fg-subtle",
     soft: "--surface-3",
     icon: "clock",
@@ -59,6 +66,7 @@ const FREE_DELIVERY_FROM = 25;
 const FALLBACK_TINT = "#4f8bd6";
 
 export default function Parts() {
+  const { t, number } = useI18n();
   const partCat = useAppStore((s) => s.partCat);
   const basket = useAppStore((s) => s.basket);
   const set = useAppStore((s) => s.set);
@@ -82,26 +90,24 @@ export default function Parts() {
 
   function clearBasket() {
     set({ basket: {} });
-    showToast("Basket emptied");
+    showToast(t("screensB.parts.basketEmptied"));
   }
 
   function checkout() {
-    showToast("Checkout isn't available in this demo", "info");
+    showToast(t("screensB.parts.checkoutToast"), "info");
   }
 
   const shipping =
     total >= FREE_DELIVERY_FROM
-      ? "Free delivery included"
-      : `£${(FREE_DELIVERY_FROM - total).toFixed(2)} more for free delivery`;
+      ? t("screensB.parts.freeDelivery")
+      : t("screensB.parts.moreForFree", {
+          amount: money(FREE_DELIVERY_FROM - total),
+        });
 
   return (
     <main className="fx-screen fx-page w-900 scr-parts">
-      <h1 className="scr-parts__h1">Spare parts</h1>
-      <p className="scr-parts__lede">
-        Every part we've ever shipped, available for at least seven years after
-        a product launches. Under warranty? Don't buy anything — make a claim
-        and we'll send it free.
-      </p>
+      <h1 className="scr-parts__h1">{t("screensB.parts.h1")}</h1>
+      <p className="scr-parts__lede">{t("screensB.parts.lede")}</p>
 
       <ChipRow className="scr-parts__cats" gap={10}>
         {cats.map((c) => (
@@ -118,10 +124,10 @@ export default function Parts() {
       {rows.length === 0 ? (
         <EmptyState
           icon="package-search"
-          title="No parts for that device"
-          body="We keep parts for at least seven years after launch, so if something is missing here it is worth asking us directly."
+          title={t("screensB.parts.emptyTitle")}
+          body={t("screensB.parts.emptyBody")}
           action={{
-            label: "Open a ticket",
+            label: t("screensB.parts.openTicket"),
             icon: "pen-line",
             onClick: openTicket,
           }}
@@ -152,10 +158,10 @@ export default function Parts() {
                 <div className="pt-row__col">
                   <p className="pt-row__name">{part.name}</p>
                   <p className="pt-row__sku">
-                    {part.sku} · fits {fits}
+                    {t("screensB.parts.fitsLine", { sku: part.sku, fits })}
                   </p>
                   <SoftPill fg={stock.fg} soft={stock.soft} icon={stock.icon}>
-                    {stock.label}
+                    {t(stock.label)}
                   </SoftPill>
                 </div>
 
@@ -165,15 +171,19 @@ export default function Parts() {
                   <div className="pt-step">
                     <IconButton
                       icon="minus"
-                      label={`Remove one ${part.name}`}
+                      label={t("screensB.parts.removeOne", {
+                        name: part.name,
+                      })}
                       small
                       iconSize={15}
                       onClick={() => setQty(part.sku, qty - 1)}
                     />
-                    <span className="pt-step__qty">{qty}</span>
+                    <span className="pt-step__qty">{number(qty)}</span>
                     <IconButton
                       icon="plus"
-                      label={`Add another ${part.name}`}
+                      label={t("screensB.parts.addAnother", {
+                        name: part.name,
+                      })}
                       small
                       iconSize={15}
                       onClick={() => setQty(part.sku, qty + 1)}
@@ -186,11 +196,11 @@ export default function Parts() {
                     iconSize={15}
                     onClick={() =>
                       out
-                        ? showToast("We'll email you when it's back")
+                        ? showToast(t("screensB.parts.notifyToast"))
                         : setQty(part.sku, 1)
                     }
                   >
-                    {out ? "Notify me" : "Add"}
+                    {out ? t("screensB.parts.notify") : t("screensB.parts.add")}
                   </ButtonSecondary>
                 )}
               </div>
@@ -203,23 +213,24 @@ export default function Parts() {
         <div className="pt-basket">
           <div className="pt-basket__col">
             <p className="pt-basket__count">
-              {pluralise(count, "part")} in your basket
+              {t("screensB.parts.inYourBasket", {
+                parts: counted("count.part", count),
+              })}
             </p>
             <p className="pt-basket__ship">{shipping}</p>
           </div>
           <span className="pt-basket__total">{money(total)}</span>
           <ButtonSecondary icon="trash-2" iconSize={15} onClick={clearBasket}>
-            Empty
+            {t("screensB.parts.empty")}
           </ButtonSecondary>
           <ButtonPrimary icon="credit-card" iconSize={16} onClick={checkout}>
-            Checkout
+            {t("screensB.parts.checkout")}
           </ButtonPrimary>
         </div>
       ) : null}
 
       <Callout tone="pos" icon="wrench" className="pt-callout">
-        Most parts fit with a screwdriver and ten minutes. Every part page in
-        the app links to a step-by-step repair guide — no soldering, ever.
+        {t("screensB.parts.callout")}
       </Callout>
     </main>
   );

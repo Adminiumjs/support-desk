@@ -19,11 +19,13 @@ import {
   VerticalTimeline,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useT } from "../i18n";
 import { claimRef } from "../lib/format";
 import { useAppStore } from "../state/store";
 import "../styles/screen-claim.css";
 
 export default function Claim() {
+  const t = useT();
   const registered = useAppStore((s) => s.registered);
   const clDev = useAppStore((s) => s.clDev);
   const clFault = useAppStore((s) => s.clFault);
@@ -40,7 +42,7 @@ export default function Claim() {
   function addPhoto() {
     const next = dataSource.claimPhotoPool().find((f) => !clPhotos.includes(f));
     if (!next) {
-      showToast("That's all the demo files", "warn");
+      showToast(t("screensA.claim.toastFiles"), "warn");
       return;
     }
     set({ clPhotos: [...clPhotos, next] });
@@ -48,11 +50,11 @@ export default function Claim() {
 
   function submitClaim() {
     if (clFault.trim().length < 20) {
-      showToast("Tell us a little more about the fault", "warn");
+      showToast(t("screensA.claim.toastFault"), "warn");
       return;
     }
     set({ clRef: claimRef(registered.length) });
-    showToast("Claim submitted");
+    showToast(t("screensA.claim.toastSubmitted"));
   }
 
   function clReset() {
@@ -72,14 +74,13 @@ export default function Claim() {
             <span className="cl-done__tile">
               <Icon name="file-check" size={26} color="var(--pos)" />
             </span>
-            <h1 className="cl-done__title">Claim received</h1>
-            <p className="cl-done__body">
-              We'll assess it within two working days. Keep the device to hand —
-              we may ask for a photo of the serial plate.
-            </p>
+            <h1 className="cl-done__title">{t("screensA.claim.doneTitle")}</h1>
+            <p className="cl-done__body">{t("screensA.claim.doneBody")}</p>
             <div className="cl-done__chips">
               <span className="cl-chip">{clRef}</span>
-              <span className="cl-chip">{outcome.label} requested</span>
+              <span className="cl-chip">
+                {t("screensA.claim.outcomeChip", { outcome: outcome.label })}
+              </span>
             </div>
           </div>
 
@@ -87,18 +88,20 @@ export default function Claim() {
             <VerticalTimeline
               entries={[
                 {
-                  label: "Claim received",
-                  note: "We have your description and photos.",
+                  label: t("screensA.claim.doneTitle"),
+                  note: t("screensA.claim.tl1Note"),
                   st: "done",
                 },
                 {
-                  label: "Assessment",
-                  note: "An engineer reviews it within two working days.",
+                  label: t("screensA.claim.tl2Label"),
+                  note: t("screensA.claim.tl2Note"),
                   st: "current",
                 },
                 {
-                  label: `${outcome.label} arranged`,
-                  note: "We'll confirm by email and book anything needed.",
+                  label: t("screensA.claim.tl3Label", {
+                    outcome: outcome.label,
+                  }),
+                  note: t("screensA.claim.tl3Note"),
                   st: "todo",
                 },
               ]}
@@ -107,10 +110,10 @@ export default function Claim() {
 
           <div className="cl-done__actions">
             <ButtonPrimary icon="wrench" iconSize={16} onClick={gotoRepair}>
-              Book a repair slot
+              {t("screensA.claim.bookRepair")}
             </ButtonPrimary>
             <ButtonSecondary icon="rotate-ccw" iconSize={16} onClick={clReset}>
-              Start another claim
+              {t("screensA.claim.another")}
             </ButtonSecondary>
           </div>
         </div>
@@ -120,15 +123,12 @@ export default function Claim() {
 
   return (
     <main className="fx-screen fx-page w-820 scr-claim">
-      <h1 className="scr-claim__h1">Make a warranty claim</h1>
-      <p className="scr-claim__lede">
-        Two-year cover as standard, three if you registered. Faults from normal
-        use are covered; accidental damage and water ingress aren't.
-      </p>
+      <h1 className="scr-claim__h1">{t("screensA.claim.h1")}</h1>
+      <p className="scr-claim__lede">{t("screensA.claim.lede")}</p>
 
       <Card variant="form" className="cl-form">
         <div>
-          <h2 className="cl-label">Which device is faulty?</h2>
+          <h2 className="cl-label">{t("screensA.claim.whichDevice")}</h2>
           <div className="cl-rows">
             {registered.map((device) => {
               const product = dataSource.product(device.prod);
@@ -139,7 +139,10 @@ export default function Claim() {
                   name="claim-device"
                   selected={clDev === device.id}
                   onSelect={() => set({ clDev: device.id })}
-                  note={`${device.serial} · cover to ${device.expires}`}
+                  note={t("screensA.claim.deviceNote", {
+                    serial: device.serial,
+                    expires: device.expires,
+                  })}
                   leading={
                     <IconChip
                       tint={product.tint}
@@ -159,7 +162,7 @@ export default function Claim() {
 
         <div>
           <label className="cl-label" htmlFor="cl-fault">
-            What's gone wrong?
+            {t("screensA.claim.faultLabel")}
           </label>
           <TextArea
             id="cl-fault"
@@ -167,13 +170,17 @@ export default function Claim() {
             onChange={(v) => set({ clFault: v })}
             maxLength={1000}
             minHeight={130}
-            placeholder="Describe the fault, when it started, and anything you've already tried."
+            placeholder={t("screensA.claim.faultPlaceholder")}
           />
         </div>
 
         <div>
-          <h2 className="cl-label">Preferred outcome</h2>
-          <div className="cl-outcomes" role="radiogroup" aria-label="Preferred outcome">
+          <h2 className="cl-label">{t("screensA.claim.preferredOutcome")}</h2>
+          <div
+            className="cl-outcomes"
+            role="radiogroup"
+            aria-label={t("screensA.claim.preferredOutcome")}
+          >
             {outcomes.map((o) => {
               const on = clOutcome === o.id;
               return (
@@ -195,7 +202,7 @@ export default function Claim() {
         </div>
 
         <div>
-          <h2 className="cl-label">Photos of the fault</h2>
+          <h2 className="cl-label">{t("screensA.claim.photos")}</h2>
           <div className="cl-photos">
             {clPhotos.map((photo) => (
               <span className="cl-photo" key={photo}>
@@ -205,7 +212,7 @@ export default function Claim() {
             ))}
             <button type="button" className="cl-addphoto fx-gi" onClick={addPhoto}>
               <Icon name="paperclip" size={14} />
-              Add photo
+              {t("screensA.claim.addPhoto")}
             </button>
           </div>
         </div>
@@ -216,7 +223,7 @@ export default function Claim() {
           className="cl-submit"
           onClick={submitClaim}
         >
-          Submit claim
+          {t("screensA.claim.submit")}
         </ButtonPrimary>
       </Card>
     </main>

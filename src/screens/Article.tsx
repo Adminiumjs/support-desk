@@ -14,6 +14,7 @@ import {
   PlaceholderTile,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useT } from "../i18n";
 import { readTime } from "../lib/format";
 import { useAppStore } from "../state/store";
 import "../styles/screen-article.css";
@@ -22,6 +23,7 @@ import "../styles/screen-article.css";
 const FALLBACK_ARTICLE = "a_doorbell_wifi";
 
 export default function Article() {
+  const t = useT();
   const articleId = useAppStore((s) => s.articleId);
   const savedIds = useAppStore((s) => s.savedIds);
   const feedback = useAppStore((s) => s.feedback);
@@ -72,10 +74,10 @@ export default function Article() {
           onClick={() => toggleSave(article.id)}
         >
           <Icon name={saved ? "bookmark-check" : "bookmark-plus"} size={15} />
-          {saved ? "Saved for later" : "Save for later"}
+          {saved ? t("screensA.article.saved") : t("screensA.article.save")}
         </button>
         <ButtonSecondary icon="library" onClick={() => go("saved")}>
-          Saved articles
+          {t("screensA.article.savedArticles")}
         </ButtonSecondary>
       </div>
 
@@ -85,7 +87,9 @@ export default function Article() {
       />
 
       <div className="art__feedback">
-        <span className="art__feedback-label">Was this helpful?</span>
+        <span className="art__feedback-label">
+          {t("screensA.article.helpful")}
+        </span>
         <div className="art__feedback-btns">
           <Chip
             icon="thumbs-up"
@@ -93,7 +97,7 @@ export default function Article() {
             active={feedback === "yes"}
             onClick={() => giveFeedback("yes")}
           >
-            Yes
+            {t("screensA.article.yes")}
           </Chip>
           <Chip
             icon="thumbs-down"
@@ -101,14 +105,14 @@ export default function Article() {
             active={feedback === "no"}
             onClick={() => giveFeedback("no")}
           >
-            No
+            {t("screensA.article.no")}
           </Chip>
         </div>
       </div>
 
       {related.length ? (
         <section className="art__related">
-          <h2 className="art__related-h2">Related articles</h2>
+          <h2 className="art__related-h2">{t("screensA.article.related")}</h2>
           <div className="art__related-list">
             {related.map((r) => (
               <ArticleCard

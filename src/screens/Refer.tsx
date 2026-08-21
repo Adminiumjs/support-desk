@@ -21,7 +21,8 @@ import {
   FOOTER_URL,
 } from "../data/demo";
 import type { Referral } from "../data/types";
-import { displayNameFromEmail, initialsFrom } from "../lib/format";
+import { useI18n, type MessageKey } from "../i18n";
+import { displayNameFromEmail, initialsFrom, poundsWhole } from "../lib/format";
 import { useAppStore } from "../state/store";
 import "../styles/screen-refer.css";
 
@@ -34,15 +35,19 @@ function copyText(text: string): void {
   }
 }
 
-const PILL: Record<Referral["st"], { label: string; fg: string; soft: string; icon: string }> = {
+/** `label` is a message key — module scope, resolved at the render site. */
+const PILL: Record<
+  Referral["st"],
+  { label: MessageKey; fg: string; soft: string; icon: string }
+> = {
   joined: {
-    label: "Joined",
+    label: "screensB.refer.pillJoined",
     fg: "--pos",
     soft: "--pos-soft",
     icon: "check-circle-2",
   },
   invited: {
-    label: "Invited",
+    label: "screensB.refer.pillInvited",
     fg: "--warn",
     soft: "--warn-soft",
     icon: "clock",
@@ -50,6 +55,7 @@ const PILL: Record<Referral["st"], { label: string; fg: string; soft: string; ic
 };
 
 export default function Refer() {
+  const { t, number } = useI18n();
   const referrals = useAppStore((s) => s.referrals);
   const refEmail = useAppStore((s) => s.refEmail);
   const set = useAppStore((s) => s.set);
@@ -57,26 +63,31 @@ export default function Refer() {
   const gotoBoard = useAppStore((s) => s.gotoBoard);
 
   const joined = referrals.filter((r) => r.st === "joined").length;
-  const earned = `£${joined * REFERRAL_REWARD} earned`;
+  const earned = t("screensB.refer.earned", {
+    amount: poundsWhole(joined * REFERRAL_REWARD),
+  });
   const pct = Math.min(100, Math.round((joined / REFERRAL_GOAL) * 100));
-  const progress = `${joined} of ${REFERRAL_GOAL} friends joined — ${
-    REFERRAL_GOAL - joined
-  } more and we add a £${REFERRAL_BONUS} bonus on top.`;
+  const progress = t("screensB.refer.progress", {
+    joined: number(joined),
+    goal: number(REFERRAL_GOAL),
+    left: number(REFERRAL_GOAL - joined),
+    bonus: poundsWhole(REFERRAL_BONUS),
+  });
 
   const copyCode = () => {
     copyText(REFERRAL_CODE);
-    showToast("Referral code copied");
+    showToast(t("screensB.refer.codeCopied"));
   };
 
   const copyLink = () => {
     copyText(`https://${FOOTER_URL}/?ref=${REFERRAL_CODE}`);
-    showToast("Invite link copied");
+    showToast(t("screensB.refer.linkCopied"));
   };
 
   const sendInvite = () => {
     const email = refEmail.trim();
     if (email.indexOf("@") < 1) {
-      showToast("Enter your friend's email", "warn");
+      showToast(t("screensB.refer.needEmail"), "warn");
       return;
     }
     const name = displayNameFromEmail(email);
@@ -84,22 +95,25 @@ export default function Refer() {
       name,
       initials: initialsFrom(name),
       tint: "#8a6fb0",
-      when: "Invited just now",
+      when: t("screensB.refer.invitedJustNow"),
       st: "invited",
-      reward: "Pending",
+      reward: t("screensB.refer.rewardPending"),
     };
     set({ referrals: [...referrals, next], refEmail: "" });
-    showToast(`Invite sent to ${email}`);
+    showToast(t("screensB.refer.inviteSent", { email }));
   };
 
   return (
     <main className="fx-screen fx-page w-820">
       <section className="refer-hero">
-        <p className="refer-hero__eyebrow">REFER A FRIEND</p>
-        <h1 className="refer-hero__title">Give £20, get £20.</h1>
+        <p className="refer-hero__eyebrow">{t("screensB.refer.eyebrow")}</p>
+        <h1 className="refer-hero__title">
+          {t("screensB.refer.title", {
+            amount: poundsWhole(REFERRAL_REWARD),
+          })}
+        </h1>
         <p className="refer-hero__lede">
-          Send a friend £20 off their first Hearth device. When their order
-          ships, we credit your account £20 — no cap, no expiry.
+          {t("screensB.refer.lede", { amount: poundsWhole(REFERRAL_REWARD) })}
         </p>
         <div className="refer-hero__row">
           <span className="refer-code">{REFERRAL_CODE}</span>
@@ -109,7 +123,7 @@ export default function Refer() {
             className="refer-copy"
             onClick={copyCode}
           >
-            Copy code
+            {t("screensB.refer.copyCode")}
           </ButtonPrimary>
           {/* Delta §6.13 — cross-link to the new leaderboard. */}
           <ButtonSecondary
@@ -118,7 +132,7 @@ export default function Refer() {
             className="refer-copy refer-copy--ghost"
             onClick={gotoBoard}
           >
-            Leaderboard
+            {t("screensB.refer.leaderboard")}
           </ButtonSecondary>
           <ButtonSecondary
             icon="link"
@@ -126,7 +140,7 @@ export default function Refer() {
             className="refer-copy refer-copy--ghost"
             onClick={copyLink}
           >
-            Copy link
+            {t("screensB.refer.copyLink")}
           </ButtonSecondary>
         </div>
       </section>
@@ -134,7 +148,7 @@ export default function Refer() {
       <div className="refer-two">
         <section className="refer-card refer-card--progress">
           <div className="refer-progress__head">
-            <Eyebrow>Your progress</Eyebrow>
+            <Eyebrow>{t("screensB.refer.yourProgress")}</Eyebrow>
             <span className="refer-progress__earned">{earned}</span>
           </div>
           <div className="meter refer-progress__track">
@@ -144,14 +158,14 @@ export default function Refer() {
         </section>
 
         <section className="refer-card">
-          <Eyebrow>Invite by email</Eyebrow>
+          <Eyebrow>{t("screensB.refer.inviteByEmail")}</Eyebrow>
           <div className="refer-invite">
             <input
               className="fx-fld refer-invite__field"
               type="email"
               value={refEmail}
               placeholder="friend@example.com"
-              aria-label="Your friend's email address"
+              aria-label={t("screensB.refer.friendEmailAria")}
               onChange={(e) => set({ refEmail: e.target.value })}
             />
             <ButtonPrimary
@@ -160,17 +174,14 @@ export default function Refer() {
               className="refer-invite__send"
               onClick={sendInvite}
             >
-              Send
+              {t("screensB.refer.send")}
             </ButtonPrimary>
           </div>
-          <p className="refer-invite__note">
-            We send one email, and one reminder a week later. Nothing else,
-            ever.
-          </p>
+          <p className="refer-invite__note">{t("screensB.refer.inviteNote")}</p>
         </section>
       </div>
 
-      <Eyebrow>Your referrals</Eyebrow>
+      <Eyebrow>{t("screensB.refer.yourReferrals")}</Eyebrow>
       <div className="refer-list">
         {referrals.map((r, i) => {
           const p = PILL[r.st];
@@ -187,7 +198,7 @@ export default function Refer() {
                 <div className="refer-row__when">{r.when}</div>
               </div>
               <SoftPill fg={p.fg} soft={p.soft} icon={p.icon}>
-                {p.label}
+                {t(p.label)}
               </SoftPill>
               <span className="refer-row__reward">{r.reward}</span>
             </div>
@@ -196,9 +207,7 @@ export default function Refer() {
       </div>
 
       <p className="refer-legal">
-        Credit applies to new customers only and lands once their order ships.
-        Referral credit can't be exchanged for cash and doesn't apply to repairs
-        or accessories under £30.
+        {t("screensB.refer.legal", { amount: poundsWhole(30) })}
       </p>
     </main>
   );

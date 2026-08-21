@@ -14,17 +14,21 @@
  * sheet wins.
  */
 
-import { useEffect, useMemo, useRef } from "react";
+import { Fragment, useEffect, useMemo, useRef } from "react";
 import { BRAND } from "../data/demo";
 import { dataSource } from "../data/source";
+import { useT } from "../i18n";
+import { readTimeShort } from "../lib/format";
 import { headerSearch } from "../lib/search";
 import { HEADER_BLUR_MS, useAppStore } from "../state/store";
 import { Icon } from "./Icon";
+import { LocalePicker } from "./LocalePicker";
 import { IconChip } from "./PlaceholderTile";
 import { ButtonPrimary, IconButton } from "./Primitives";
-import { NAV_LINKS } from "./chrome";
+import { NAV_LINKS, slots } from "./chrome";
 
 export function Header() {
+  const t = useT();
   const view = useAppStore((s) => s.view);
   const theme = useAppStore((s) => s.theme);
   const hq = useAppStore((s) => s.hq);
@@ -91,11 +95,20 @@ export function Header() {
             <Icon name="life-buoy" size={19} />
           </span>
           <span className="hdr__word">
-            {BRAND} <span>Help</span>
+            {/* `.hdr__word span` is the subtle half, so the brand stays a bare
+              * text node and whatever the translator puts around it is the
+              * span — in any word order. */}
+            {slots(t("chrome.header.wordmark")).map((part, i) =>
+              part === "{brand}" ? (
+                <Fragment key={i}>{BRAND}</Fragment>
+              ) : (
+                <span key={i}>{part}</span>
+              ),
+            )}
           </span>
         </button>
 
-        <nav className="hdr__nav hdr-nav" aria-label="Primary">
+        <nav className="hdr__nav hdr-nav" aria-label={t("chrome.header.navAria")}>
           {NAV_LINKS.map((l) => (
             <button
               key={l.view}
@@ -105,7 +118,7 @@ export function Header() {
               onClick={() => go(l.view)}
             >
               <Icon name={l.icon} size={15} />
-              {l.label}
+              {t(l.label)}
             </button>
           ))}
         </nav>
@@ -119,8 +132,8 @@ export function Header() {
               ref={inputRef}
               className="fx-fld"
               value={hq}
-              aria-label="Search help"
-              placeholder="Search help…"
+              aria-label={t("chrome.header.searchLabel")}
+              placeholder={t("chrome.header.searchPlaceholder")}
               onChange={(e) => set({ hq: e.target.value, hqFocus: true })}
               onFocus={() => set({ hqFocus: true })}
               onBlur={() => {
@@ -146,7 +159,7 @@ export function Header() {
                 {results.length === 0 ? (
                   <div className="sd-drop__empty">
                     <Icon name="search-x" size={20} />
-                    Nothing matched — try fewer words.
+                    {t("chrome.header.noMatch")}
                   </div>
                 ) : (
                   <>
@@ -177,7 +190,10 @@ export function Header() {
                             <span
                               style={{ fontSize: 11.5, color: "var(--fg-subtle)" }}
                             >
-                              {cat?.name} · {a.read} min
+                              {t("chrome.header.resultMeta", {
+                                category: cat?.name ?? "",
+                                read: readTimeShort(a.read),
+                              })}
                             </span>
                           </span>
                         </button>
@@ -192,7 +208,7 @@ export function Header() {
                         set({ hqFocus: false });
                       }}
                     >
-                      See all results for “{hq}”
+                      {t("chrome.header.seeAll", { query: hq })}
                       <Icon name="arrow-right" size={14} />
                     </button>
                   </>
@@ -204,7 +220,7 @@ export function Header() {
           <IconButton
             className="hdr-search-btn"
             icon="search"
-            label="Search help"
+            label={t("chrome.header.searchLabel")}
             showLabel={labels}
             onClick={() => gotoKb()}
           />
@@ -215,20 +231,24 @@ export function Header() {
           <IconButton
             className="hdr-cmd-btn"
             icon="command"
-            label="Command palette — ⌘K"
+            label={t("chrome.header.paletteLabel")}
             showLabel={labels}
             onClick={cpToggle}
           />
           <IconButton
             className="hdr-grid-btn"
             icon="layout-grid"
-            label="All screens"
+            label={t("chrome.crumb.overview")}
             showLabel={labels}
             onClick={gotoOverview}
           />
+          {/* Gated at 560px with the other header extras — below that the
+            * MobileSheet carries the picker instead, so no viewport loses the
+            * ability to change language. */}
+          <LocalePicker className="hdr-lang-ctl" />
           <IconButton
             icon={theme === "dark" ? "sun" : "moon"}
-            label="Toggle theme"
+            label={t("chrome.header.toggleTheme")}
             showLabel={labels}
             onClick={toggleTheme}
           />
@@ -238,12 +258,12 @@ export function Header() {
             icon="pen-line"
             onClick={openTicket}
           >
-            Open a ticket
+            {t("chrome.link.openTicket")}
           </ButtonPrimary>
           <IconButton
             className="hdr-menu-btn"
             icon="menu"
-            label="Menu"
+            label={t("chrome.header.menu")}
             iconSize={20}
             showLabel={labels}
             onClick={openMenu}

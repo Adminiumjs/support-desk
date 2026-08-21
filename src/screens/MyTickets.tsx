@@ -12,11 +12,13 @@ import {
   TextInput,
   TicketRow,
 } from "../components";
-import { pluralise } from "../lib/format";
+import { useT } from "../i18n";
+import { counted } from "../lib/format";
 import { useAppStore, useTickets } from "../state/store";
 import "../styles/screen-mytickets.css";
 
 export default function MyTickets() {
+  const t = useT();
   const tickets = useTickets();
   const mtEmail = useAppStore((s) => s.mtEmail);
   const mtSubmitted = useAppStore((s) => s.mtSubmitted);
@@ -26,20 +28,18 @@ export default function MyTickets() {
 
   const showMyTickets = () => {
     set({ mtSubmitted: true });
-    showToast(`Showing tickets for ${mtEmail}`);
+    showToast(t("screensB.myTickets.showingFor", { email: mtEmail }));
   };
 
   return (
     <main className="fx-screen fx-page w-820 mt">
-      <h1 className="mt__title">My tickets</h1>
-      <p className="mt__lede">
-        Look up your open and past conversations with us.
-      </p>
+      <h1 className="mt__title">{t("screensB.myTickets.title")}</h1>
+      <p className="mt__lede">{t("screensB.myTickets.lede")}</p>
 
       <Card className="mt__lookup">
         <div className="mt__field">
           <label className="mt__label" htmlFor="mt-email">
-            Email address
+            {t("screensB.myTickets.emailLabel")}
           </label>
           <TextInput
             id="mt-email"
@@ -56,24 +56,24 @@ export default function MyTickets() {
           className="mt__go"
           onClick={showMyTickets}
         >
-          Show my tickets
+          {t("screensB.myTickets.show")}
         </ButtonPrimary>
       </Card>
 
       <p className="mt__help">
         <Icon name="info" size={14} />
-        We'll show tickets for this address — demo data.
+        {t("screensB.myTickets.help")}
       </p>
 
       {mtSubmitted ? (
         <>
-          <p className="mt__count">{pluralise(tickets.length, "ticket")}</p>
+          <p className="mt__count">{counted("count.ticket", tickets.length)}</p>
           <div className="mt__list">
-            {tickets.map((t) => (
+            {tickets.map((ticket) => (
               <TicketRow
-                key={t.id}
-                ticket={t}
-                onClick={() => openThread(t.id)}
+                key={ticket.id}
+                ticket={ticket}
+                onClick={() => openThread(ticket.id)}
               />
             ))}
           </div>

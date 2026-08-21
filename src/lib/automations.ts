@@ -11,6 +11,7 @@
  */
 
 import type { Automation, AutomationOption, AutomationStep } from "../data/types";
+import { number as fmtNumber, t } from "../i18n/ambient";
 
 /** Rules still on the board — `auGone` removed. */
 export function visibleAutomations(all: Automation[], gone: string[]): Automation[] {
@@ -28,21 +29,33 @@ export function runningCount(rules: Automation[], off: string[]): number {
 
 export function automationIntro(running: number, total: number): string {
   return total
-    ? `${running} of ${total} running. Each one is a trigger and an action — reorder nothing, break nothing.`
-    : "Nothing running yet. Automations are one trigger and one action.";
+    ? t("lib.auto.intro", {
+        running: fmtNumber(running),
+        total: fmtNumber(total),
+      })
+    : t("lib.auto.introEmpty");
 }
 
-/** The sub-line under a rule name: its `last` string, or the literal `paused`. */
+/**
+ * The sub-line under a rule name: its `last` string, or "paused".
+ *
+ * `NEVER_RUN_STAMP` is a stored token, not prose — a rule created while the
+ * portal was in Danish would otherwise keep a Danish sub-line forever. It is
+ * translated here, at the point of rendering.
+ */
 export function automationLast(rule: Automation, on: boolean): string {
-  return on ? rule.last : "paused";
+  if (!on) return t("lib.auto.paused");
+  return rule.last === NEVER_RUN_STAMP ? t("lib.auto.neverRun") : rule.last;
 }
 
 export function automationToggleToast(rule: Automation, nextOn: boolean): string {
-  return `${rule.name} ${nextOn ? "running" : "paused"}`;
+  return nextOn
+    ? t("lib.auto.toastRunning", { name: rule.name })
+    : t("lib.auto.toastPaused", { name: rule.name });
 }
 
 export function automationDeleteToast(rule: Automation): string {
-  return `${rule.name} deleted`;
+  return t("lib.auto.toastDeleted", { name: rule.name });
 }
 
 /** "Turn on the porch light" → "turn on the porch light". First char only. */
@@ -76,13 +89,27 @@ export function buildAutomation(input: {
     when: decapitalise(input.trigger.label),
     whenIcon: input.trigger.icon,
     then,
-    last: "never run yet",
+    last: NEVER_RUN_STAMP,
   };
 }
 
+/** Stored marker for a rule that has not fired yet. See `automationLast()`. */
+export const NEVER_RUN_STAMP = "never run yet";
+
 /* --------------------------------------------------------------- toasts */
 
-export const AU_NAME_TOAST = "Give the automation a name";
-export const AU_TRIGGER_TOAST = "Pick a trigger";
-export const AU_ACTION_TOAST = "Pick an action";
-export const AU_CREATED_TOAST = "Automation created";
+export function auNameToast(): string {
+  return t("lib.auto.nameToast");
+}
+
+export function auTriggerToast(): string {
+  return t("lib.auto.triggerToast");
+}
+
+export function auActionToast(): string {
+  return t("lib.auto.actionToast");
+}
+
+export function auCreatedToast(): string {
+  return t("lib.auto.createdToast");
+}

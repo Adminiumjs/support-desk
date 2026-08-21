@@ -11,12 +11,15 @@
 import { useEffect, useRef, useState } from "react";
 import { BRAND } from "../data/demo";
 import { dataSource } from "../data/source";
+import { useT } from "../i18n";
 import { heroSearch } from "../lib/search";
 import { HERO_BLUR_MS, useAppStore } from "../state/store";
 import { Icon } from "./Icon";
+import { slots } from "./chrome";
 import { IconChip } from "./PlaceholderTile";
 
 export function SearchHero() {
+  const t = useT();
   const q = useAppStore((s) => s.q);
   const searchFocus = useAppStore((s) => s.searchFocus);
   const set = useAppStore((s) => s.set);
@@ -45,13 +48,10 @@ export function SearchHero() {
       <div className="hero__inner">
         <span className="hero__eyebrow">
           <Icon name="sparkles" size={13} />
-          {BRAND} Help Center
+          {t("chrome.hero.eyebrow", { brand: BRAND })}
         </span>
-        <h1>How can we help?</h1>
-        <p className="hero__lede">
-          Search our guides for smart thermostats, doorbells, plugs, and sensors
-          — or open a ticket and a real person gets back to you.
-        </p>
+        <h1>{t("chrome.hero.title")}</h1>
+        <p className="hero__lede">{t("chrome.hero.lede")}</p>
 
         <div className="hero__field">
           <span className="hero__ico">
@@ -60,8 +60,8 @@ export function SearchHero() {
           <input
             className="fx-fld"
             value={q}
-            aria-label="Search help articles"
-            placeholder={'Try "doorbell wifi" or "factory reset"'}
+            aria-label={t("chrome.hero.searchLabel")}
+            placeholder={t("chrome.hero.placeholder")}
             onChange={(e) => set({ q: e.target.value, searchFocus: true })}
             onFocus={() => set({ searchFocus: true })}
             onBlur={() => {
@@ -79,7 +79,7 @@ export function SearchHero() {
             <button
               type="button"
               className="hero__clear fx-gi"
-              aria-label="Clear search"
+              aria-label={t("chrome.hero.clear")}
               onMouseDown={(e) => {
                 e.preventDefault();
                 set({ q: "" });
@@ -104,27 +104,34 @@ export function SearchHero() {
                   }}
                 >
                   <Icon name="search-x" size={22} />
+                  {/* `{action}` is the pressable half of the sentence; the
+                    * translator decides where in the sentence it sits. */}
                   <span>
-                    No articles match that yet. Try fewer words, or{" "}
-                    <button
-                      type="button"
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        openTicket();
-                      }}
-                      style={{
-                        border: "none",
-                        background: "transparent",
-                        padding: 0,
-                        font: "inherit",
-                        fontWeight: 700,
-                        color: "var(--accent)",
-                        cursor: "pointer",
-                      }}
-                    >
-                      open a ticket
-                    </button>
-                    .
+                    {slots(t("chrome.hero.noMatch")).map((part, i) =>
+                      part === "{action}" ? (
+                        <button
+                          key={i}
+                          type="button"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            openTicket();
+                          }}
+                          style={{
+                            border: "none",
+                            background: "transparent",
+                            padding: 0,
+                            font: "inherit",
+                            fontWeight: 700,
+                            color: "var(--accent)",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {t("chrome.hero.noMatchAction")}
+                        </button>
+                      ) : (
+                        part
+                      ),
+                    )}
                   </span>
                 </div>
               ) : (

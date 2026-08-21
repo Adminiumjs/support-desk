@@ -31,6 +31,7 @@ import {
   useIsDark,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useT } from "../i18n";
 import { a11yActiveNote } from "../lib/a11y";
 import { themeModeNote } from "../lib/theme";
 import { useAppStore } from "../state/store";
@@ -42,6 +43,7 @@ function chipFontSize(scale: number): number {
 }
 
 export default function A11y() {
+  const t = useT();
   const SIZES = dataSource.accessibilitySizes();
   const PALETTES = dataSource.accessibilityPalettes();
   const TOGGLES = dataSource.accessibilityToggles();
@@ -64,21 +66,14 @@ export default function A11y() {
 
   return (
     <main className="fx-screen fx-page w-900 a11">
-      <h1 className="a11__h1">Accessibility settings</h1>
-      <p className="a11__lede">
-        These apply across the help center and the Hearth app on this account.
-        Changes take effect immediately — the preview shows exactly what you'll
-        get.
-      </p>
+      <h1 className="a11__h1">{t("screensA.a11y.title")}</h1>
+      <p className="a11__lede">{t("screensA.a11y.lede")}</p>
 
       <div className="a11__split">
         <Card className="a11__panel">
           <section className="a11__block a11__block--divided">
-            <h2 className="a11__block-title">Display size</h2>
-            <p className="a11__block-note">
-              Scales every screen in the help center — text, buttons and spacing
-              together. Applies as soon as you pick one.
-            </p>
+            <h2 className="a11__block-title">{t("screensA.a11y.size")}</h2>
+            <p className="a11__block-note">{t("screensA.a11y.sizeNote")}</p>
             <ChipRow>
               {SIZES.map((s) => (
                 <Chip
@@ -94,20 +89,20 @@ export default function A11y() {
           </section>
 
           <div className="a11__toggles">
-            {TOGGLES.map((t) => {
-              const on = a11y.on[t.id];
+            {TOGGLES.map((tog) => {
+              const on = a11y.on[tog.id];
               return (
                 <button
                   type="button"
-                  key={t.id}
+                  key={tog.id}
                   role="switch"
                   aria-checked={on}
                   className="a11__row"
-                  onClick={() => toggleA11y(t.id)}
+                  onClick={() => toggleA11y(tog.id)}
                 >
                   <span className="a11__row-text">
-                    <span className="a11__row-label">{t.label}</span>
-                    <span className="a11__row-note">{t.note}</span>
+                    <span className="a11__row-label">{tog.label}</span>
+                    <span className="a11__row-note">{tog.note}</span>
                   </span>
                   <span className="sd-toggle" aria-hidden="true">
                     <span className="sd-toggle__knob" />
@@ -118,11 +113,8 @@ export default function A11y() {
           </div>
 
           <section className="a11__block a11__block--top">
-            <h2 className="a11__block-title">Colour palette</h2>
-            <p className="a11__block-note">
-              Status colours are always paired with an icon and a label, never
-              colour alone.
-            </p>
+            <h2 className="a11__block-title">{t("screensA.a11y.palette")}</h2>
+            <p className="a11__block-note">{t("screensA.a11y.paletteNote")}</p>
             <ChipRow>
               {PALETTES.map((p) => (
                 <Chip
@@ -142,42 +134,54 @@ export default function A11y() {
             className="a11__preview"
             style={{ borderWidth: previewBorder }}
           >
-            <Eyebrow>Live sample</Eyebrow>
+            <Eyebrow>{t("screensA.a11y.sample")}</Eyebrow>
             <h2 className="a11__preview-h" style={{ color: previewFg }}>
-              Fix a device that shows offline
+              {t("screensA.a11y.sampleTitle")}
             </h2>
             <p className="a11__preview-p" style={{ color: previewMuted }}>
-              An "offline" label usually clears itself within a few minutes. If
-              it doesn't, restart the device and check your router hasn't
-              changed channel.
+              {t("screensA.a11y.sampleBody")}
             </p>
             <div className="a11__pills">
               <SoftPill fg="--pos" soft="--pos-soft" icon="check-circle-2">
-                Solved
+                {t("screensA.a11y.solved")}
               </SoftPill>
               <SoftPill fg="--warn" soft="--warn-soft" icon="clock">
-                Pending
+                {t("screensA.a11y.pending")}
               </SoftPill>
               <SoftPill fg="--danger" soft="--danger-soft" icon="alert-triangle">
-                Action needed
+                {t("screensA.a11y.actionNeeded")}
               </SoftPill>
             </div>
-            <span className="a11__faux-btn">Read the article</span>
+            <span className="a11__faux-btn">{t("screensA.a11y.readArticle")}</span>
             <p className="a11__note">{a11yActiveNote(a11y)}</p>
           </Card>
 
           <Card className="a11__shortcuts">
             <p className="a11__shortcuts-head">
               <Icon name="keyboard" size={18} />
-              Keyboard shortcuts
+              {t("screensA.a11y.shortcuts")}
             </p>
+            {/* Split on the placeholders so the translator owns the word order —
+                the two keycaps are rendered wherever the sentence puts them. */}
             <p className="a11__shortcuts-body">
-              Press <span className="sd-kbd sd-kbd--sm">/</span> to search from
-              anywhere, <span className="sd-kbd sd-kbd--sm">Esc</span> to close
-              any panel.
+              {t("screensA.a11y.shortcutsBody")
+                .split(/(\{slash\}|\{esc\})/)
+                .map((part, i) =>
+                  part === "{slash}" ? (
+                    <span key={i} className="sd-kbd sd-kbd--sm">
+                      /
+                    </span>
+                  ) : part === "{esc}" ? (
+                    <span key={i} className="sd-kbd sd-kbd--sm">
+                      Esc
+                    </span>
+                  ) : (
+                    part
+                  ),
+                )}
             </p>
             <button type="button" className="fx-nav a11__see-all" onClick={scToggle}>
-              See all shortcuts
+              {t("screensA.a11y.seeAll")}
               <Icon name="arrow-right" size={13} />
             </button>
           </Card>
@@ -186,7 +190,7 @@ export default function A11y() {
           <Card className="a11__shortcuts">
             <p className="a11__shortcuts-head">
               <Icon name="sun-moon" size={18} />
-              Appearance
+              {t("screensA.a11y.appearance")}
             </p>
             <p className="a11__shortcuts-body">{themeModeNote(themeManual)}</p>
             <button
@@ -195,16 +199,16 @@ export default function A11y() {
               onClick={followSystemTheme}
             >
               <Icon name="monitor-smartphone" size={13} />
-              Follow my system theme
+              {t("screensA.a11y.followSystem")}
             </button>
           </Card>
 
           <div className="a11__actions">
             <ButtonPrimary icon="check" onClick={saveA11y}>
-              Save settings
+              {t("screensA.a11y.save")}
             </ButtonPrimary>
             <ButtonSecondary icon="rotate-ccw" onClick={resetA11y}>
-              Reset
+              {t("screensA.a11y.reset")}
             </ButtonSecondary>
           </div>
         </aside>

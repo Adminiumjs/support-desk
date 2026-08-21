@@ -27,12 +27,20 @@ import {
 } from "../components";
 import { dataSource } from "../data/source";
 import { DL_SCHEDULED_TEXT } from "../data/demo";
+import { useT } from "../i18n";
 import { useAppStore } from "../state/store";
 import "../styles/screen-deleteacct.css";
 
-const STEP_LABELS = ["What goes", "Alternatives", "Confirm"];
+/** The literal the store compares against — a machine token, never translated. */
+const CONFIRM_WORD = "DELETE";
 
 export default function DeleteAcct() {
+  const t = useT();
+  const STEP_LABELS = [
+    t("screensA.delete.step1"),
+    t("screensA.delete.step2"),
+    t("screensA.delete.step3"),
+  ];
   const dlStep = useAppStore((s) => s.dlStep);
   const dlReason = useAppStore((s) => s.dlReason);
   const dlOn = useAppStore((s) => s.dlOn);
@@ -59,7 +67,9 @@ export default function DeleteAcct() {
           <span className="dl-done__ico">
             <Icon name="clock" size={26} color="var(--danger)" />
           </span>
-          <h1 className="dl-done__title">Deletion scheduled</h1>
+          <h1 className="dl-done__title">
+            {t("screensA.delete.scheduledTitle")}
+          </h1>
           <p className="dl-done__text">{DL_SCHEDULED_TEXT}</p>
           <div className="dl-done__chips">
             <span className="dl-chip">{dlScheduled.ref}</span>
@@ -72,14 +82,14 @@ export default function DeleteAcct() {
               className="dl-done__cta"
               onClick={deleteCancel}
             >
-              Keep my account
+              {t("screensA.delete.keep")}
             </ButtonPrimary>
             <ButtonSecondary
               icon="download"
               iconSize={15}
               onClick={() => go("security")}
             >
-              Download my data first
+              {t("screensA.delete.downloadFirst")}
             </ButtonSecondary>
           </div>
         </div>
@@ -95,16 +105,17 @@ export default function DeleteAcct() {
   ];
 
   const phraseTyped = dlPhrase.trim().toUpperCase();
-  const phraseBad = dlPhrase.length > 0 && phraseTyped !== "DELETE";
-  const ok = dlOn.length >= 3 && phraseTyped === "DELETE";
+  const phraseBad = dlPhrase.length > 0 && phraseTyped !== CONFIRM_WORD;
+  const ok = dlOn.length >= 3 && phraseTyped === CONFIRM_WORD;
+
+  /* One `{word}` slot, so a single split keeps the translator's word order
+     around the highlighted literal. */
+  const confirmText = t("screensA.delete.textConfirm").split("{word}");
 
   return (
     <main className="fx-screen fx-page w-760 scr-delete">
-      <h1 className="dl-h1">Delete your account</h1>
-      <p className="dl-lede">
-        We'll walk you through what goes and what stays. Nothing happens until
-        the last step, and you get 30 days to change your mind.
-      </p>
+      <h1 className="dl-h1">{t("screensA.delete.h1")}</h1>
+      <p className="dl-lede">{t("screensA.delete.lede")}</p>
 
       <StepIndicator
         labels={STEP_LABELS}
@@ -116,12 +127,8 @@ export default function DeleteAcct() {
       <Card variant="form" className="dl-card">
         {dlStep === 1 ? (
           <div className="dl-panel">
-            <h2 className="dl-h2">What happens to your things</h2>
-            <p className="dl-text">
-              Your devices keep working locally — schedules, alerts and local
-              recording all carry on. It's the account and everything in our
-              cloud that goes.
-            </p>
+            <h2 className="dl-h2">{t("screensA.delete.h2Things")}</h2>
+            <p className="dl-text">{t("screensA.delete.textThings")}</p>
             <ListCard className="dl-inventory">
               {items.map((it, i) => (
                 <FactRow
@@ -143,19 +150,15 @@ export default function DeleteAcct() {
               ))}
             </ListCard>
             <Callout tone="info" icon="download">
-              Take a copy first if you want one — a zip of your account,
-              devices, schedules and clip index, usually ready in ten minutes.
+              {t("screensA.delete.calloutCopy")}
             </Callout>
           </div>
         ) : null}
 
         {dlStep === 2 ? (
           <div className="dl-panel">
-            <h2 className="dl-h2">Before you go</h2>
-            <p className="dl-text">
-              These often solve the reason people leave. Skip them if you've
-              already decided — we won't ask twice.
-            </p>
+            <h2 className="dl-h2">{t("screensA.delete.h2Before")}</h2>
+            <p className="dl-text">{t("screensA.delete.textBefore")}</p>
             <div className="dl-alts">
               {alts.map((a, i) => (
                 <div className="dl-alt" key={a.title}>
@@ -173,15 +176,19 @@ export default function DeleteAcct() {
               ))}
             </div>
             <Field
-              label="Why are you leaving?"
+              label={t("screensA.delete.reasonLabel")}
               htmlFor="dl-reason"
-              aside={<span className="dl-optional">Optional, but it helps</span>}
+              aside={
+                <span className="dl-optional">
+                  {t("screensA.delete.reasonOptional")}
+                </span>
+              }
             >
               <SelectField
                 id="dl-reason"
                 value={dlReason}
                 options={reasons}
-                placeholder="Prefer not to say"
+                placeholder={t("screensA.delete.reasonPlaceholder")}
                 onChange={(v) => set({ dlReason: v })}
                 className="dl-select"
               />
@@ -191,11 +198,11 @@ export default function DeleteAcct() {
 
         {dlStep === 3 ? (
           <div className="dl-panel">
-            <h2 className="dl-h2">Confirm it's you</h2>
+            <h2 className="dl-h2">{t("screensA.delete.h2Confirm")}</h2>
             <p className="dl-text">
-              Type <span className="dl-word">DELETE</span> to confirm. We'll
-              email you a link too — the account isn't touched until you follow
-              it.
+              {confirmText[0]}
+              <span className="dl-word">{CONFIRM_WORD}</span>
+              {confirmText[1]}
             </p>
             <div className="dl-checks">
               {checks.map((c) => (
@@ -210,13 +217,13 @@ export default function DeleteAcct() {
             </div>
             <div>
               <label className="dl-label" htmlFor="dl-phrase">
-                Type DELETE
+                {t("screensA.delete.phraseLabel")}
               </label>
               <input
                 id="dl-phrase"
                 className="fx-fld dl-phrase"
                 value={dlPhrase}
-                placeholder="DELETE"
+                placeholder={CONFIRM_WORD}
                 onChange={(e) => set({ dlPhrase: e.target.value })}
                 style={
                   phraseBad ? { borderColor: "var(--danger)" } : undefined
@@ -224,8 +231,7 @@ export default function DeleteAcct() {
               />
             </div>
             <Callout tone="danger">
-              After 30 days this can't be undone by anyone, including us. Clips,
-              schedules, order history and any remaining credit go with it.
+              {t("screensA.delete.calloutDanger")}
             </Callout>
           </div>
         ) : null}
@@ -233,7 +239,7 @@ export default function DeleteAcct() {
         <div className="dl-footer">
           {dlStep > 1 ? (
             <ButtonSecondary icon="arrow-left" iconSize={15} onClick={deleteBack}>
-              Back
+              {t("screensA.delete.back")}
             </ButtonSecondary>
           ) : null}
           <button
@@ -243,11 +249,13 @@ export default function DeleteAcct() {
             }`}
             onClick={deleteNext}
           >
-            {dlStep === 3 ? "Schedule deletion" : "Continue"}
+            {dlStep === 3
+              ? t("screensA.delete.schedule")
+              : t("screensA.delete.continue")}
             <Icon name={dlStep === 3 ? "trash-2" : "arrow-right"} size={15} />
           </button>
           <button type="button" className="fx-nav dl-cancel" onClick={goHome}>
-            Cancel and keep my account
+            {t("screensA.delete.cancel")}
           </button>
         </div>
       </Card>

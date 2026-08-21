@@ -24,6 +24,7 @@ import {
   columnClass,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useT } from "../i18n";
 import {
   automationIntro,
   automationLast,
@@ -35,6 +36,7 @@ import { useAppStore } from "../state/store";
 import "../styles/screen-auto.css";
 
 export default function Auto() {
+  const t = useT();
   const automations = useAppStore((s) => s.automations);
   const auOff = useAppStore((s) => s.auOff);
   const auGone = useAppStore((s) => s.auGone);
@@ -57,7 +59,7 @@ export default function Auto() {
     <main className={`fx-screen fx-page ${columnClass("auto")} au`}>
       <div className="au__head">
         <div className="au__head-text">
-          <h1 className="au__h1">Automations</h1>
+          <h1 className="au__h1">{t("screensA.auto.title")}</h1>
           <p className="au__lede">{automationIntro(running, rules.length)}</p>
         </div>
         <ButtonPrimary
@@ -65,31 +67,33 @@ export default function Auto() {
           className="au__new-btn"
           onClick={toggleNewAutomation}
         >
-          {auNewOpen ? "Close" : "New automation"}
+          {auNewOpen ? t("screensA.auto.close") : t("screensA.auto.new")}
         </ButtonPrimary>
       </div>
 
       {auNewOpen ? (
         <Card variant="lg" accent className="au__panel">
-          <h2 className="au__panel-h">New automation</h2>
+          <h2 className="au__panel-h">{t("screensA.auto.new")}</h2>
           <div className="au__panel-body">
             <div>
               <label className="au__label" htmlFor="au-name">
-                Name it
+                {t("screensA.auto.nameLabel")}
               </label>
               <TextInput
                 id="au-name"
                 value={auName}
                 onChange={(v) => set({ auName: v })}
-                placeholder="e.g. Porch light when someone calls"
+                placeholder={t("screensA.auto.namePlaceholder")}
               />
             </div>
 
             <div className="au__selects">
               <div>
                 <label className="au__label" htmlFor="au-trigger">
-                  <span className="au__badge au__badge--when">WHEN</span>
-                  this happens
+                  <span className="au__badge au__badge--when">
+                    {t("screensA.auto.when")}
+                  </span>
+                  {t("screensA.auto.whenLabel")}
                 </label>
                 <select
                   id="au-trigger"
@@ -97,10 +101,10 @@ export default function Auto() {
                   value={auTrigger}
                   onChange={(e) => set({ auTrigger: e.target.value })}
                 >
-                  <option value="">Choose a trigger…</option>
-                  {triggers.map((t) => (
-                    <option key={t.value} value={t.value}>
-                      {t.label}
+                  <option value="">{t("screensA.auto.chooseTrigger")}</option>
+                  {triggers.map((trigger) => (
+                    <option key={trigger.value} value={trigger.value}>
+                      {trigger.label}
                     </option>
                   ))}
                 </select>
@@ -108,8 +112,10 @@ export default function Auto() {
 
               <div>
                 <label className="au__label" htmlFor="au-action">
-                  <span className="au__badge au__badge--then">THEN</span>
-                  do this
+                  <span className="au__badge au__badge--then">
+                    {t("screensA.auto.then")}
+                  </span>
+                  {t("screensA.auto.thenLabel")}
                 </label>
                 <select
                   id="au-action"
@@ -117,7 +123,7 @@ export default function Auto() {
                   value={auAction}
                   onChange={(e) => set({ auAction: e.target.value })}
                 >
-                  <option value="">Choose an action…</option>
+                  <option value="">{t("screensA.auto.chooseAction")}</option>
                   {actions.map((a) => (
                     <option key={a.value} value={a.value}>
                       {a.label}
@@ -129,10 +135,10 @@ export default function Auto() {
 
             <div className="au__panel-acts">
               <ButtonPrimary icon="check" onClick={saveAutomation}>
-                Create automation
+                {t("screensA.auto.create")}
               </ButtonPrimary>
               <ButtonSecondary onClick={toggleNewAutomation}>
-                Cancel
+                {t("screensA.auto.cancel")}
               </ButtonSecondary>
             </div>
           </div>
@@ -153,7 +159,9 @@ export default function Auto() {
                     <div className="au-rule__title-row">
                       <span className="au-rule__name">{r.name}</span>
                       {r.fresh ? (
-                        <span className="au-rule__badge">New</span>
+                        <span className="au-rule__badge">
+                          {t("screensA.auto.badgeNew")}
+                        </span>
                       ) : null}
                     </div>
                     <span className="au-rule__last">
@@ -162,12 +170,12 @@ export default function Auto() {
                   </div>
                   <Toggle
                     on={on}
-                    label="Enable or pause"
+                    label={t("screensA.auto.toggleLabel")}
                     onChange={() => toggleAutomation(r.id)}
                   />
                   <IconButton
                     icon="trash-2"
-                    label="Delete automation"
+                    label={t("screensA.auto.deleteLabel")}
                     small
                     onClick={() => deleteAutomation(r.id)}
                     style={{ color: "var(--danger)" }}
@@ -177,7 +185,7 @@ export default function Auto() {
                 <div className="au-rule__body">
                   <div className="au-rule__step">
                     <span className="au-rule__tag au-rule__tag--when">
-                      WHEN
+                      {t("screensA.auto.when")}
                     </span>
                     <Icon name={r.whenIcon} size={16} />
                     <span className="au-rule__text">{r.when}</span>
@@ -185,7 +193,7 @@ export default function Auto() {
                   {r.then.map((step) => (
                     <div className="au-rule__step" key={step.text}>
                       <span className="au-rule__tag au-rule__tag--then">
-                        THEN
+                        {t("screensA.auto.then")}
                       </span>
                       <Icon name={step.icon} size={16} />
                       <span className="au-rule__text">{step.text}</span>
@@ -199,10 +207,10 @@ export default function Auto() {
       ) : (
         <EmptyState
           icon="workflow"
-          title="No automations yet"
-          body="Automations are one trigger and one action — start with something small, like the porch light coming on when the doorbell sees someone after dark."
+          title={t("screensA.auto.emptyTitle")}
+          body={t("screensA.auto.emptyBody")}
           action={{
-            label: "Create your first one",
+            label: t("screensA.auto.emptyAction"),
             icon: "plus",
             onClick: toggleNewAutomation,
           }}
@@ -210,8 +218,7 @@ export default function Auto() {
       )}
 
       <Callout tone="pos" icon="cpu" className="au__note">
-        Automations run on your devices, not our cloud — they keep working
-        during an outage and when your internet drops.
+        {t("screensA.auto.note")}
       </Callout>
     </main>
   );

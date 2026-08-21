@@ -5,7 +5,7 @@
 
 import { ArticleRow, IconChip, ListCard } from "../components";
 import { dataSource } from "../data/source";
-import { articleCount } from "../lib/format";
+import { counted } from "../lib/format";
 import { useAppStore } from "../state/store";
 import "../styles/screen-category.css";
 
@@ -31,7 +31,7 @@ export default function Category() {
           <h1 className="cat__h1">{category.name}</h1>
           <p className="cat__blurb">{category.blurb}</p>
           <span className="cat__count sd-mono">
-            {articleCount(articles.length)}
+            {counted("count.article", articles.length)}
           </span>
         </div>
       </header>

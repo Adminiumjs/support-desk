@@ -3,7 +3,7 @@
  * (port spec §6.1 B).
  */
 
-import { articleCount } from "../lib/format";
+import { counted } from "../lib/format";
 import { Icon } from "./Icon";
 import { IconChip } from "./PlaceholderTile";
 import type { Category } from "../data/types";
@@ -40,7 +40,7 @@ export function CategoryTile({
       <p className="cat-tile__blurb">{category.blurb}</p>
       <span className="cat-tile__foot">
         <Icon name="file-text" size={13} />
-        {articleCount(count)}
+        {counted("count.article", count)}
       </span>
     </button>
   );

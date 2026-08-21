@@ -384,58 +384,68 @@ describe("rankCommands", () => {
      * The comp pushed screens first and then sliced 9, which buried the
      * Actions group where no one could reach it without typing (spec §13.2
      * #10). This ordering is the fix, so it is asserted, not incidental.
+     *
+     * The `act:` / `screen:` id prefixes are what decide the split, and the
+     * `group` / `hint` here are deliberately NOT the English "Actions" and
+     * "Screen": those two fields hold translated display text in the real
+     * store, and matching on them emptied the palette in six locales.
      */
     const mixed = [
-      command("s1", "Home", "Browse", "", "Screen"),
-      command("a1", "Toggle theme", "Actions", "", "t"),
-      command("s2", "Orders", "Browse", "", "Screen"),
-      command("a2", "Open a ticket", "Actions", "", "n"),
+      command("screen:home", "Home", "Durchsuchen", "", "Ansicht"),
+      command("act:theme", "Toggle theme", "Aktionen", "", "t"),
+      command("screen:orders", "Orders", "Durchsuchen", "", "Ansicht"),
+      command("act:ticket", "Open a ticket", "Aktionen", "", "n"),
     ];
     expect(rankCommands(mixed, "").map((c) => c.id)).toEqual([
-      "a1",
-      "a2",
-      "s1",
-      "s2",
+      "act:theme",
+      "act:ticket",
+      "screen:home",
+      "screen:orders",
     ]);
     expect(rankCommands(mixed, "   ").map((c) => c.id)).toEqual([
-      "a1",
-      "a2",
-      "s1",
-      "s2",
+      "act:theme",
+      "act:ticket",
+      "screen:home",
+      "screen:orders",
     ]);
   });
 
   it("caps the empty-query list at nine", () => {
     const many = Array.from({ length: 20 }, (_, i) =>
-      command(`s${i}`, `Screen ${i}`, "Browse", "", "Screen"),
+      command(`screen:s${i}`, `Screen ${i}`, "Browse", "", "Screen"),
     );
     expect(PALETTE_EMPTY_LIMIT).toBe(9);
     expect(rankCommands(many, "")).toHaveLength(PALETTE_EMPTY_LIMIT);
   });
 
   it("shows nothing on an empty query when nothing qualifies", () => {
-    /* A row that is neither an Action nor a Screen is unreachable until the
-     * user types — by design, the empty palette is a shortlist. */
-    const odd = [command("x1", "Something else", "Other", "", "Action")];
+    /* An article row is neither an action nor a screen, so it is unreachable
+     * until the user types — by design, the empty palette is a shortlist. */
+    const odd = [command("article:a1", "Something else", "Articles", "", "4 min")];
     expect(rankCommands(odd, "")).toEqual([]);
   });
 
-  it("would list a row twice if it were both an Action and a Screen", () => {
+  it("cannot list a row twice — the two filters are mutually exclusive", () => {
     /*
      * The empty-query branch concatenates two independently-filtered lists
-     * with no de-duplication. No real command is in group "Actions" *and*
-     * hinted "Screen" (screens carry their own group names), so this is
-     * unreachable today — but if one ever is, it renders twice and React
-     * gets a duplicate `key` in CommandPalette. Pinned so the day it happens
-     * this test says why.
+     * with no de-duplication, so a row caught by both would render twice and
+     * hand CommandPalette a duplicate React `key`. Classifying on the single
+     * `id` prefix makes that unreachable by construction — a row is `act:`
+     * or `screen:`, never both. Pinned so a future re-classification that
+     * reintroduces the overlap fails here.
      */
-    const dual = [command("d1", "Dashboard", "Actions", "", "Screen")];
-    expect(rankCommands(dual, "").map((c) => c.id)).toEqual(["d1", "d1"]);
+    const rows = [
+      command("act:theme", "Toggle theme", "Aktionen", "", "t"),
+      command("screen:home", "Home", "Durchsuchen", "", "Ansicht"),
+    ];
+    const ids = rankCommands(rows, "").map((c) => c.id);
+    expect(ids).toEqual(["act:theme", "screen:home"]);
+    expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it("ignores the Action/Screen split once something is typed", () => {
-    const odd = [command("x1", "Something else", "Other", "", "Action")];
-    expect(rankCommands(odd, "some").map((c) => c.id)).toEqual(["x1"]);
+  it("ignores the action/screen split once something is typed", () => {
+    const odd = [command("article:a1", "Something else", "Articles", "", "4 min")];
+    expect(rankCommands(odd, "some").map((c) => c.id)).toEqual(["article:a1"]);
   });
 });
 

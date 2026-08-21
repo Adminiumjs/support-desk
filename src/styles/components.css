@@ -581,7 +581,72 @@
 .hdr__search {
   position: relative;
   flex: 0 1 236px;
-  min-inline-size: 120px;
+  /* 120px before the locale picker joined the strip; the picker costs 40px and
+   * the bar was already sitting exactly on its 1120 cap, so the field gives up
+   * the difference — which is what the note above .hdr__right says it is for. */
+  min-inline-size: 112px;
+}
+
+/* --- locale picker -------------------------------------------------------
+ * A native <select> on purpose: it gets the platform's own language list UI,
+ * keyboard handling and RTL mirroring for free, which a custom dropdown would
+ * have to re-earn. The globe sits outside it because a <select> cannot hold an
+ * icon. Logical properties throughout, so the glyph swaps sides under `dir`. */
+.hdr__lang {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  block-size: 40px;
+  border-radius: 11px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--fg-muted);
+  flex-shrink: 0;
+}
+/* The <select> is the focus target, so the ring has to be drawn on its box. */
+.hdr__lang:has(.hdr__lang-select:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Header form: 40px, matching .sd-iconbtn, with the control laid over the
+ * globe. Invisible, not hidden — it keeps the native dropdown, the keyboard
+ * behaviour and the accessible name that a div-and-listbox would have to
+ * rebuild. The endonyms are all still there when it opens. */
+.hdr__lang--icon {
+  inline-size: 40px;
+  justify-content: center;
+}
+.hdr__lang--icon .hdr__lang-select {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  opacity: 0;
+  border: 0;
+  cursor: pointer;
+}
+
+/* MobileSheet form: full width, endonym spelled out. */
+.hdr__lang--block {
+  inline-size: 100%;
+  justify-content: flex-start;
+  padding-inline: 12px;
+}
+.hdr__lang--block .hdr__lang-select {
+  flex: 1;
+  min-inline-size: 0;
+  border: 0;
+  background: none;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.sheet__item--static {
+  cursor: default;
 }
 .hdr__search input {
   inline-size: 100%;
@@ -2627,13 +2692,15 @@
  * comp's `hdrExtras` gate, as a media query (ruling R5). Nothing becomes
  * unreachable: ⌘K is meaningless on touch and the footer links All screens. */
 .hdr-cmd-btn,
-.hdr-grid-btn {
+.hdr-grid-btn,
+.hdr-lang-ctl {
   display: none;
 }
 
 @media (min-width: 560px) {
   .hdr-cmd-btn,
-  .hdr-grid-btn {
+  .hdr-grid-btn,
+  .hdr-lang-ctl {
     display: inline-flex;
   }
 }

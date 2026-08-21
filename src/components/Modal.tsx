@@ -5,6 +5,7 @@
  */
 
 import { useEffect, useId, useRef } from "react";
+import { useT } from "../i18n";
 import { trapFocus } from "../lib/a11y";
 import { AccentIconTile } from "./Primitives";
 import { IconButton } from "./Primitives";
@@ -37,6 +38,7 @@ export function Modal({
   bare = false,
   className,
 }: ModalProps) {
+  const t = useT();
   const cardRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
 
@@ -78,7 +80,13 @@ export function Modal({
               </h2>
               {subtitle ? <p className="modal__sub">{subtitle}</p> : null}
             </div>
-            <IconButton icon="x" label="Close" small iconSize={17} onClick={onClose} />
+            <IconButton
+              icon="x"
+              label={t("chrome.action.close")}
+              small
+              iconSize={17}
+              onClick={onClose}
+            />
           </div>
         )}
         {bare ? (

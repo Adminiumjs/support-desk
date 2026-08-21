@@ -25,13 +25,14 @@ import {
   columnClass,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useT, type TFunction } from "../i18n";
 import {
-  RECENT_PRODUCT_SUB,
   filterRecent,
   groupRecent,
   recentCounts,
   recentEmpty,
   recentIntro,
+  recentProductSub,
   visibleRecent,
 } from "../lib/derive";
 import { money } from "../lib/format";
@@ -51,19 +52,22 @@ interface RowCopy {
   secondLabel: string;
 }
 
-function rowCopy(entry: RecentEntry): RowCopy {
+function rowCopy(entry: RecentEntry, t: TFunction): RowCopy {
   if (entry.kind === "article") {
     const article = dataSource.article(entry.ref);
     const cat = article ? dataSource.category(article.cat) : undefined;
     return {
       tint: cat?.tint ?? "#4f8bd6",
       icon: cat?.icon ?? "file-text",
-      title: article?.title ?? "Article",
+      title: article?.title ?? t("screensB.recent.articleFallback"),
       sub: article?.snippet ?? "",
-      meta: `${cat?.name ?? "Help"} · ${entry.time}`,
+      meta: t("screensB.recent.metaLine", {
+        source: cat?.name ?? t("screensB.recent.helpFallback"),
+        time: entry.time,
+      }),
       price: null,
       secondIcon: "bookmark-plus",
-      secondLabel: "Save for later",
+      secondLabel: t("screensB.recent.saveForLater"),
     };
   }
   const product = dataSource.product(entry.prod);
@@ -71,15 +75,19 @@ function rowCopy(entry: RecentEntry): RowCopy {
     tint: product.tint,
     icon: product.icon,
     title: entry.name ?? product.name,
-    sub: RECENT_PRODUCT_SUB,
-    meta: `${product.name} · ${entry.time}`,
+    sub: recentProductSub(),
+    meta: t("screensB.recent.metaLine", {
+      source: product.name,
+      time: entry.time,
+    }),
     price: entry.price === undefined ? null : money(entry.price),
     secondIcon: "heart",
-    secondLabel: "Save to wishlist",
+    secondLabel: t("screensB.recent.saveToWishlist"),
   };
 }
 
 export default function Recent() {
+  const t = useT();
   const rvCat = useAppStore((s) => s.rvCat);
   const rvOut = useAppStore((s) => s.rvOut);
   const rvCleared = useAppStore((s) => s.rvCleared);
@@ -107,11 +115,18 @@ export default function Recent() {
   const has = visible.length > 0;
   const empty = recentEmpty(has);
 
+  /*
+   * The privacy note wraps a link mid-sentence. The message is authored as one
+   * string with a `{link}` marker so word order stays the translator's — no
+   * params are passed, so the marker survives lookup and is split on here.
+   */
+  const [noteBefore, noteAfter] = t("screensB.recent.note").split("{link}");
+
   return (
     <main className={`fx-screen fx-page ${columnClass("recent")} rv`}>
       <div className="rv__head">
         <div className="rv__head-text">
-          <h1 className="rv__h1">Recently viewed</h1>
+          <h1 className="rv__h1">{t("screensB.recent.h1")}</h1>
           <p className="rv__lede">{recentIntro(visible.length)}</p>
         </div>
         {has ? (
@@ -120,7 +135,7 @@ export default function Recent() {
             tone="var(--danger)"
             onClick={recentClear}
           >
-            Clear history
+            {t("screensB.recent.clearHistory")}
           </ButtonSecondary>
         ) : null}
       </div>
@@ -146,7 +161,7 @@ export default function Recent() {
               <GroupHeader label={g.when} count={g.count} />
               <ListCard>
                 {g.rows.map((entry) => {
-                  const copy = rowCopy(entry);
+                  const copy = rowCopy(entry, t);
                   return (
                     <div className="sd-listrow rv-row" key={entry.id}>
                       <IconChip
@@ -177,7 +192,7 @@ export default function Recent() {
                       />
                       <IconButton
                         icon="x"
-                        label="Remove from history"
+                        label={t("screensB.recent.removeFromHistory")}
                         small
                         iconSize={16}
                         onClick={() => recentForget(entry)}
@@ -198,11 +213,11 @@ export default function Recent() {
           <p className="empty__body">{empty.text}</p>
           <div className="rv__empty-acts">
             <ButtonPrimary size="md" icon="life-buoy" onClick={goHome}>
-              Browse help
+              {t("screensB.recent.browseHelp")}
             </ButtonPrimary>
             {rvCleared ? (
               <ButtonSecondary icon="rotate-ccw" onClick={recentRestore}>
-                Put the demo history back
+                {t("screensB.recent.restore")}
               </ButtonSecondary>
             ) : null}
           </div>
@@ -210,17 +225,15 @@ export default function Recent() {
       )}
 
       <Callout tone="info" icon="lock" className="rv__note">
-        History is stored on this device only and cleared automatically after 30
-        days. We don't use it for advertising, and turning off personalised tips
-        in{" "}
+        {noteBefore}
         <button
           type="button"
           className="rv__note-link"
           onClick={() => go("security")}
         >
-          Security &amp; privacy
-        </button>{" "}
-        stops it being used for suggestions.
+          {t("screensB.recent.securityLink")}
+        </button>
+        {noteAfter}
       </Callout>
     </main>
   );

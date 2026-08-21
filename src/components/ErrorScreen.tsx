@@ -11,20 +11,22 @@
  */
 
 import {
-  ERR_CARDS,
-  ERR_TEXT,
-  ERR_TIME,
-  OFFLINE_TEXT,
-  OFFLINE_TITLE,
+  errCards,
+  errText,
+  errTime,
+  offlineText,
+  offlineTitle,
   errorCode,
   errorTitle,
 } from "../lib/errors";
+import { useT } from "../i18n";
 import { useAppStore } from "../state/store";
 import { Icon } from "./Icon";
 import { ButtonPrimary, ButtonSecondary } from "./Primitives";
 import { columnClass } from "./chrome";
 
 export function ErrorScreen() {
+  const t = useT();
   const view = useAppStore((s) => s.view);
   const retryView = useAppStore((s) => s.retryView);
   const reportFailure = useAppStore((s) => s.reportFailure);
@@ -37,24 +39,24 @@ export function ErrorScreen() {
         <Icon name="cloud-off" size={26} />
       </span>
       <h1 className="err__title">{errorTitle(view)}</h1>
-      <p className="err__text">{ERR_TEXT}</p>
+      <p className="err__text">{errText()}</p>
       <div className="err__codes">
         <span className="err__code">{errorCode(view)}</span>
-        <span className="err__code">{ERR_TIME}</span>
+        <span className="err__code">{errTime()}</span>
       </div>
       <div className="err__actions">
         <ButtonPrimary icon="refresh-cw" onClick={retryView}>
-          Try again
+          {t("chrome.action.tryAgain")}
         </ButtonPrimary>
         <ButtonSecondary icon="activity" onClick={() => go("status")}>
-          Check service status
+          {t("chrome.err.checkStatus")}
         </ButtonSecondary>
         <ButtonSecondary icon="flag" onClick={reportFailure}>
-          Report it
+          {t("chrome.err.report")}
         </ButtonSecondary>
       </div>
       <div className="err__cards">
-        {ERR_CARDS.map((card) => (
+        {errCards().map((card) => (
           <div className="err__card" key={card.title}>
             <span className="err__card-head">
               <Icon name={card.icon} size={16} />
@@ -75,6 +77,7 @@ export function ErrorScreen() {
 
 /** The `--danger-soft` strip shown whenever the browser reports no network. */
 export function OfflineBanner() {
+  const t = useT();
   const offline = useAppStore((s) => s.offline);
   const retryConnection = useAppStore((s) => s.retryConnection);
   if (!offline) return null;
@@ -84,11 +87,11 @@ export function OfflineBanner() {
       <span className="offline__ico">
         <Icon name="wifi-off" size={16} />
       </span>
-      <span className="offline__title">{OFFLINE_TITLE}</span>
-      <span className="offline__text">{OFFLINE_TEXT}</span>
+      <span className="offline__title">{offlineTitle()}</span>
+      <span className="offline__text">{offlineText()}</span>
       <button type="button" className="offline__btn fx-btn" onClick={retryConnection}>
         <Icon name="refresh-cw" size={14} />
-        Retry now
+        {t("chrome.offline.retry")}
       </button>
     </div>
   );

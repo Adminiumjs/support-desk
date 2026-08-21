@@ -28,10 +28,11 @@ import {
   useIsDark,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useI18n } from "../i18n";
 import {
-  SHARE_STATE_META,
   shareClipMeta,
   shareExtendLabel,
+  shareStateMeta,
   visibleShareLinks,
 } from "../lib/clips";
 import { useAppStore } from "../state/store";
@@ -41,6 +42,7 @@ import "../styles/screen-share.css";
 const COMPOSER_CLIPS = 3;
 
 export default function Share() {
+  const { t, number } = useI18n();
   const shareLinks = useAppStore((s) => s.shareLinks);
   const shOut = useAppStore((s) => s.shOut);
   const shNewOpen = useAppStore((s) => s.shNewOpen);
@@ -71,24 +73,20 @@ export default function Share() {
     <main className={`fx-screen fx-page ${columnClass("share")} sh`}>
       <div className="sh__head">
         <div className="sh__head-text">
-          <h1 className="sh__h1">Shared clips</h1>
-          <p className="sh__lede">
-            Share a clip with neighbours, a group chat, or the police without
-            handing over your account. Every link expires, and you can pull one
-            back at any moment.
-          </p>
+          <h1 className="sh__h1">{t("screensB.share.h1")}</h1>
+          <p className="sh__lede">{t("screensB.share.lede")}</p>
         </div>
         <ButtonPrimary icon="share-2" onClick={toggleShareNew}>
-          Share a clip
+          {t("screensB.share.shareClip")}
         </ButtonPrimary>
       </div>
 
       {shNewOpen ? (
         <Card variant="lg" accent className="sh__panel">
-          <h2 className="sh__panel-h">New shared link</h2>
+          <h2 className="sh__panel-h">{t("screensB.share.newLink")}</h2>
 
           <div className="sh__field">
-            <span className="sh__label">Which clip?</span>
+            <span className="sh__label">{t("screensB.share.whichClip")}</span>
             <div className="sh__clips">
               {clips.map((clip) => {
                 const cam = dataSource.camera(clip.cam);
@@ -123,7 +121,7 @@ export default function Share() {
           <div className="sh__selects">
             <div>
               <label className="sh__label" htmlFor="sh-audience">
-                Who can watch
+                {t("screensB.share.whoCanWatch")}
               </label>
               <select
                 id="sh-audience"
@@ -140,7 +138,7 @@ export default function Share() {
             </div>
             <div>
               <label className="sh__label" htmlFor="sh-expiry">
-                Link expires
+                {t("screensB.share.linkExpires")}
               </label>
               <select
                 id="sh-expiry"
@@ -172,9 +170,11 @@ export default function Share() {
 
           <div className="sh__panel-acts">
             <ButtonPrimary icon="link" onClick={shareCreate}>
-              Create link
+              {t("screensB.share.createLink")}
             </ButtonPrimary>
-            <ButtonSecondary onClick={toggleShareNew}>Cancel</ButtonSecondary>
+            <ButtonSecondary onClick={toggleShareNew}>
+              {t("screensB.share.cancel")}
+            </ButtonSecondary>
           </div>
         </Card>
       ) : null}
@@ -183,7 +183,7 @@ export default function Share() {
         <div className="sh__links">
           {links.map((link) => {
             const cam = dataSource.camera(link.cam);
-            const meta = SHARE_STATE_META[link.state];
+            const meta = shareStateMeta(link.state);
             return (
               <div className="sd-card fx-card sh-link" key={link.id}>
                 <div className="sh-link__top">
@@ -207,13 +207,20 @@ export default function Share() {
                       </SoftPill>
                     </div>
                     <p className="sh-link__aud">
-                      {link.audience} · {link.expires}
+                      {t("screensB.share.linkMeta", {
+                        audience: link.audience,
+                        expires: link.expires,
+                      })}
                     </p>
                     <p className="sh-link__url">{link.url}</p>
                   </div>
                   <div className="sh-link__views">
-                    <span className="sh-link__views-n">{link.views}</span>
-                    <span className="sh-link__views-l">views</span>
+                    <span className="sh-link__views-n">
+                      {number(link.views)}
+                    </span>
+                    <span className="sh-link__views-l">
+                      {t("screensB.share.views")}
+                    </span>
                   </div>
                 </div>
 
@@ -240,7 +247,7 @@ export default function Share() {
                     className="sh-link__act"
                     onClick={shareCopy}
                   >
-                    Copy link
+                    {t("screensB.share.copyLink")}
                   </ButtonSecondary>
                   <ButtonSecondary
                     icon="clock"
@@ -258,7 +265,7 @@ export default function Share() {
                     tone="var(--danger)"
                     onClick={() => shareRevoke(link)}
                   >
-                    Revoke
+                    {t("screensB.share.revoke")}
                   </ButtonSecondary>
                 </div>
               </div>
@@ -268,10 +275,10 @@ export default function Share() {
       ) : (
         <EmptyState
           icon="link-2-off"
-          title="Nothing shared right now"
-          body="When you share a clip it appears here with its view count, so you always know what's out there — and can pull it back."
+          title={t("screensB.share.emptyTitle")}
+          body={t("screensB.share.emptyBody")}
           action={{
-            label: "Share a clip",
+            label: t("screensB.share.shareClip"),
             icon: "share-2",
             onClick: toggleShareNew,
           }}
@@ -279,9 +286,7 @@ export default function Share() {
       )}
 
       <Callout tone="info" icon="lock" className="sh__note">
-        Shared clips are decrypted in the viewer's browser, never on our
-        servers. Revoking kills the link immediately, though anyone who already
-        downloaded a copy keeps it — the same as any video you send.
+        {t("screensB.share.note")}
       </Callout>
     </main>
   );

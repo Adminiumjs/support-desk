@@ -22,18 +22,20 @@ import {
   columnClass,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useT } from "../i18n";
 import {
-  WISH_STOCK_META,
   visibleWish,
   wishAlert,
   wishDropped,
   wishIntro,
+  wishStockMeta,
 } from "../lib/derive";
 import { money } from "../lib/format";
 import { useAppStore } from "../state/store";
 import "../styles/screen-wish.css";
 
 export default function Wish() {
+  const t = useT();
   const wlOut = useAppStore((s) => s.wlOut);
   const go = useAppStore((s) => s.go);
   const wishAdd = useAppStore((s) => s.wishAdd);
@@ -50,15 +52,15 @@ export default function Wish() {
     <main className={`fx-screen fx-page ${columnClass("wish")} wl`}>
       <div className="wl__head">
         <div className="wl__head-text">
-          <h1 className="wl__h1">Wishlist</h1>
+          <h1 className="wl__h1">{t("screensB.wish.h1")}</h1>
           <p className="wl__lede">{wishIntro(items.length)}</p>
         </div>
         <div className="wl__head-acts">
           <ButtonSecondary icon="share-2" onClick={wishShare}>
-            Share list
+            {t("screensB.wish.shareList")}
           </ButtonSecondary>
           <ButtonPrimary icon="shopping-basket" onClick={wishAddAll}>
-            Add all in stock
+            {t("screensB.wish.addAllInStock")}
           </ButtonPrimary>
         </div>
       </div>
@@ -73,7 +75,7 @@ export default function Wish() {
         <div className="wl-list">
           {items.map((item) => {
             const product = dataSource.product(item.prod);
-            const stock = WISH_STOCK_META[item.stock];
+            const stock = wishStockMeta(item.stock);
             const dropped = wishDropped(item);
             const out = item.stock === "out";
 
@@ -94,7 +96,7 @@ export default function Wish() {
                     {dropped ? (
                       <span className="wl-item__drop">
                         <Icon name="arrow-down" size={11} />
-                        Price drop
+                        {t("screensB.wish.priceDrop")}
                       </span>
                     ) : null}
                     <SoftPill
@@ -125,7 +127,7 @@ export default function Wish() {
                       className="wl-item__add"
                       onClick={() => wishAdd(item)}
                     >
-                      Notify me
+                      {t("screensB.wish.notifyMe")}
                     </ButtonSecondary>
                   ) : (
                     <ButtonPrimary
@@ -134,12 +136,12 @@ export default function Wish() {
                       className="wl-item__add"
                       onClick={() => wishAdd(item)}
                     >
-                      Add to basket
+                      {t("screensB.wish.addToBasket")}
                     </ButtonPrimary>
                   )}
                   <IconButton
                     icon="heart-off"
-                    label="Remove"
+                    label={t("screensB.wish.remove")}
                     small
                     iconSize={16}
                     onClick={() => wishRemove(item)}
@@ -154,27 +156,24 @@ export default function Wish() {
           <span className="empty__ico">
             <Icon name="heart" size={27} />
           </span>
-          <h3 className="empty__title">Your wishlist is empty</h3>
-          <p className="empty__body">
-            Save anything you're weighing up — we'll tell you if the price drops
-            or it comes back in stock, and nothing expires.
-          </p>
+          <h3 className="empty__title">{t("screensB.wish.emptyTitle")}</h3>
+          <p className="empty__body">{t("screensB.wish.emptyBody")}</p>
           <div className="wl-empty__acts">
             <ButtonPrimary
               size="md"
               icon="boxes"
               onClick={() => go("bundles")}
             >
-              Browse bundles
+              {t("screensB.wish.browseBundles")}
             </ButtonPrimary>
             <ButtonSecondary icon="rotate-ccw" iconSize={15} onClick={wishRestore}>
-              Put the demo items back
+              {t("screensB.wish.restore")}
             </ButtonSecondary>
           </div>
         </div>
       )}
 
-      <h2 className="wl__h2">Others also saved</h2>
+      <h2 className="wl__h2">{t("screensB.wish.othersSaved")}</h2>
       <div className="wl-suggest">
         {dataSource.wishSuggestions().map((s) => {
           const product = dataSource.product(s.prod);
@@ -197,7 +196,7 @@ export default function Wish() {
                 className="wl-sug__save"
                 onClick={() => saveToWishlist(s.name)}
               >
-                Save it
+                {t("screensB.wish.saveIt")}
               </ButtonSecondary>
             </Card>
           );

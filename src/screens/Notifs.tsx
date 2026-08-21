@@ -23,6 +23,7 @@ import {
   IconButton,
 } from "../components";
 import { dataSource } from "../data/source";
+import { useI18n } from "../i18n";
 import { ticketCode } from "../lib/format";
 import { useAppStore } from "../state/store";
 import type { Notification } from "../data/types";
@@ -37,6 +38,7 @@ interface DayGroup {
 }
 
 export default function Notifs() {
+  const { t, number } = useI18n();
   const ntCat = useAppStore((s) => s.ntCat);
   const ntRead = useAppStore((s) => s.ntRead);
   const set = useAppStore((s) => s.set);
@@ -72,23 +74,31 @@ export default function Notifs() {
   }, [filtered]);
 
   const intro = unreadCount
-    ? `${unreadCount} unread · we keep 90 days of history, and you can tune what arrives.`
-    : "All caught up — we keep 90 days of history.";
+    ? t(
+        "screensB.notifs.introUnread",
+        { count: number(unreadCount) },
+        unreadCount,
+      )
+    : t("screensB.notifs.introClear");
 
   const markAll = () => {
     const prev = ntRead.slice();
     set({ ntRead: all.map((n) => n.id) });
-    undoToast("All marked read", () => set({ ntRead: prev }));
+    undoToast(t("screensB.notifs.allMarkedRead"), () => set({ ntRead: prev }));
     succeed(
-      "Inbox cleared",
-      "Nothing unread left. New alerts will appear at the top as they arrive.",
-      { label: "Alert settings", icon: "settings", fn: () => go("a11y") },
+      t("screensB.notifs.inboxCleared"),
+      t("screensB.notifs.inboxClearedBody"),
+      {
+        label: t("screensB.notifs.alertSettings"),
+        icon: "settings",
+        fn: () => go("a11y"),
+      },
     );
   };
 
   const openSettings = () => {
     go("a11y");
-    showToast("Alert settings live with accessibility here", "info");
+    showToast(t("screensB.notifs.settingsLive"), "info");
   };
 
   const onRow = (n: Notification) => {
@@ -101,16 +111,16 @@ export default function Notifs() {
     <main className="fx-screen fx-page w-820 nt">
       <div className="nt__head">
         <div className="nt__head-text">
-          <h1 className="nt__h1">Notifications</h1>
+          <h1 className="nt__h1">{t("screensB.notifs.h1")}</h1>
           <p className="nt__lede">{intro}</p>
         </div>
         <div className="nt__head-acts">
           <ButtonSecondary icon="check-check" onClick={markAll}>
-            Mark all read
+            {t("screensB.notifs.markAllRead")}
           </ButtonSecondary>
           <IconButton
             icon="settings"
-            label="Notification settings"
+            label={t("screensB.notifs.settingsLabel")}
             className="nt__settings"
             onClick={openSettings}
           />
@@ -168,7 +178,10 @@ export default function Notifs() {
                       </span>
                       <span className="nt__time">{n.time}</span>
                       {unread ? (
-                        <span className="nt__dot" aria-label="Unread" />
+                        <span
+                          className="nt__dot"
+                          aria-label={t("screensB.notifs.unread")}
+                        />
                       ) : null}
                     </button>
                   );
@@ -181,8 +194,8 @@ export default function Notifs() {
         <EmptyState
           compact
           icon="bell-off"
-          title="Nothing in this filter"
-          body="Try another category — we keep 90 days of history."
+          title={t("screensB.notifs.emptyTitle")}
+          body={t("screensB.notifs.emptyBody")}
         />
       )}
     </main>

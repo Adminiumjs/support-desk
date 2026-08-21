@@ -7,12 +7,14 @@
  */
 
 import { useEffect, useMemo, useRef } from "react";
+import { useT } from "../i18n";
 import { rankCommands, showsGroupHeader } from "../lib/search";
 import { trapFocus } from "../lib/a11y";
 import { useAppStore } from "../state/store";
 import { Icon } from "./Icon";
 
 export function CommandPalette() {
+  const t = useT();
   const open = useAppStore((s) => s.cpOpen);
   const q = useAppStore((s) => s.cpQ);
   const index = useAppStore((s) => s.cpIndex);
@@ -59,7 +61,7 @@ export function CommandPalette() {
         className="cp"
         role="dialog"
         aria-modal="true"
-        aria-label="Command palette"
+        aria-label={t("chrome.cp.title")}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="cp__inputrow">
@@ -68,8 +70,8 @@ export function CommandPalette() {
             ref={inputRef}
             className="cp__input"
             value={q}
-            aria-label="Jump to a screen, run an action, find an article"
-            placeholder="Jump to a screen, run an action, find an article…"
+            aria-label={t("chrome.cp.inputLabel")}
+            placeholder={t("chrome.cp.inputPlaceholder")}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "ArrowDown") {
@@ -90,16 +92,16 @@ export function CommandPalette() {
           <kbd className="sd-kbd sd-kbd--sm">esc</kbd>
         </div>
 
-        <div className="cp__list fx-scroll" role="listbox" aria-label="Results">
+        <div className="cp__list fx-scroll" role="listbox" aria-label={t("chrome.cp.results")}>
           {rows.length === 0 ? (
             <div className="cp__empty">
               <Icon name="search-x" size={24} />
               <span style={{ fontSize: 14, fontWeight: 700 }}>
-                No matches for “{q}”
+                {t("chrome.cp.noMatch", { query: q })}
               </span>
               <button type="button" className="sd-btn-ghost fx-gi" onClick={ask}>
                 <Icon name="pen-line" size={14} />
-                Open a ticket instead
+                {t("chrome.cp.askInstead")}
               </button>
             </div>
           ) : (
@@ -130,13 +132,13 @@ export function CommandPalette() {
         <div className="cp__footer">
           <span>
             <kbd className="sd-kbd sd-kbd--sm">↑</kbd>{" "}
-            <kbd className="sd-kbd sd-kbd--sm">↓</kbd> move
+            <kbd className="sd-kbd sd-kbd--sm">↓</kbd> {t("chrome.cp.move")}
           </span>
           <span>
-            <kbd className="sd-kbd sd-kbd--sm">↵</kbd> run
+            <kbd className="sd-kbd sd-kbd--sm">↵</kbd> {t("chrome.cp.run")}
           </span>
           <span className="cp__footer-end">
-            <kbd className="sd-kbd sd-kbd--sm">?</kbd> all shortcuts
+            <kbd className="sd-kbd sd-kbd--sm">?</kbd> {t("chrome.cp.allShortcuts")}
           </span>
         </div>
       </div>

@@ -3,6 +3,7 @@
  * claim (port spec §6.8 step 5).
  */
 
+import { useT } from "../i18n";
 import { Icon } from "./Icon";
 
 export interface AttachmentChipProps {
@@ -19,6 +20,7 @@ export function AttachmentChip({
   onRemove,
   className,
 }: AttachmentChipProps) {
+  const t = useT();
   return (
     <span className={`sd-attach${className ? ` ${className}` : ""}`}>
       <Icon name="paperclip" size={14} color="var(--fg-subtle)" />
@@ -27,7 +29,7 @@ export function AttachmentChip({
         <button
           type="button"
           className="sd-attach__x fx-gi"
-          aria-label={`Remove ${name}`}
+          aria-label={t("chrome.attach.remove", { name })}
           onClick={() => onRemove(name)}
         >
           <Icon name="x" size={13} />

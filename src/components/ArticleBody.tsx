@@ -3,6 +3,7 @@
  * step 5). Six block kinds: p, h, ul, ol, tip, warn.
  */
 
+import { useT } from "../i18n";
 import { Callout } from "./Primitives";
 import type { BodyBlock } from "../data/types";
 
@@ -14,6 +15,7 @@ export interface ArticleBodyProps {
 
 /** `<ArticleBody blocks={dataSource.articleBody(articleId)} />` */
 export function ArticleBody({ blocks, className }: ArticleBodyProps) {
+  const t = useT();
   return (
     <article className={`body-blocks${className ? ` ${className}` : ""}`}>
       {blocks.map((b, i) => {
@@ -38,13 +40,18 @@ export function ArticleBody({ blocks, className }: ArticleBodyProps) {
             );
           case "tip":
             return (
-              <Callout key={i} tone="info" icon="lightbulb" eyebrow="Tip">
+              <Callout key={i} tone="info" icon="lightbulb" eyebrow={t("chrome.callout.tip")}>
                 {b.x}
               </Callout>
             );
           case "warn":
             return (
-              <Callout key={i} tone="warn" icon="alert-triangle" eyebrow="Heads up">
+              <Callout
+                key={i}
+                tone="warn"
+                icon="alert-triangle"
+                eyebrow={t("chrome.callout.warn")}
+              >
                 {b.x}
               </Callout>
             );

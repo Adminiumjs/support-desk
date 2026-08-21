@@ -6,6 +6,7 @@
  */
 
 import { BRAND, FOOTER_COPYRIGHT, FOOTER_URL } from "../data/demo";
+import { useT } from "../i18n";
 import { useAppStore } from "../state/store";
 import { Icon } from "./Icon";
 import { Eyebrow } from "./Primitives";
@@ -13,6 +14,7 @@ import { FOOTER_COLUMNS } from "./chrome";
 import type { FooterTarget } from "./chrome";
 
 export function Footer() {
+  const t = useT();
   const go = useAppStore((s) => s.go);
   const openTicket = useAppStore((s) => s.openTicket);
   const openChat = useAppStore((s) => s.openChat);
@@ -36,7 +38,7 @@ export function Footer() {
               <Icon name="life-buoy" size={17} />
             </span>
             <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: "-0.03em" }}>
-              {BRAND} Help
+              {t("chrome.header.wordmark", { brand: BRAND })}
             </span>
           </div>
           <p className="ftr__copy">{FOOTER_COPYRIGHT}</p>
@@ -49,7 +51,7 @@ export function Footer() {
               onClick={gotoOverview}
             >
               <Icon name="layout-grid" size={14} />
-              All screens overview
+              {t("chrome.link.overviewAll")}
             </button>
             <button
               type="button"
@@ -58,15 +60,15 @@ export function Footer() {
               onClick={scToggle}
             >
               <Icon name="keyboard" size={14} />
-              Shortcuts
+              {t("chrome.footer.shortcuts")}
             </button>
           </div>
         </div>
 
-        <nav className="ftr__cols" aria-label="Footer">
+        <nav className="ftr__cols" aria-label={t("chrome.footer.aria")}>
           {FOOTER_COLUMNS.map((col) => (
             <div className="ftr__col" key={col.name}>
-              <Eyebrow>{col.name}</Eyebrow>
+              <Eyebrow>{t(col.name, { brand: BRAND })}</Eyebrow>
               {col.links.map((l, i) => (
                 <button
                   key={`${col.name}-${l.label}-${i}`}
@@ -74,7 +76,7 @@ export function Footer() {
                   className="ftr__link fx-nav"
                   onClick={() => activate(l.to)}
                 >
-                  {l.label}
+                  {t(l.label, { brand: BRAND })}
                 </button>
               ))}
             </div>

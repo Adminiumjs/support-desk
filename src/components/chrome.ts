@@ -4,15 +4,23 @@
  * They live apart from the components that render them so Fast Refresh keeps
  * working — a module that exports both a component and a plain value forces a
  * full invalidate on every edit.
+ *
+ * i18n: every `label` / `name` below is a MESSAGE KEY, not display text. This
+ * module has no hook to hold, so nothing here is translated; `<Header>`,
+ * `<MobileSheet>`, `<Footer>`, `<Breadcrumbs>` and `<ShortcutsOverlay>` call
+ * `t(key)` at the render site, which is also what makes the whole chrome
+ * re-render the instant the locale changes. Keys carrying `{brand}` are handed
+ * `{ brand: BRAND }` by the render site; the brand name is never translated.
  */
 
-import { BRAND } from "../data/demo";
+import type { MessageKey } from "../i18n";
 import type { ViewId } from "../data/types";
 
 /* ---------------------------------------------------------------- header */
 
 export interface NavLink {
-  label: string;
+  /** Message key. */
+  label: MessageKey;
   icon: string;
   view: ViewId;
   /** Views that light this item up. */
@@ -22,20 +30,25 @@ export interface NavLink {
 /** The four primary nav items, shared with the mobile sheet. */
 export const NAV_LINKS: NavLink[] = [
   {
-    label: "Help center",
+    label: "chrome.link.helpCenter",
     icon: "life-buoy",
     view: "home",
     active: ["home", "category", "article", "404"],
   },
   {
-    label: "My tickets",
+    label: "chrome.link.myTickets",
     icon: "ticket",
     view: "mytickets",
     active: ["mytickets", "thread"],
   },
-  { label: "Orders", icon: "package", view: "orders", active: ["orders"] },
   {
-    label: "Community",
+    label: "chrome.link.orders",
+    icon: "package",
+    view: "orders",
+    active: ["orders"],
+  },
+  {
+    label: "chrome.link.community",
     icon: "messages-square",
     view: "forum",
     active: ["forum"],
@@ -51,106 +64,109 @@ export type FooterTarget =
   | "returnsArticle";
 
 export interface FooterLink {
-  label: string;
+  /** Message key. */
+  label: MessageKey;
   to: FooterTarget;
 }
 
 export interface FooterColumn {
-  name: string;
+  /** Message key. */
+  name: MessageKey;
   links: FooterLink[];
 }
 
 /** 8 columns; the delta added 15 more links across four of them. */
 export const FOOTER_COLUMNS: FooterColumn[] = [
   {
-    name: "Support",
+    name: "chrome.footer.col.support",
     links: [
-      { label: "Help center", to: "home" },
-      { label: "Search articles", to: "kb" },
-      { label: "Saved articles", to: "saved" },
-      { label: "Take the tour", to: "tour" },
-      { label: "My tickets", to: "mytickets" },
-      { label: "Order status", to: "orders" },
-      { label: "Open a ticket", to: "openTicket" },
+      { label: "chrome.link.helpCenter", to: "home" },
+      { label: "chrome.link.searchArticles", to: "kb" },
+      { label: "chrome.link.savedArticles", to: "saved" },
+      { label: "chrome.link.takeTour", to: "tour" },
+      { label: "chrome.link.myTickets", to: "mytickets" },
+      { label: "chrome.link.orderStatus", to: "orders" },
+      { label: "chrome.link.openTicket", to: "openTicket" },
     ],
   },
   {
-    name: "Service",
+    name: "chrome.footer.col.service",
     links: [
-      { label: "Warranty registration", to: "warranty" },
-      { label: "Warranty claim", to: "claim" },
-      { label: "Returns", to: "returns" },
-      { label: "Repair booking", to: "repair" },
-      { label: "Service appointments", to: "appts" },
-      { label: "Installer finder", to: "installers" },
+      { label: "chrome.link.warrantyReg", to: "warranty" },
+      { label: "chrome.link.warrantyClaim", to: "claim" },
+      { label: "chrome.link.returns", to: "returns" },
+      { label: "chrome.link.repairBooking", to: "repair" },
+      { label: "chrome.link.appts", to: "appts" },
+      { label: "chrome.link.installers", to: "installers" },
     ],
   },
   {
-    name: "Shop",
+    name: "chrome.footer.col.shop",
     links: [
-      { label: "Spare parts", to: "parts" },
-      { label: "Trade-in valuation", to: "tradein" },
-      { label: "Bundle deals", to: "bundles" },
-      { label: "Gift cards", to: "gift" },
-      { label: "Gift guide", to: "guide" },
-      { label: "Wishlist", to: "wish" },
-      { label: "Recently viewed", to: "recent" },
-      { label: "Find a store", to: "stores" },
-      { label: "Recycling drop-off", to: "recycle" },
-      { label: "Refer a friend", to: "refer" },
-      { label: "Leaderboard", to: "board" },
+      { label: "chrome.link.parts", to: "parts" },
+      { label: "chrome.link.tradein", to: "tradein" },
+      { label: "chrome.link.bundles", to: "bundles" },
+      { label: "chrome.link.gift", to: "gift" },
+      { label: "chrome.link.guide", to: "guide" },
+      { label: "chrome.link.wish", to: "wish" },
+      { label: "chrome.link.recent", to: "recent" },
+      { label: "chrome.link.stores", to: "stores" },
+      { label: "chrome.link.recycle", to: "recycle" },
+      { label: "chrome.link.refer", to: "refer" },
+      { label: "chrome.link.board", to: "board" },
     ],
   },
   {
-    name: "Your home",
+    name: "chrome.footer.col.yourHome",
     links: [
-      { label: "Device dashboard", to: "devices" },
-      { label: "Live view & clips", to: "live" },
-      { label: "Shared clips", to: "share" },
-      { label: "Automations", to: "auto" },
-      { label: "Energy insights", to: "energy" },
-      { label: "Household members", to: "members" },
-      { label: "Notifications", to: "notifs" },
+      { label: "chrome.link.devices", to: "devices" },
+      { label: "chrome.link.live", to: "live" },
+      { label: "chrome.link.share", to: "share" },
+      { label: "chrome.link.auto", to: "auto" },
+      { label: "chrome.link.energy", to: "energy" },
+      { label: "chrome.link.members", to: "members" },
+      { label: "chrome.link.notifs", to: "notifs" },
     ],
   },
   {
-    name: "Account",
+    name: "chrome.footer.col.account",
     links: [
-      { label: "Subscription plans", to: "plans" },
-      { label: "Billing & invoices", to: "billing" },
-      { label: "Warranty transfer", to: "transfer" },
-      { label: "Security & privacy", to: "security" },
-      { label: "Accessibility settings", to: "a11y" },
-      { label: "Give feedback", to: "survey" },
+      { label: "chrome.link.plans", to: "plans" },
+      { label: "chrome.link.billing", to: "billing" },
+      { label: "chrome.link.transfer", to: "transfer" },
+      { label: "chrome.link.security", to: "security" },
+      { label: "chrome.link.a11y", to: "a11y" },
+      { label: "chrome.link.survey", to: "survey" },
     ],
   },
   {
-    name: "Resources",
+    name: "chrome.footer.col.resources",
     links: [
-      { label: "Downloads & manuals", to: "downloads" },
-      { label: "Firmware release notes", to: "firmware" },
-      { label: "Service & system status", to: "status" },
-      { label: "Security notice", to: "breach" },
-      { label: "Insurance claims", to: "insurance" },
-      { label: "Delete account", to: "deleteacct" },
+      { label: "chrome.link.downloads", to: "downloads" },
+      { label: "chrome.link.firmware", to: "firmware" },
+      { label: "chrome.link.status", to: "status" },
+      { label: "chrome.link.breach", to: "breach" },
+      { label: "chrome.link.insurance", to: "insurance" },
+      { label: "chrome.link.deleteAcct", to: "deleteacct" },
     ],
   },
   {
-    name: "Community",
+    name: "chrome.footer.col.community",
     links: [
-      { label: "Forum", to: "forum" },
-      { label: "Live chat", to: "openChat" },
-      { label: "Refer a friend", to: "refer" },
+      { label: "chrome.link.forum", to: "forum" },
+      { label: "chrome.link.liveChat", to: "openChat" },
+      { label: "chrome.link.refer", to: "refer" },
     ],
   },
   {
-    name: BRAND,
+    /* The brand column is the brand name — never translated. */
+    name: "chrome.footer.col.brand",
     links: [
-      { label: "About us", to: "about" },
-      { label: "Contact us", to: "contact" },
-      { label: "Partner portal", to: "partner" },
-      { label: "Trade account", to: "trade" },
-      { label: "Imprint", to: "imprint" },
+      { label: "chrome.link.about", to: "about" },
+      { label: "chrome.link.contact", to: "contact" },
+      { label: "chrome.link.partner", to: "partner" },
+      { label: "chrome.link.trade", to: "trade" },
+      { label: "chrome.link.imprint", to: "imprint" },
     ],
   },
 ];
@@ -194,46 +210,49 @@ export const CRUMB_W: Partial<Record<ViewId, number>> = {
   /* `recent`, `board`, `insurance` and `transfer` fall to the 820 default. */
 };
 
-/** Single-label trails. `home` is absent on purpose — Home has no breadcrumb. */
-export const CRUMB_LABELS: Partial<Record<ViewId, string>> = {
-  kb: "Search",
-  mytickets: "My tickets",
-  newticket: "Open a ticket",
-  orders: "Order status",
-  returns: "Returns",
-  tradein: "Trade-in valuation",
-  warranty: "Warranty registration",
-  repair: "Book a repair",
-  appts: "Service appointments",
-  installers: "Installer finder",
-  parts: "Spare parts",
-  bundles: "Bundle deals",
-  gift: "Gift cards",
-  plans: `${BRAND} Care plans`,
-  refer: "Refer a friend",
-  downloads: "Downloads & manuals",
-  firmware: "Firmware release notes",
-  status: "Service status",
-  a11y: "Accessibility",
-  security: "Security & privacy",
-  survey: "Feedback",
-  saved: "Saved articles",
-  tour: "Getting started",
-  devices: "Devices",
-  notifs: "Notifications",
-  forum: "Community forum",
-  about: "About us",
-  contact: "Contact us",
-  imprint: "Imprint",
-  partner: "Partner portal",
-  overview: "All screens",
-  "404": "Page not found",
+/**
+ * Single-label trails, as message keys. `home` is absent on purpose — Home has
+ * no breadcrumb.
+ */
+export const CRUMB_LABELS: Partial<Record<ViewId, MessageKey>> = {
+  kb: "chrome.crumb.kb",
+  mytickets: "chrome.link.myTickets",
+  newticket: "chrome.link.openTicket",
+  orders: "chrome.link.orderStatus",
+  returns: "chrome.link.returns",
+  tradein: "chrome.link.tradein",
+  warranty: "chrome.link.warrantyReg",
+  repair: "chrome.crumb.repair",
+  appts: "chrome.link.appts",
+  installers: "chrome.link.installers",
+  parts: "chrome.link.parts",
+  bundles: "chrome.link.bundles",
+  gift: "chrome.link.gift",
+  plans: "chrome.crumb.plans",
+  refer: "chrome.link.refer",
+  downloads: "chrome.link.downloads",
+  firmware: "chrome.link.firmware",
+  status: "chrome.crumb.status",
+  a11y: "chrome.crumb.a11y",
+  security: "chrome.link.security",
+  survey: "chrome.crumb.survey",
+  saved: "chrome.link.savedArticles",
+  tour: "chrome.crumb.tour",
+  devices: "chrome.crumb.devices",
+  notifs: "chrome.link.notifs",
+  forum: "chrome.crumb.forum",
+  about: "chrome.link.about",
+  contact: "chrome.link.contact",
+  imprint: "chrome.link.imprint",
+  partner: "chrome.link.partner",
+  overview: "chrome.crumb.overview",
+  "404": "chrome.crumb.notFound",
   /* --- delta: the single-label trails --- */
-  recent: "Recently viewed",
-  stores: "Find a store",
-  recycle: "Recycling drop-off",
-  insurance: "Insurance claims",
-  guide: "Gift guide",
+  recent: "chrome.link.recent",
+  stores: "chrome.link.stores",
+  recycle: "chrome.link.recycle",
+  insurance: "chrome.link.insurance",
+  guide: "chrome.link.guide",
 };
 
 /**
@@ -249,58 +268,60 @@ export function columnClass(view: ViewId): string {
 }
 
 /**
- * Delta trails with a clickable middle crumb: `[parent view, parent label,
- * last label]`. Rendered by `<Breadcrumbs>`.
+ * Delta trails with a clickable middle crumb: `[parent view, parent label key,
+ * last label key]`. Rendered by `<Breadcrumbs>`.
  */
-export const CRUMB_TRAILS: Partial<Record<ViewId, [ViewId, string, string]>> = {
-  live: ["devices", "Devices", "Live view & clips"],
-  auto: ["devices", "Devices", "Automations"],
-  billing: ["plans", `${BRAND} Care plans`, "Billing & invoices"],
-  transfer: ["warranty", "Warranty", "Transfer a warranty"],
-  wish: ["parts", "Spare parts", "Wishlist"],
-  board: ["refer", "Refer a friend", "Leaderboard"],
-  breach: ["security", "Security & privacy", "Security notice"],
-  deleteacct: ["security", "Security & privacy", "Delete account"],
-  share: ["live", "Live view & clips", "Shared clips"],
-  trade: ["partner", "Partner portal", "Trade account"],
+export const CRUMB_TRAILS: Partial<Record<ViewId, [ViewId, MessageKey, MessageKey]>> = {
+  live: ["devices", "chrome.crumb.devices", "chrome.link.live"],
+  auto: ["devices", "chrome.crumb.devices", "chrome.link.auto"],
+  billing: ["plans", "chrome.crumb.plans", "chrome.link.billing"],
+  transfer: ["warranty", "chrome.crumb.warranty", "chrome.crumb.transferLast"],
+  wish: ["parts", "chrome.link.parts", "chrome.link.wish"],
+  board: ["refer", "chrome.link.refer", "chrome.link.board"],
+  breach: ["security", "chrome.link.security", "chrome.link.breach"],
+  deleteacct: ["security", "chrome.link.security", "chrome.link.deleteAcct"],
+  share: ["live", "chrome.link.live", "chrome.link.share"],
+  trade: ["partner", "chrome.link.partner", "chrome.link.trade"],
 };
 
 /* ------------------------------------------------------------- shortcuts */
 
 export interface ShortcutGroup {
-  name: string;
-  rows: { label: string; keys: string[] }[];
+  /** Message key. */
+  name: MessageKey;
+  /** `label` is a message key; `keys` are machine tokens and stay literal. */
+  rows: { label: MessageKey; keys: string[] }[];
 }
 
 /** The literal `SC` table from the comp (port spec §5.5). */
 export const SHORTCUT_GROUPS: ShortcutGroup[] = [
   {
-    name: "Go to",
+    name: "chrome.sc.group.goto",
     rows: [
-      { label: "Help center home", keys: ["g", "h"] },
-      { label: "My tickets", keys: ["g", "t"] },
-      { label: "Order status", keys: ["g", "o"] },
-      { label: "Service status", keys: ["g", "s"] },
-      { label: "Community forum", keys: ["g", "f"] },
-      { label: "Spare parts", keys: ["g", "p"] },
-      { label: "All screens overview", keys: ["g", "a"] },
+      { label: "chrome.sc.row.home", keys: ["g", "h"] },
+      { label: "chrome.link.myTickets", keys: ["g", "t"] },
+      { label: "chrome.link.orderStatus", keys: ["g", "o"] },
+      { label: "chrome.crumb.status", keys: ["g", "s"] },
+      { label: "chrome.crumb.forum", keys: ["g", "f"] },
+      { label: "chrome.link.parts", keys: ["g", "p"] },
+      { label: "chrome.link.overviewAll", keys: ["g", "a"] },
     ],
   },
   {
-    name: "Do",
+    name: "chrome.sc.group.do",
     rows: [
-      { label: "Open the command palette", keys: ["⌘", "K"] },
-      { label: "Focus search", keys: ["/"] },
-      { label: "Open a new ticket", keys: ["n"] },
-      { label: "Open live chat", keys: ["c"] },
-      { label: "Switch light / dark", keys: ["t"] },
+      { label: "chrome.sc.row.palette", keys: ["⌘", "K"] },
+      { label: "chrome.sc.row.search", keys: ["/"] },
+      { label: "chrome.cmd.newTicket", keys: ["n"] },
+      { label: "chrome.link.liveChatOpen", keys: ["c"] },
+      { label: "chrome.sc.row.theme", keys: ["t"] },
     ],
   },
   {
-    name: "Anywhere",
+    name: "chrome.sc.group.anywhere",
     rows: [
-      { label: "Show this list", keys: ["?"] },
-      { label: "Close panel, menu or chat", keys: ["Esc"] },
+      { label: "chrome.sc.row.list", keys: ["?"] },
+      { label: "chrome.sc.row.close", keys: ["Esc"] },
     ],
   },
 ];
@@ -320,3 +341,18 @@ export const CHORD_MAP: Record<string, ViewId> = {
   p: "parts",
   r: "repair",
 };
+
+/* ------------------------------------------------------------- messages */
+
+/**
+ * Splits a translated string on its `{slot}` markers, keeping the markers as
+ * their own entries: `"{brand} Help"` → `["{brand}", " Help"]`.
+ *
+ * This is how a sentence that carries an inline element — a styled wordmark, a
+ * `<kbd>`, a link the reader can press — survives translation with its word
+ * order intact. The translator moves the marker; the render site only decides
+ * what each marker becomes.
+ */
+export function slots(text: string): string[] {
+  return text.split(/(\{\w+\})/g).filter((part) => part !== "");
+}

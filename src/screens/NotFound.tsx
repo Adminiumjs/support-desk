@@ -6,10 +6,12 @@
  */
 
 import { ButtonPrimary, ButtonSecondary, Icon } from "../components";
+import { useT } from "../i18n";
 import { useAppStore } from "../state/store";
 import "../styles/screen-404.css";
 
 export default function NotFound() {
+  const t = useT();
   const goHome = useAppStore((s) => s.goHome);
   const openTicket = useAppStore((s) => s.openTicket);
 
@@ -18,12 +20,9 @@ export default function NotFound() {
       <span className="nf__ico" aria-hidden="true">
         <Icon name="compass" size={38} />
       </span>
-      <p className="nf__code">ERROR 404</p>
-      <h1 className="nf__title">This page took a wrong turn.</h1>
-      <p className="nf__body">
-        The page you're looking for isn't here — it may have moved, or it
-        hasn't been built for this demo yet.
-      </p>
+      <p className="nf__code">{t("screensB.notFound.code")}</p>
+      <h1 className="nf__title">{t("screensB.notFound.title")}</h1>
+      <p className="nf__body">{t("screensB.notFound.body")}</p>
       <div className="nf__actions">
         <ButtonPrimary
           icon="life-buoy"
@@ -31,7 +30,7 @@ export default function NotFound() {
           className="nf__btn"
           onClick={goHome}
         >
-          Back to help center
+          {t("screensB.notFound.home")}
         </ButtonPrimary>
         <ButtonSecondary
           icon="pen-line"
@@ -39,7 +38,7 @@ export default function NotFound() {
           className="nf__btn nf__btn--ghost"
           onClick={openTicket}
         >
-          Open a ticket
+          {t("screensB.notFound.ticket")}
         </ButtonSecondary>
       </div>
     </main>
