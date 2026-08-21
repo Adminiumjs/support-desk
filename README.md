@@ -94,9 +94,9 @@ deploy the help desk on its own, running on the bundled demo data. No database,
 no admin — a fully static preview.
 
 **Tier 2 — the whole stack, one command.** [`docker-compose.yml`](docker-compose.yml)
-stands up Postgres (seeded with the *same* tickets, articles, and agents), an
-auto-generated Adminium admin dashboard that works those tickets on that real
-database, and the customer-facing desk:
+stands up Postgres (seeded by default with the *same* tickets, articles, and
+agents), an auto-generated Adminium admin dashboard that works those tickets on
+that real database, and the customer-facing desk:
 
 ```bash
 cp .env.example .env      # then set ADMINIUM_SECRET — e.g. openssl rand -hex 32
@@ -106,13 +106,37 @@ docker compose up
 - **Help desk** → http://localhost:8080
 - **Adminium admin dashboard** → http://localhost:4600
 
-On first boot, `desk-db` applies `db/schema.sql` then `db/seed.sql`, and
-Adminium imports the help-desk database as its first source connection,
-introspects the schema, and generates the agent-side dashboard. Finish the
-~1-minute first-run wizard at `:4600` — it's pre-pointed at the seeded desk DB.
-The public desk and the dashboard are the **same desk**: a ticket a customer
-opens on `:8080` is the ticket an agent answers on `:4600`. The install spec
-Adminium reads to configure itself is `manifest.json`.
+On first boot, `desk-db` applies `db/schema.sql`, installs the demo
+bookkeeping, and then loads `db/seed.sql` unless you asked it not to (see
+**Demo data** below). Adminium imports the help-desk database as its first
+source connection, introspects the schema, and generates the agent-side
+dashboard. Finish the ~1-minute first-run wizard at `:4600` — it's pre-pointed
+at the desk DB. The public desk and the dashboard are the **same desk**: a
+ticket a customer opens on `:8080` is the ticket an agent answers on `:4600`.
+The install spec Adminium reads to configure itself is `manifest.json`.
+
+### Demo data
+
+Hearth's tickets, articles, and agents are loaded on first boot, so the desk
+and the dashboard both have something to work on straight away. Set
+`DEMO_DATA=0` in `.env` before the first `docker compose up` for an empty
+database on the same full schema. Neither choice is permanent.
+
+| Script                | What it does                                          |
+| --------------------- | ----------------------------------------------------- |
+| `npm run demo:status` | What is loaded right now, table by table.             |
+| `npm run demo:import` | Load `db/seed.sql`.                                   |
+| `npm run demo:wipe`   | Remove the demo rows — schema and your own rows stay. |
+| `npm run demo:reset`  | Wipe, then import a fresh copy.                       |
+
+A wipe deletes only what the seed added, and a demo row your own data depends
+on is kept rather than force-deleted — reported under `kept`. `ON DELETE
+CASCADE` still applies, though: a demo ticket takes its `ticket_messages` with
+it, including a reply you wrote on it yourself, and those rows are counted
+separately under `cascaded`. `wipe` and `reset` ask before they act;
+`npm run demo:wipe -- --yes` skips the question, which is also what you need in
+a script, where there is nobody to ask. Set `DATABASE_URL` to point any of them
+at a Postgres elsewhere. The full reference is [db/README.md](db/README.md).
 
 ## Connecting to Adminium
 
@@ -138,6 +162,7 @@ src/
   components/  header, footer, command palette, modal, toast, mobile sheet, …
   styles/      tokens.css (design tokens + accent) + base.css (fonts, a11y layers)
 public/fonts/  self-hosted Manrope + JetBrains Mono (woff2)
+db/            schema, demo seed, and the demo-data commands
 ```
 
 ## License
