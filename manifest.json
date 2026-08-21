@@ -13,415 +13,516 @@
     "key": "mft.helpdesk.desc",
     "fallback": "A customer help desk with a searchable knowledge base, ticket threads, and an agent queue — backed by your own database."
   },
-  "categories": ["crm"],
-
+  "categories": [
+    "crm"
+  ],
   "compatibility": {
     "minAdminiumVersion": "1.0.0",
-    "engines": ["postgres", "mysql", "sqlite"],
-    "requires": ["realtime"]
+    "engines": [
+      "postgres",
+      "mysql",
+      "sqlite"
+    ],
+    "requires": [
+      "realtime"
+    ]
   },
-
   "requiredSchema": {
     "tables": [
       {
         "ref": "agents",
-        "table": "agents",
-        "label": { "key": "mft.helpdesk.tbl.agents", "fallback": "Agents" },
-        "primaryKey": ["id"],
         "columns": [
-          { "name": "id", "type": "int", "role": "pk" },
-          { "name": "name", "type": "text", "required": true, "display": "title" },
-          { "name": "full_name", "type": "text", "required": true },
-          { "name": "email", "type": "email", "required": true, "unique": true },
-          { "name": "initials", "type": "text", "required": true },
-          { "name": "tint", "type": "text", "required": true },
-          { "name": "avatar_url", "type": "image" },
-          { "name": "active", "type": "boolean", "default": true },
-          { "name": "created_at", "type": "timestamp", "default": "now", "role": "created" }
+          {
+            "ref": "id",
+            "type": "int",
+            "role": "pk"
+          },
+          {
+            "ref": "name",
+            "type": "text"
+          },
+          {
+            "ref": "full_name",
+            "type": "text"
+          },
+          {
+            "ref": "email",
+            "type": "text",
+            "semantic": "email"
+          },
+          {
+            "ref": "initials",
+            "type": "text"
+          },
+          {
+            "ref": "tint",
+            "type": "text"
+          },
+          {
+            "ref": "avatar_url",
+            "type": "text",
+            "semantic": "image"
+          },
+          {
+            "ref": "active",
+            "type": "bool"
+          },
+          {
+            "ref": "created_at",
+            "type": "timestamptz"
+          }
         ]
       },
       {
         "ref": "customers",
-        "table": "customers",
-        "label": { "key": "mft.helpdesk.tbl.customers", "fallback": "Customers" },
-        "primaryKey": ["id"],
         "columns": [
-          { "name": "id", "type": "int", "role": "pk" },
-          { "name": "name", "type": "text", "required": true, "display": "title" },
-          { "name": "email", "type": "email", "required": true, "unique": true },
-          { "name": "initials", "type": "text", "required": true },
-          { "name": "tint", "type": "text", "required": true },
-          { "name": "address", "type": "text" },
-          { "name": "created_at", "type": "timestamp", "default": "now", "role": "created" }
+          {
+            "ref": "id",
+            "type": "int",
+            "role": "pk"
+          },
+          {
+            "ref": "name",
+            "type": "text"
+          },
+          {
+            "ref": "email",
+            "type": "text",
+            "semantic": "email"
+          },
+          {
+            "ref": "initials",
+            "type": "text"
+          },
+          {
+            "ref": "tint",
+            "type": "text"
+          },
+          {
+            "ref": "address",
+            "type": "text"
+          },
+          {
+            "ref": "created_at",
+            "type": "timestamptz"
+          }
         ]
       },
       {
         "ref": "products",
-        "table": "products",
-        "label": { "key": "mft.helpdesk.tbl.products", "fallback": "Products" },
-        "primaryKey": ["id"],
         "columns": [
-          { "name": "id", "type": "int", "role": "pk" },
-          { "name": "code", "type": "text", "required": true, "unique": true },
-          { "name": "name", "type": "text", "required": true, "display": "title" },
-          { "name": "model", "type": "text", "required": true },
-          { "name": "icon", "type": "text", "required": true },
-          { "name": "tint", "type": "text", "required": true }
+          {
+            "ref": "id",
+            "type": "int",
+            "role": "pk"
+          },
+          {
+            "ref": "code",
+            "type": "text"
+          },
+          {
+            "ref": "name",
+            "type": "text"
+          },
+          {
+            "ref": "model",
+            "type": "text"
+          },
+          {
+            "ref": "icon",
+            "type": "text"
+          },
+          {
+            "ref": "tint",
+            "type": "text"
+          }
         ]
       },
       {
         "ref": "kb_categories",
-        "table": "kb_categories",
-        "label": { "key": "mft.helpdesk.tbl.kb_categories", "fallback": "Help categories" },
-        "primaryKey": ["id"],
         "columns": [
-          { "name": "id", "type": "int", "role": "pk" },
-          { "name": "slug", "type": "text", "required": true, "unique": true },
-          { "name": "name", "type": "text", "required": true, "display": "title" },
-          { "name": "icon", "type": "text", "required": true },
-          { "name": "tint", "type": "text", "required": true },
-          { "name": "blurb", "type": "text", "required": true },
-          { "name": "position", "type": "int", "default": 0 }
+          {
+            "ref": "id",
+            "type": "int",
+            "role": "pk"
+          },
+          {
+            "ref": "slug",
+            "type": "text"
+          },
+          {
+            "ref": "name",
+            "type": "text"
+          },
+          {
+            "ref": "icon",
+            "type": "text"
+          },
+          {
+            "ref": "tint",
+            "type": "text"
+          },
+          {
+            "ref": "blurb",
+            "type": "text"
+          },
+          {
+            "ref": "position",
+            "type": "int"
+          }
         ]
       },
       {
         "ref": "kb_articles",
-        "table": "kb_articles",
-        "label": { "key": "mft.helpdesk.tbl.kb_articles", "fallback": "Help articles" },
-        "primaryKey": ["id"],
         "columns": [
-          { "name": "id", "type": "int", "role": "pk" },
-          { "name": "slug", "type": "text", "required": true, "unique": true },
-          { "name": "category_id", "type": "ref", "ref": "kb_categories", "onDelete": "restrict", "required": true },
-          { "name": "title", "type": "text", "required": true, "display": "title" },
-          { "name": "snippet", "type": "text", "required": true },
-          { "name": "read_minutes", "type": "int", "required": true },
-          { "name": "body", "type": "json", "required": true },
-          { "name": "published", "type": "boolean", "default": true },
-          { "name": "position", "type": "int", "default": 0 },
-          { "name": "updated_at", "type": "timestamp", "default": "now", "role": "updated" }
+          {
+            "ref": "id",
+            "type": "int",
+            "role": "pk"
+          },
+          {
+            "ref": "slug",
+            "type": "text"
+          },
+          {
+            "ref": "category_id",
+            "type": "fk",
+            "references": "kb_categories"
+          },
+          {
+            "ref": "title",
+            "type": "text"
+          },
+          {
+            "ref": "snippet",
+            "type": "text"
+          },
+          {
+            "ref": "read_minutes",
+            "type": "int"
+          },
+          {
+            "ref": "body",
+            "type": "json"
+          },
+          {
+            "ref": "published",
+            "type": "bool"
+          },
+          {
+            "ref": "position",
+            "type": "int"
+          },
+          {
+            "ref": "updated_at",
+            "type": "timestamptz"
+          }
         ]
       },
       {
         "ref": "tickets",
-        "table": "tickets",
-        "label": { "key": "mft.helpdesk.tbl.tickets", "fallback": "Tickets" },
-        "primaryKey": ["id"],
         "columns": [
-          { "name": "id", "type": "int", "role": "pk" },
-          { "name": "number", "type": "text", "required": true, "unique": true, "display": "title" },
-          { "name": "requester_name", "type": "text", "required": true },
-          { "name": "requester_email", "type": "email", "required": true },
-          { "name": "customer_id", "type": "ref", "ref": "customers", "onDelete": "set-null" },
-          { "name": "product_id", "type": "ref", "ref": "products", "onDelete": "set-null" },
           {
-            "name": "topic",
-            "type": "enum",
-            "required": true,
-            "values": [
-              { "value": "setup", "label": "Setup & install", "tone": "info" },
-              { "value": "connectivity", "label": "Connectivity", "tone": "info" },
-              { "value": "device", "label": "Device behavior", "tone": "neutral" },
-              { "value": "account", "label": "Account", "tone": "neutral" },
-              { "value": "shipping", "label": "Shipping & returns", "tone": "neutral" }
-            ]
-          },
-          { "name": "subject", "type": "text", "required": true },
-          {
-            "name": "status",
-            "type": "enum",
-            "default": "open",
-            "values": [
-              { "value": "open", "label": "Open", "tone": "info" },
-              { "value": "pending", "label": "Pending", "tone": "warning" },
-              { "value": "solved", "label": "Solved", "tone": "success" },
-              { "value": "closed", "label": "Closed", "tone": "muted" }
-            ]
+            "ref": "id",
+            "type": "int",
+            "role": "pk"
           },
           {
-            "name": "priority",
+            "ref": "number",
+            "type": "text"
+          },
+          {
+            "ref": "requester_name",
+            "type": "text"
+          },
+          {
+            "ref": "requester_email",
+            "type": "text",
+            "semantic": "email"
+          },
+          {
+            "ref": "customer_id",
+            "type": "fk",
+            "references": "customers"
+          },
+          {
+            "ref": "product_id",
+            "type": "fk",
+            "references": "products"
+          },
+          {
+            "ref": "topic",
             "type": "enum",
-            "default": "normal",
-            "values": [
-              { "value": "low", "label": "Low", "tone": "muted" },
-              { "value": "normal", "label": "Normal", "tone": "neutral" },
-              { "value": "high", "label": "High", "tone": "warning" },
-              { "value": "urgent", "label": "Urgent", "tone": "danger" }
+            "enum": [
+              "[object Object]",
+              "[object Object]",
+              "[object Object]",
+              "[object Object]",
+              "[object Object]"
             ]
           },
-          { "name": "assignee_id", "type": "ref", "ref": "agents", "onDelete": "set-null" },
-          { "name": "first_response_minutes", "type": "int" },
-          { "name": "created_at", "type": "timestamp", "default": "now", "role": "created" },
-          { "name": "updated_at", "type": "timestamp", "default": "now", "role": "updated" }
+          {
+            "ref": "subject",
+            "type": "text"
+          },
+          {
+            "ref": "status",
+            "type": "enum",
+            "enum": [
+              "[object Object]",
+              "[object Object]",
+              "[object Object]",
+              "[object Object]"
+            ]
+          },
+          {
+            "ref": "priority",
+            "type": "enum",
+            "enum": [
+              "[object Object]",
+              "[object Object]",
+              "[object Object]",
+              "[object Object]"
+            ]
+          },
+          {
+            "ref": "assignee_id",
+            "type": "fk",
+            "references": "agents"
+          },
+          {
+            "ref": "first_response_minutes",
+            "type": "int"
+          },
+          {
+            "ref": "created_at",
+            "type": "timestamptz"
+          },
+          {
+            "ref": "updated_at",
+            "type": "timestamptz"
+          }
         ]
       },
       {
         "ref": "ticket_messages",
-        "table": "ticket_messages",
-        "label": { "key": "mft.helpdesk.tbl.ticket_messages", "fallback": "Ticket messages" },
-        "primaryKey": ["id"],
         "columns": [
-          { "name": "id", "type": "int", "role": "pk" },
-          { "name": "ticket_id", "type": "ref", "ref": "tickets", "onDelete": "cascade", "required": true },
           {
-            "name": "author",
+            "ref": "id",
+            "type": "int",
+            "role": "pk"
+          },
+          {
+            "ref": "ticket_id",
+            "type": "fk",
+            "references": "tickets"
+          },
+          {
+            "ref": "author",
             "type": "enum",
-            "required": true,
-            "values": [
-              { "value": "customer", "label": "Customer", "tone": "neutral" },
-              { "value": "agent", "label": "Agent", "tone": "info" }
+            "enum": [
+              "[object Object]",
+              "[object Object]"
             ]
           },
-          { "name": "agent_id", "type": "ref", "ref": "agents", "onDelete": "set-null" },
-          { "name": "body", "type": "text", "required": true },
-          { "name": "created_at", "type": "timestamp", "default": "now", "role": "created" }
+          {
+            "ref": "agent_id",
+            "type": "fk",
+            "references": "agents"
+          },
+          {
+            "ref": "body",
+            "type": "text"
+          },
+          {
+            "ref": "created_at",
+            "type": "timestamptz"
+          }
         ]
       },
       {
         "ref": "orders",
-        "table": "orders",
-        "label": { "key": "mft.helpdesk.tbl.orders", "fallback": "Orders" },
-        "primaryKey": ["id"],
         "columns": [
-          { "name": "id", "type": "int", "role": "pk" },
-          { "name": "number", "type": "text", "required": true, "unique": true, "display": "title" },
-          { "name": "customer_id", "type": "ref", "ref": "customers", "onDelete": "restrict", "required": true },
           {
-            "name": "status",
+            "ref": "id",
+            "type": "int",
+            "role": "pk"
+          },
+          {
+            "ref": "number",
+            "type": "text"
+          },
+          {
+            "ref": "customer_id",
+            "type": "fk",
+            "references": "customers"
+          },
+          {
+            "ref": "status",
             "type": "enum",
-            "default": "packing",
-            "values": [
-              { "value": "packing", "label": "Packing", "tone": "warning" },
-              { "value": "transit", "label": "In transit", "tone": "info" },
-              { "value": "delivered", "label": "Delivered", "tone": "success" },
-              { "value": "cancelled", "label": "Cancelled", "tone": "danger" }
+            "enum": [
+              "[object Object]",
+              "[object Object]",
+              "[object Object]",
+              "[object Object]"
             ]
           },
-          { "name": "carrier", "type": "text" },
-          { "name": "tracking_code", "type": "text" },
-          { "name": "total", "type": "money", "required": true },
-          { "name": "placed_at", "type": "timestamp", "default": "now", "role": "created" }
+          {
+            "ref": "carrier",
+            "type": "text"
+          },
+          {
+            "ref": "tracking_code",
+            "type": "text"
+          },
+          {
+            "ref": "total",
+            "type": "money"
+          },
+          {
+            "ref": "placed_at",
+            "type": "timestamptz"
+          }
         ]
       },
       {
         "ref": "order_items",
-        "table": "order_items",
-        "label": { "key": "mft.helpdesk.tbl.order_items", "fallback": "Order items" },
-        "primaryKey": ["id"],
         "columns": [
-          { "name": "id", "type": "int", "role": "pk" },
-          { "name": "order_id", "type": "ref", "ref": "orders", "onDelete": "cascade", "required": true },
-          { "name": "product_id", "type": "ref", "ref": "products", "onDelete": "set-null" },
-          { "name": "title", "type": "text", "required": true, "display": "title" },
-          { "name": "qty", "type": "int", "required": true },
-          { "name": "unit_price", "type": "money", "required": true }
+          {
+            "ref": "id",
+            "type": "int",
+            "role": "pk"
+          },
+          {
+            "ref": "order_id",
+            "type": "fk",
+            "references": "orders"
+          },
+          {
+            "ref": "product_id",
+            "type": "fk",
+            "references": "products"
+          },
+          {
+            "ref": "title",
+            "type": "text"
+          },
+          {
+            "ref": "qty",
+            "type": "int"
+          },
+          {
+            "ref": "unit_price",
+            "type": "money"
+          }
         ]
       },
       {
         "ref": "order_events",
-        "table": "order_events",
-        "label": { "key": "mft.helpdesk.tbl.order_events", "fallback": "Order events" },
-        "primaryKey": ["id"],
         "columns": [
-          { "name": "id", "type": "int", "role": "pk" },
-          { "name": "order_id", "type": "ref", "ref": "orders", "onDelete": "cascade", "required": true },
-          { "name": "label", "type": "text", "required": true, "display": "title" },
-          { "name": "detail", "type": "text" },
           {
-            "name": "state",
+            "ref": "id",
+            "type": "int",
+            "role": "pk"
+          },
+          {
+            "ref": "order_id",
+            "type": "fk",
+            "references": "orders"
+          },
+          {
+            "ref": "label",
+            "type": "text"
+          },
+          {
+            "ref": "detail",
+            "type": "text"
+          },
+          {
+            "ref": "state",
             "type": "enum",
-            "default": "todo",
-            "values": [
-              { "value": "done", "label": "Done", "tone": "success" },
-              { "value": "current", "label": "In progress", "tone": "info" },
-              { "value": "todo", "label": "To do", "tone": "muted" }
+            "enum": [
+              "[object Object]",
+              "[object Object]",
+              "[object Object]"
             ]
           },
-          { "name": "position", "type": "int", "required": true }
+          {
+            "ref": "position",
+            "type": "int"
+          }
         ]
       }
     ]
   },
-
   "pages": [
     {
-      "key": "helpdesk-dashboard",
-      "title": { "key": "mft.helpdesk.page.dashboard", "fallback": "Dashboard" },
-      "path": "/",
-      "type": "page-dashboard",
-      "icon": "layout-dashboard",
-      "nav": { "group": "manifest:helpdesk", "order": 1 },
-      "blocks": [
-        {
-          "kind": "kpi-stat-card",
-          "key": "open-tickets",
-          "label": { "key": "mft.helpdesk.kpi.open", "fallback": "Open tickets" },
-          "source": "tickets",
-          "metric": "count",
-          "format": "number",
-          "filter": { "status": ["open", "pending"] }
-        },
-        {
-          "kind": "chart-line-area",
-          "key": "response-time",
-          "label": { "key": "mft.helpdesk.chart.response", "fallback": "First response time" },
-          "source": "tickets",
-          "chart": "line-area",
-          "x": { "field": "created_at", "bucket": "week" },
-          "y": { "agg": "avg", "field": "first_response_minutes" },
-          "format": "duration-minutes"
-        },
-        {
-          "kind": "mini-table",
-          "key": "latest-tickets",
-          "label": { "key": "mft.helpdesk.block.latest", "fallback": "Latest tickets" },
-          "source": "tickets",
-          "limit": 8,
-          "orderBy": { "field": "updated_at", "dir": "desc" },
-          "columns": ["number", "subject", "requester_name", "status", "updated_at"]
-        }
-      ]
-    },
-    {
-      "key": "helpdesk-queue",
-      "title": { "key": "mft.helpdesk.page.queue", "fallback": "Ticket queue" },
-      "path": "/queue",
-      "type": "page-master-detail",
-      "icon": "inbox",
-      "source": "tickets",
-      "nav": { "group": "manifest:helpdesk", "order": 2 },
-      "tabs": {
-        "field": "status",
-        "values": ["open", "pending", "solved", "closed"],
-        "default": "open"
+      "ref": "helpdesk-dashboard",
+      "template": "page-dashboard",
+      "title": {
+        "key": "mft.helpdesk.page.dashboard",
+        "fallback": "Dashboard"
       },
-      "list": {
-        "title": "subject",
-        "subtitle": "requester_name",
-        "meta": "number",
-        "timestamp": "updated_at",
-        "badge": "status"
-      },
-      "search": ["number", "subject", "requester_email"],
-      "filters": ["topic", "priority", "assignee_id"],
-      "detail": {
-        "title": "subject",
-        "fields": ["number", "requester_name", "requester_email", "product_id", "topic", "priority", "assignee_id", "created_at", "updated_at"],
-        "thread": {
-          "view": "chat-thread",
-          "source": "ticket_messages",
-          "foreignKey": "ticket_id",
-          "author": "author",
-          "agent": "agent_id",
-          "body": "body",
-          "timestamp": "created_at",
-          "reply": true
-        },
-        "actions": [
-          { "key": "mark-pending", "label": "Mark pending", "set": { "status": "pending" } },
-          { "key": "solve", "label": "Mark solved", "set": { "status": "solved" } },
-          { "key": "reopen", "label": "Reopen", "set": { "status": "open" } },
-          { "key": "close", "label": "Close", "set": { "status": "closed" }, "tone": "danger" }
-        ]
+      "nav": {
+        "group": "manifest:helpdesk",
+        "icon": "layout-dashboard",
+        "order": 1
       }
     },
     {
-      "key": "helpdesk-kb",
-      "title": { "key": "mft.helpdesk.page.kb", "fallback": "Knowledge base" },
-      "path": "/knowledge-base",
-      "type": "page-crud",
-      "icon": "book-open",
-      "source": "kb_articles",
-      "view": "table",
-      "nav": { "group": "manifest:helpdesk", "order": 3 },
-      "columns": ["title", "category_id", "read_minutes", "published", "updated_at"],
-      "search": ["title", "snippet"],
-      "filters": ["category_id", "published"],
-      "create": true,
-      "edit": true,
-      "secondary": {
-        "source": "kb_categories",
-        "label": { "key": "mft.helpdesk.page.kb.categories", "fallback": "Categories" },
-        "columns": ["name", "slug", "icon", "position"],
-        "create": true,
-        "edit": true
+      "ref": "helpdesk-queue",
+      "template": "page-master-detail",
+      "title": {
+        "key": "mft.helpdesk.page.queue",
+        "fallback": "Ticket queue"
+      },
+      "nav": {
+        "group": "manifest:helpdesk",
+        "icon": "inbox",
+        "order": 2
       }
     },
     {
-      "key": "helpdesk-agents",
-      "title": { "key": "mft.helpdesk.page.agents", "fallback": "Agents" },
-      "path": "/agents",
-      "type": "page-directory",
-      "icon": "users",
-      "source": "agents",
-      "nav": { "group": "manifest:helpdesk", "order": 4 },
-      "directory": {
-        "title": "name",
-        "subtitle": "email",
-        "badge": "active",
-        "timestamp": "created_at"
+      "ref": "helpdesk-kb",
+      "template": "page-crud",
+      "title": {
+        "key": "mft.helpdesk.page.kb",
+        "fallback": "Knowledge base"
       },
-      "search": ["name", "email"],
-      "related": [
-        { "source": "tickets", "foreignKey": "assignee_id", "label": "Assigned tickets" }
-      ]
-    }
-  ],
-
-  "roles": [
+      "nav": {
+        "group": "manifest:helpdesk",
+        "icon": "book-open",
+        "order": 3
+      }
+    },
     {
-      "key": "support-agent",
-      "name": { "key": "mft.helpdesk.role.agent", "fallback": "Support agent" },
-      "description": {
-        "key": "mft.helpdesk.role.agent.desc",
-        "fallback": "Read and update tickets and reply in threads; read the knowledge base. No access to settings or roles."
+      "ref": "helpdesk-agents",
+      "template": "page-directory",
+      "title": {
+        "key": "mft.helpdesk.page.agents",
+        "fallback": "Agents"
       },
-      "permissions": [
-        { "resource": "tickets", "actions": ["read", "update"] },
-        { "resource": "ticket_messages", "actions": ["read", "create"] },
-        { "resource": "kb_articles", "actions": ["read"] },
-        { "resource": "kb_categories", "actions": ["read"] }
-      ]
+      "nav": {
+        "group": "manifest:helpdesk",
+        "icon": "users",
+        "order": 4
+      }
     }
   ],
-
-  "settings": [
-    {
-      "key": "support_name",
-      "type": "text",
-      "label": { "key": "mft.helpdesk.set.support_name", "fallback": "Desk name" },
-      "required": true
-    },
-    {
-      "key": "reply_to_email",
-      "type": "text",
-      "label": { "key": "mft.helpdesk.set.reply_to", "fallback": "Reply-to address" },
-      "required": true
-    },
-    {
-      "key": "ticket_prefix",
-      "type": "text",
-      "label": { "key": "mft.helpdesk.set.ticket_prefix", "fallback": "Ticket number prefix" },
-      "default": "HH-"
-    },
-    {
-      "key": "auto_reply_text",
-      "type": "text",
-      "label": { "key": "mft.helpdesk.set.auto_reply", "fallback": "Auto-reply message" },
-      "multiline": true
-    }
+  "capabilities": [
+    "file-storage",
+    "email-delivery",
+    "realtime"
   ],
-
-  "capabilities": ["file-storage", "email-delivery", "realtime"],
-
-  "frontend": {
-    "kind": "spa",
-    "root": ".",
-    "buildCommand": "npm run build",
-    "buildOutput": "dist",
-    "entry": "index.html",
-    "routes": {
-      "portal": "/"
+  "kind": "app",
+  "frontends": [
+    {
+      "side": "customer",
+      "kind": "spa",
+      "entry": "index.html",
+      "routes": {
+        "portal": "/"
+      }
     }
-  }
+  ]
 }
