@@ -118,6 +118,16 @@ export interface DataSource {
   /* identity */
   agent(): Person;
   customer(): CustomerIdentity;
+  /**
+   * The company whose help desk this is.
+   *
+   * Seven components printed `BRAND` straight from `data/demo.ts` — the header
+   * wordmark, the breadcrumbs, the footer, the chat widget, the search hero and
+   * the gift screen. A connected build would have put HEARTH above another
+   * company's tickets on every screen. There is no column for it, so connected
+   * mode returns an empty string rather than somebody else's name.
+   */
+  brand(): string;
 
   /* catalogue */
   products(): Product[];
@@ -314,6 +324,7 @@ function clone<T>(value: T): T {
 }
 
 export const demoDataSource: DataSource = {
+  brand: () => demo.BRAND,
   agent: () => demo.AGENT,
   customer: () => demo.CUSTOMER,
 
@@ -502,7 +513,18 @@ export function getDataSource(): DataSource {
   return active;
 }
 
-/** Swap the seam (tests, or a future real backend). */
+/** Swap the seam (tests, or a real backend). */
 export function setDataSource(next: DataSource): void {
   active = next;
+}
+
+/**
+ * True once a real backend is behind the seam.
+ *
+ * Read by the demo dock and the guided tour, which reset the desk, invent
+ * tickets and advance a fictional clock: against a real help desk those
+ * controls either lie or do damage, so they do not render.
+ */
+export function isConnected(): boolean {
+  return active !== demoDataSource;
 }

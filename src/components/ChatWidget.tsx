@@ -8,7 +8,7 @@
  */
 
 import { useEffect, useRef } from "react";
-import { AGENT, BRAND, CHAT_QUICK } from "../data/demo";
+import { dataSource } from "../data/source";
 import { useI18n } from "../i18n";
 import { selectCanEscalate, useAppStore } from "../state/store";
 import { Avatar } from "./Avatar";
@@ -67,13 +67,13 @@ export function ChatWidget() {
     <div
       className="chat"
       role="dialog"
-      aria-label={t("chrome.chat.dialogAria", { brand: BRAND })}
+      aria-label={t("chrome.chat.dialogAria", { brand: dataSource.brand() })}
     >
       <div className="chat__head">
-        <Avatar initials={AGENT.initials} tint={AGENT.tint} size={38} fontSize={14} />
+        <Avatar initials={dataSource.agent().initials} tint={dataSource.agent().tint} size={38} fontSize={14} />
         <div className="sd-grow sd-col">
           <span className="chat__title">
-            {t("chrome.chat.title", { brand: BRAND })}
+            {t("chrome.chat.title", { brand: dataSource.brand() })}
           </span>
           <span className="chat__status">
             <span className="chat__online" />
@@ -121,7 +121,7 @@ export function ChatWidget() {
           <TypingDots
             variant="chat"
             bubble
-            label={t("chrome.chat.typing", { name: AGENT.name })}
+            label={t("chrome.chat.typing", { name: dataSource.agent().name })}
           />
         ) : null}
 
@@ -142,7 +142,7 @@ export function ChatWidget() {
         {quick ? (
           <div className="chat__quick">
             <p className="sd-eyebrow">{t("chrome.chat.quickHead")}</p>
-            {CHAT_QUICK.map((qr, i) => (
+            {dataSource.chatQuickReplies().map((qr, i) => (
               <button
                 key={qr.label}
                 type="button"

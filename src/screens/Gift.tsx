@@ -25,7 +25,7 @@ import {
   phIco,
   useIsDark,
 } from "../components";
-import { BRAND } from "../data/demo";
+
 import type { GiftWhen } from "../data/types";
 import { dataSource } from "../data/source";
 import { useT, type MessageKey } from "../i18n";
@@ -284,7 +284,7 @@ export default function Gift() {
                 radius={8}
                 iconSize={14}
               />
-              <span className="gift-preview__word">{BRAND}</span>
+              <span className="gift-preview__word">{dataSource.brand()}</span>
               <Icon
                 name={design.icon}
                 size={20}

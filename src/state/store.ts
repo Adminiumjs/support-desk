@@ -23,21 +23,7 @@
 
 import { useMemo } from "react";
 import { create } from "zustand";
-import {
-  AGENT,
-  BRAND,
-  BREACH_HIT_EMAIL,
-  CHAT_ESCALATION_CLOSER,
-  CHAT_QUICK,
-  CHAT_REPLIES,
-  CUSTOMER,
-  DL_SCHEDULED_DATE,
-  INVOICE_EXPORT_FILE,
-  OV_GROUPS,
-  PRODUCTS,
-  SEEDED_ATTACHMENT,
-  SHARE_HOST,
-} from "../data/demo";
+import { BREACH_HIT_EMAIL, CHAT_ESCALATION_CLOSER, CHAT_REPLIES, DL_SCHEDULED_DATE, INVOICE_EXPORT_FILE, OV_GROUPS, PRODUCTS, SEEDED_ATTACHMENT, SHARE_HOST } from "../data/demo";
 import { dataSource } from "../data/source";
 import { date as fmtDate, number as fmtNumber, t } from "../i18n/ambient";
 import {
@@ -759,11 +745,11 @@ function initialState(): AppState {
     typing: false,
     form: { ...EMPTY_FORM, attachments: [SEEDED_ATTACHMENT] },
     errs: {},
-    mtEmail: CUSTOMER.email,
+    mtEmail: dataSource.customer().email,
     mtSubmitted: true,
 
     ordNum: "HH-88214",
-    ordEmail: CUSTOMER.email,
+    ordEmail: dataSource.customer().email,
     ordFound: "HH-88214",
     ordErr: "",
 
@@ -1349,7 +1335,7 @@ export const useAppStore = create<Store>((set, get) => ({
   saveA11y: () => {
     const s = get();
     s.showToast(t("chrome.toast.a11ySaved"));
-    s.succeed(t("chrome.succ.a11y.title"), t("chrome.succ.a11y.text", { brand: BRAND }), {
+    s.succeed(t("chrome.succ.a11y.title"), t("chrome.succ.a11y.text", { brand: dataSource.brand() }), {
       label: t("chrome.action.seeOnHome"),
       icon: "life-buoy",
       fn: () => get().goHome(),
@@ -1370,7 +1356,7 @@ export const useAppStore = create<Store>((set, get) => ({
   closeChat: () => set({ chatOpen: false }),
 
   chatAsk: (index) => {
-    const quick = CHAT_QUICK[index];
+    const quick = dataSource.chatQuickReplies()[index];
     if (!quick) return;
     const s = get();
     const msgs: ChatMessage[] = [
@@ -1712,7 +1698,7 @@ export const useAppStore = create<Store>((set, get) => ({
   },
 
   updateCard: () =>
-    get().showToast(t("chrome.toast.cardInApp", { brand: BRAND }), "info"),
+    get().showToast(t("chrome.toast.cardInApp", { brand: dataSource.brand() }), "info"),
 
   exportInvoices: () =>
     get().showToast(t("chrome.toast.downloading", { file: INVOICE_EXPORT_FILE })),
@@ -1858,7 +1844,7 @@ export const useAppStore = create<Store>((set, get) => ({
         brResult: {
           kind: "info",
           icon: "info",
-          text: t("chrome.breach.needEmail", { brand: BRAND }),
+          text: t("chrome.breach.needEmail", { brand: dataSource.brand() }),
         },
       });
       return;
@@ -2233,7 +2219,7 @@ export function selectOutageVisible(s: AppState): boolean {
 }
 
 /** The agent + customer identities the thread and chat render. */
-export const IDENTITY = { agent: AGENT, customer: CUSTOMER };
+export const IDENTITY = { agent: dataSource.agent(), customer: dataSource.customer() };
 
 /** First product whose name or id appears in the text; falls back to doorbell. */
 export function inferProduct(text: string): ProductId {

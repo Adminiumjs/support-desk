@@ -9,7 +9,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import { BRAND } from "../data/demo";
+
 import { dataSource } from "../data/source";
 import { useT } from "../i18n";
 import { heroSearch } from "../lib/search";
@@ -48,7 +48,7 @@ export function SearchHero() {
       <div className="hero__inner">
         <span className="hero__eyebrow">
           <Icon name="sparkles" size={13} />
-          {t("chrome.hero.eyebrow", { brand: BRAND })}
+          {t("chrome.hero.eyebrow", { brand: dataSource.brand() })}
         </span>
         <h1>{t("chrome.hero.title")}</h1>
         <p className="hero__lede">{t("chrome.hero.lede")}</p>

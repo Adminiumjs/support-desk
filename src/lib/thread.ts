@@ -9,7 +9,7 @@
  *   open · pending · solved · closed
  */
 
-import { AGENT_REPLIES, TOPICS } from "../data/demo";
+
 import { dataSource } from "../data/source";
 import { NOW_STAMP, subjectFromMessage, ticketCode } from "./format";
 import { t } from "../i18n/ambient";
@@ -93,10 +93,10 @@ export function canSolve(ticket: Ticket): boolean {
 
 /**
  * Topic → rotation offset into the reply pool. Unknown or empty topics use
- * offset 0, which reproduces the comp's `AGENT_REPLIES[msgs.length % 4]`.
+ * offset 0, which reproduces the comp's `dataSource.agentReplies()[msgs.length % 4]`.
  */
 export function topicOffset(topic: string | undefined): number {
-  const i = TOPICS.indexOf(topic ?? "");
+  const i = dataSource.topics().indexOf(topic ?? "");
   return i < 0 ? 0 : i;
 }
 
@@ -108,7 +108,7 @@ export function topicOffset(topic: string | undefined): number {
 export function pickAgentReply(
   topic: string | undefined,
   msgCount: number,
-  pool: string[] = AGENT_REPLIES,
+  pool: string[] = dataSource.agentReplies(),
 ): string {
   const i = (msgCount + topicOffset(topic)) % pool.length;
   return pool[i];
@@ -291,7 +291,7 @@ export function threadReducer(
       const text = pickAgentReply(
         prev.topic,
         prev.msgs.length,
-        action.pool ?? AGENT_REPLIES,
+        action.pool ?? dataSource.agentReplies(),
       );
       const next: Ticket = {
         ...prev,

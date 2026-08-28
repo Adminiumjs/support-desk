@@ -22,7 +22,7 @@ import {
   ThreadBubble,
   TypingDots,
 } from "../components";
-import { AGENT } from "../data/demo";
+
 import { dataSource } from "../data/source";
 import { useT } from "../i18n";
 import { canSolve, threadTimeline } from "../lib/thread";
@@ -114,14 +114,14 @@ export default function Thread() {
         {typing ? (
           <div className="bubble-row">
             <Avatar
-              initials={AGENT.initials}
-              tint={AGENT.tint}
+              initials={dataSource.agent().initials}
+              tint={dataSource.agent().tint}
               size={36}
               fontSize={13}
             />
             <TypingDots
               bubble
-              label={t("screensB.thread.typing", { name: AGENT.full })}
+              label={t("screensB.thread.typing", { name: dataSource.agent().full })}
             />
           </div>
         ) : null}

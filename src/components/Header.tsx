@@ -15,7 +15,7 @@
  */
 
 import { Fragment, useEffect, useMemo, useRef } from "react";
-import { BRAND } from "../data/demo";
+
 import { dataSource } from "../data/source";
 import { useT } from "../i18n";
 import { readTimeShort } from "../lib/format";
@@ -100,7 +100,7 @@ export function Header() {
               * span — in any word order. */}
             {slots(t("chrome.header.wordmark")).map((part, i) =>
               part === "{brand}" ? (
-                <Fragment key={i}>{BRAND}</Fragment>
+                <Fragment key={i}>{dataSource.brand()}</Fragment>
               ) : (
                 <span key={i}>{part}</span>
               ),

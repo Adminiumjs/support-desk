@@ -5,7 +5,8 @@
  * Store-connected: takes no props.
  */
 
-import { BRAND, FOOTER_COPYRIGHT, FOOTER_URL } from "../data/demo";
+import { FOOTER_COPYRIGHT, FOOTER_URL } from "../data/demo";
+import { dataSource } from "../data/source";
 import { useT } from "../i18n";
 import { useAppStore } from "../state/store";
 import { Icon } from "./Icon";
@@ -38,7 +39,7 @@ export function Footer() {
               <Icon name="life-buoy" size={17} />
             </span>
             <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: "-0.03em" }}>
-              {t("chrome.header.wordmark", { brand: BRAND })}
+              {t("chrome.header.wordmark", { brand: dataSource.brand() })}
             </span>
           </div>
           <p className="ftr__copy">{FOOTER_COPYRIGHT}</p>
@@ -68,7 +69,7 @@ export function Footer() {
         <nav className="ftr__cols" aria-label={t("chrome.footer.aria")}>
           {FOOTER_COLUMNS.map((col) => (
             <div className="ftr__col" key={col.name}>
-              <Eyebrow>{t(col.name, { brand: BRAND })}</Eyebrow>
+              <Eyebrow>{t(col.name, { brand: dataSource.brand() })}</Eyebrow>
               {col.links.map((l, i) => (
                 <button
                   key={`${col.name}-${l.label}-${i}`}
@@ -76,7 +77,7 @@ export function Footer() {
                   className="ftr__link fx-nav"
                   onClick={() => activate(l.to)}
                 >
-                  {t(l.label, { brand: BRAND })}
+                  {t(l.label, { brand: dataSource.brand() })}
                 </button>
               ))}
             </div>

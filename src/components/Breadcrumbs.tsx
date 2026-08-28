@@ -8,7 +8,7 @@
  * query, so there isn't one.
  */
 
-import { BRAND } from "../data/demo";
+
 import { dataSource } from "../data/source";
 import { useT, type MessageKey } from "../i18n";
 import { truncateCrumb } from "../lib/format";
@@ -35,7 +35,7 @@ export function Breadcrumbs() {
   if (view === "home") return null;
 
   /** Every crumb key may carry `{brand}`; passing it always is harmless. */
-  const label = (key: MessageKey) => t(key, { brand: BRAND });
+  const label = (key: MessageKey) => t(key, { brand: dataSource.brand() });
 
   const trail: Crumb[] = [
     { label: label("chrome.link.helpCenter"), onClick: goHome },
