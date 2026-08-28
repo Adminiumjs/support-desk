@@ -95,7 +95,8 @@ export const screensA = {
     'screensA.appts.confirmed': 'Confirmed',
     'screensA.appts.awaiting': 'Awaiting parcel',
     'screensA.appts.completed': 'Completed',
-    'screensA.appts.toastCalendar': 'Calendar invite sent',
+    'screensA.appts.toastCalendar':
+      'Calendar invite sent in this demo — nothing reaches your calendar',
     'screensA.appts.toastReschedule': 'Pick a new slot below',
     'screensA.appts.toastCancelled': 'Appointment {id} cancelled',
     'screensA.appts.toastReport': 'Service reports aren’t available in this demo',
@@ -604,7 +605,8 @@ export const screensA = {
     'screensA.appts.confirmed': 'Bestätigt',
     'screensA.appts.awaiting': 'Wartet auf Paket',
     'screensA.appts.completed': 'Abgeschlossen',
-    'screensA.appts.toastCalendar': 'Kalendereinladung gesendet',
+    'screensA.appts.toastCalendar':
+      'Kalendereinladung in dieser Demo gesendet — Ihr Kalender bleibt unverändert',
     'screensA.appts.toastReschedule': 'Wählen Sie unten einen neuen Termin',
     'screensA.appts.toastCancelled': 'Termin {id} storniert',
     'screensA.appts.toastReport': 'Serviceberichte gibt es in dieser Demo nicht',
@@ -1124,7 +1126,8 @@ export const screensA = {
     'screensA.appts.confirmed': 'Confirmé',
     'screensA.appts.awaiting': 'Colis en attente',
     'screensA.appts.completed': 'Terminé',
-    'screensA.appts.toastCalendar': 'Invitation d’agenda envoyée',
+    'screensA.appts.toastCalendar':
+      'Invitation d’agenda envoyée dans cette démo — votre agenda reste inchangé',
     'screensA.appts.toastReschedule': 'Choisissez un nouveau créneau ci-dessous',
     'screensA.appts.toastCancelled': 'Rendez-vous {id} annulé',
     'screensA.appts.toastReport':
@@ -1648,7 +1651,8 @@ export const screensA = {
     'screensA.appts.confirmed': 'Potvrzeno',
     'screensA.appts.awaiting': 'Čeká na zásilku',
     'screensA.appts.completed': 'Dokončeno',
-    'screensA.appts.toastCalendar': 'Pozvánka do kalendáře odeslána',
+    'screensA.appts.toastCalendar':
+      'Pozvánka do kalendáře odeslána v této ukázce — do kalendáře nic nepřijde',
     'screensA.appts.toastReschedule': 'Vyberte níže nový termín',
     'screensA.appts.toastCancelled': 'Termín {id} zrušen',
     'screensA.appts.toastReport': 'Servisní zprávy v této ukázce nejsou',
@@ -2163,7 +2167,8 @@ export const screensA = {
     'screensA.appts.confirmed': 'Bekræftet',
     'screensA.appts.awaiting': 'Afventer pakke',
     'screensA.appts.completed': 'Afsluttet',
-    'screensA.appts.toastCalendar': 'Kalenderinvitation sendt',
+    'screensA.appts.toastCalendar':
+      'Kalenderinvitation sendt i denne demo — din kalender ændres ikke',
     'screensA.appts.toastReschedule': 'Vælg et nyt tidspunkt nedenfor',
     'screensA.appts.toastCancelled': 'Aftale {id} aflyst',
     'screensA.appts.toastReport': 'Servicerapporter findes ikke i denne demo',
@@ -2675,7 +2680,7 @@ export const screensA = {
     'screensA.appts.confirmed': '已确认',
     'screensA.appts.awaiting': '等待包裹',
     'screensA.appts.completed': '已完成',
-    'screensA.appts.toastCalendar': '日历邀请已发送',
+    'screensA.appts.toastCalendar': '本演示中已发送日历邀请——你的日历不会有任何变化',
     'screensA.appts.toastReschedule': '请在下方选择新的时段',
     'screensA.appts.toastCancelled': '预约 {id} 已取消',
     'screensA.appts.toastReport': '本演示中没有服务报告',
@@ -3170,7 +3175,7 @@ export const screensA = {
     'screensA.appts.confirmed': '已確認',
     'screensA.appts.awaiting': '等待包裹',
     'screensA.appts.completed': '已完成',
-    'screensA.appts.toastCalendar': '行事曆邀請已寄出',
+    'screensA.appts.toastCalendar': '本示範已寄出行事曆邀請——你的行事曆不會有任何變化',
     'screensA.appts.toastReschedule': '請在下方挑選新的時段',
     'screensA.appts.toastCancelled': '預約 {id} 已取消',
     'screensA.appts.toastReport': '本示範沒有服務報告',
@@ -3670,7 +3675,8 @@ export const screensA = {
     'screensA.appts.confirmed': 'مؤكَّد',
     'screensA.appts.awaiting': 'بانتظار الطرد',
     'screensA.appts.completed': 'مكتمل',
-    'screensA.appts.toastCalendar': 'تم إرسال دعوة التقويم',
+    'screensA.appts.toastCalendar':
+      'تم إرسال دعوة التقويم في هذا العرض التوضيحي — لا شيء يصل إلى تقويمك',
     'screensA.appts.toastReschedule': 'اختر موعدًا جديدًا من الأسفل',
     'screensA.appts.toastCancelled': 'تم إلغاء الموعد {id}',
     'screensA.appts.toastReport': 'تقارير الخدمة غير متاحة في هذا العرض التوضيحي',

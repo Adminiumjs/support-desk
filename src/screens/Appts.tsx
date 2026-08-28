@@ -68,8 +68,13 @@ export default function Appts() {
 
   const gotoRepair = () => go("repair");
 
+  /*
+   * Nothing is sent: there is no invite, no .ics and no calendar to reach.
+   * The toast says so and takes the neutral kind every demo-labelled toast in
+   * this app uses, so it does not read as a delivered result (24 D11).
+   */
   function onCal() {
-    showToast(t("screensA.appts.toastCalendar"));
+    showToast(t("screensA.appts.toastCalendar"), "info");
   }
 
   function onReschedule() {
