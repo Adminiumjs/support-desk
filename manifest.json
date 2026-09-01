@@ -254,11 +254,11 @@
             "ref": "topic",
             "type": "enum",
             "enum": [
-              "[object Object]",
-              "[object Object]",
-              "[object Object]",
-              "[object Object]",
-              "[object Object]"
+              "setup",
+              "connectivity",
+              "device",
+              "account",
+              "shipping"
             ]
           },
           {
@@ -269,20 +269,20 @@
             "ref": "status",
             "type": "enum",
             "enum": [
-              "[object Object]",
-              "[object Object]",
-              "[object Object]",
-              "[object Object]"
+              "open",
+              "pending",
+              "solved",
+              "closed"
             ]
           },
           {
             "ref": "priority",
             "type": "enum",
             "enum": [
-              "[object Object]",
-              "[object Object]",
-              "[object Object]",
-              "[object Object]"
+              "low",
+              "normal",
+              "high",
+              "urgent"
             ]
           },
           {
@@ -321,8 +321,8 @@
             "ref": "author",
             "type": "enum",
             "enum": [
-              "[object Object]",
-              "[object Object]"
+              "customer",
+              "agent"
             ]
           },
           {
@@ -361,10 +361,10 @@
             "ref": "status",
             "type": "enum",
             "enum": [
-              "[object Object]",
-              "[object Object]",
-              "[object Object]",
-              "[object Object]"
+              "packing",
+              "transit",
+              "delivered",
+              "cancelled"
             ]
           },
           {
@@ -442,9 +442,9 @@
             "ref": "state",
             "type": "enum",
             "enum": [
-              "[object Object]",
-              "[object Object]",
-              "[object Object]"
+              "done",
+              "current",
+              "todo"
             ]
           },
           {
