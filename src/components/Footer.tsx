@@ -22,6 +22,7 @@ export function Footer() {
   const openArticle = useAppStore((s) => s.openArticle);
   const gotoOverview = useAppStore((s) => s.gotoOverview);
   const scToggle = useAppStore((s) => s.scToggle);
+  const openAddOns = useAppStore((s) => s.openAddOns);
 
   const activate = (to: FooterTarget) => {
     if (to === "openTicket") return openTicket();
@@ -62,6 +63,19 @@ export function Footer() {
             >
               <Icon name="keyboard" size={14} />
               {t("chrome.footer.shortcuts")}
+            </button>
+            {/* The owner's corner of their own help desk — the drawer that
+                holds each add-on's switch and settings form. See
+                components/AddOnsDrawer.tsx for why it lives in the customer
+                bundle at all. */}
+            <button
+              type="button"
+              className="ftr__link fx-nav sd-row"
+              style={{ fontSize: 13, fontWeight: 700 }}
+              onClick={openAddOns}
+            >
+              <Icon name="plug" size={14} />
+              {t("addon.host.manage.open")}
             </button>
           </div>
         </div>

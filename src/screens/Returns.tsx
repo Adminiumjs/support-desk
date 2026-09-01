@@ -21,6 +21,8 @@ import {
   StepIndicator,
   TextArea,
 } from "../components";
+import { inboundOrderFor, returnRecordFor, SHOP_CLOCK } from "../add-ons/records.ts";
+import { AddOnSlot } from "../add-ons/slot.tsx";
 import { dataSource } from "../data/source";
 import { useI18n } from "../i18n";
 import { counted, rmaRef } from "../lib/format";
@@ -253,6 +255,36 @@ export default function Returns() {
                 <p className="rt-qr__hint">{t("screensB.returns.qrHint")}</p>
               </div>
             </div>
+
+            {/*
+              SLOTS — the RMA as a record an add-on can act on, and the parcel
+              as a shipment a customer can read. BOTH ADDITIVE AND BOTH SILENT
+              (24 D6): with nothing connected this step is byte-identical to
+              the screen this app shipped before the seam — the reference, the
+              email-a-label button and the what-next list are a finished flow,
+              not a fallback. With a carrier connected, the prepaid-label panel
+              appears here (`record.actions` — this is the customer's OWN
+              record, which is half of why that slot's surface is `both`), and
+              once a label exists the tracking panel below it follows the
+              parcel TOWARD the business (31 O4). The host maps its wizard
+              state into the seam's shapes in `add-ons/records.ts`; nothing
+              here names an add-on.
+             */}
+            {rRma !== null ? (
+              <>
+                <AddOnSlot
+                  slot="record.actions"
+                  payload={returnRecordFor({ rRma, rOrder, rPicked, rReason, rMethod })}
+                />
+                <AddOnSlot
+                  slot="order.dispatch.panel"
+                  payload={{
+                    order: inboundOrderFor({ rRma, rOrder, rPicked }),
+                    now: SHOP_CLOCK,
+                  }}
+                />
+              </>
+            ) : null}
 
             <div>
               <Eyebrow>{t("screensB.returns.whatNext")}</Eyebrow>

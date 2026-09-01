@@ -49,6 +49,21 @@ async function boot(): Promise<void> {
     }
   }
 
+  /*
+   * The add-on list, registered AFTER the data source is settled and BEFORE
+   * the first render. The list is static and the registry boots empty, so
+   * this is the only line that turns the seam on — remove it and every slot
+   * draws its fallback, which is the D6 state. Importing the modules below
+   * also runs `registerAddOnMessages` at module load, which THROWS naming the
+   * add-on, the locale and the key on an incomplete bundle. In connected mode
+   * (Phase B) only the SOURCE of this list changes.
+   */
+  const [{ demoAddOns }, { useAppStore }] = await Promise.all([
+    import("./add-ons/registry.ts"),
+    import("./state/store.ts"),
+  ]);
+  useAppStore.getState().registerAddOns(demoAddOns());
+
   const { App } = await import("./app/App.tsx");
   createRoot(document.getElementById("root")!).render(
     <StrictMode>

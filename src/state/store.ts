@@ -33,6 +33,14 @@ import {
   chime,
 } from "../lib/a11y";
 import {
+  applyAddOnSettings,
+  createRegistry,
+  type AddOn,
+  type AddOnRegistry,
+  type AddOnSettings,
+} from "../add-ons/vendor/host/index.ts";
+import { DEFAULT_ADD_ON_SETTINGS } from "../add-ons/registry.ts";
+import {
   auActionToast,
   auCreatedToast,
   auNameToast,
@@ -488,6 +496,20 @@ export interface AppState {
   trReason: string;
   trOn: string[];
   trDone: TransferReceipt | null;
+
+  /* --- add-ons --- */
+  /**
+   * The seam's fields (kit README §7). `registry` boots EMPTY and is filled at
+   * bootstrap by `registerAddOns` — an empty registry is a valid state, so the
+   * seam lands before any add-on does and every slot draws its fallback.
+   */
+  registry: AddOnRegistry;
+  /** Which add-ons are switched on. The one set every fill is gated by. */
+  enabled: Set<string>;
+  /** Saved settings, keyed by add-on key and OPAQUE to this app. */
+  addOnSettings: AddOnSettings;
+  /** The manage drawer — the one surface in this bundle addressed to the owner. */
+  addOnsOpen: boolean;
 }
 
 export interface AppActions {
@@ -701,6 +723,20 @@ export interface AppActions {
   toggleTransferCheck: (id: string) => void;
   transferSubmit: () => void;
   transferReset: () => void;
+
+  /* --- add-ons --- */
+  registerAddOns: (addOns: readonly AddOn[]) => void;
+  toggleAddOn: (key: string) => void;
+  connectAddOn: (key: string) => void;
+  disconnectAddOn: (key: string) => void;
+  /**
+   * `Record<string, unknown>` and not a typed patch: the host holds an
+   * add-on's settings as an opaque document and has no business knowing their
+   * types — the add-on reads them back into its own shape.
+   */
+  patchAddOnSettings: (addOn: string, patch: Record<string, unknown>) => void;
+  openAddOns: () => void;
+  closeAddOns: () => void;
 }
 
 export type Store = AppState & AppActions;
@@ -944,6 +980,11 @@ function initialState(): AppState {
     trReason: "",
     trOn: [],
     trDone: null,
+
+    registry: createRegistry([]),
+    enabled: new Set<string>(),
+    addOnSettings: DEFAULT_ADD_ON_SETTINGS,
+    addOnsOpen: false,
   };
 }
 
@@ -2181,6 +2222,75 @@ export const useAppStore = create<Store>((set, get) => ({
 
   transferReset: () =>
     set((s) => ({ trDone: null, trDev: s.registered[0]?.id ?? null })),
+
+  /* ---------------------------------------------------------- add-ons */
+
+  registerAddOns: (addOns) => {
+    set({ registry: createRegistry(addOns) });
+    // PUSHED, never polled — see `patchAddOnSettings`. An add-on registered
+    // after a setting has already been changed must start from the changed
+    // value, not from its own default.
+    applyAddOnSettings(addOns, get().addOnSettings);
+  },
+
+  /**
+   * The drawer's one control per add-on, so two states can never disagree.
+   * CONNECTED and ENABLED are different facts in the seam — a credential is a
+   * thing you have, switching on is a decision you made — but THIS HOST CANNOT
+   * HOLD A CREDENTIAL AT ALL: it is a static customer bundle with no server
+   * half of its own, and 24 D15 keeps every secret out of it. So here the two
+   * facts coincide, exactly as they do in `ecommerce-storefront`, whose store
+   * records the reasoning at length. The day this app is served hosted, the
+   * facts come apart again and the second set arrives with a screen that can
+   * show the difference.
+   */
+  toggleAddOn: (key) => {
+    if (get().enabled.has(key)) get().disconnectAddOn(key);
+    else get().connectAddOn(key);
+  },
+
+  connectAddOn: (key) =>
+    set((s) => {
+      const enabled = new Set(s.enabled);
+      enabled.add(key);
+      return { enabled };
+    }),
+
+  /**
+   * DISCONNECT REMOVES SURFACES, NEVER DATA (24 D16). What goes: the add-on's
+   * fills stop rendering, so the return-label panel and the tracking timeline
+   * are gone from the moment the set changes and the wizard's own words are
+   * back. What stays: everything the customer made — the RMA, its reference,
+   * the picked items — and everything the add-on's transport holds, which is
+   * where a booked label lives; reconnecting finds it again by the same
+   * reference. Nothing host-side has to be cleared, because nothing host-side
+   * was ever the add-on's.
+   */
+  disconnectAddOn: (key) =>
+    set((s) => {
+      const enabled = new Set(s.enabled);
+      enabled.delete(key);
+      return { enabled };
+    }),
+
+  patchAddOnSettings: (addOn, patch) => {
+    const addOnSettings = {
+      ...get().addOnSettings,
+      [addOn]: { ...(get().addOnSettings[addOn] ?? {}), ...patch },
+    };
+    set({ addOnSettings });
+    /*
+     * THE HOST PUSHES; AN ADD-ON DOES NOT POLL. Its engines are handed
+     * settings rather than a store, so a quote made a second after the shop
+     * moved a value has to be priced off the new one. An add-on that read
+     * this store would be coupled to this app's state shape — the coupling
+     * every other decision in this seam exists to prevent.
+     */
+    applyAddOnSettings(get().registry.all, addOnSettings);
+  },
+
+  openAddOns: () => set({ addOnsOpen: true }),
+  closeAddOns: () => set({ addOnsOpen: false }),
 }));
 
 /* ------------------------------------------------------------- selectors */

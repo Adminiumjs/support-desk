@@ -142,6 +142,7 @@ export { OutageBanner } from "./OutageBanner";
 export { Toast } from "./Toast";
 export { Modal } from "./Modal";
 export type { ModalProps } from "./Modal";
+export { AddOnsDrawer } from "./AddOnsDrawer";
 export { CommandPalette } from "./CommandPalette";
 export { ShortcutsOverlay } from "./ShortcutsOverlay";
 export { ChatWidget } from "./ChatWidget";

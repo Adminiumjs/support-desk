@@ -20,6 +20,7 @@
 
 import { useEffect, useRef } from "react";
 import {
+  AddOnsDrawer,
   Breadcrumbs,
   ChatWidget,
   CommandPalette,
@@ -317,6 +318,7 @@ export function App() {
       <CommandPalette />
       <ShortcutsOverlay />
       <ChatWidget />
+      <AddOnsDrawer />
     </div>
   );
 }
