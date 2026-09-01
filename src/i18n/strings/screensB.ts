@@ -341,7 +341,8 @@ export const screensB = {
     'screensB.returns.needItem': 'Pick at least one item to return',
     'screensB.returns.needReason': 'Choose a reason so we can process it',
     'screensB.returns.created': 'Return created',
-    'screensB.returns.labelEmailed': 'Label emailed to sam@example.com',
+    'screensB.returns.labelEmailed':
+      'Label emailed to sam@example.com in this demo — no email is actually sent',
     'screensB.returns.continue': 'Continue',
     'screensB.returns.getLabel': 'Get my label',
     'screensB.returns.emailLabel': 'Email me the label',
@@ -357,7 +358,8 @@ export const screensB = {
       "It helps us fix things — but you don't have to explain.",
     'screensB.returns.howSend': 'How would you like to send it?',
     'screensB.returns.doneTitle': 'Your return is set up',
-    'screensB.returns.doneBody': "We've emailed the label to sam@example.com. {detail}",
+    'screensB.returns.doneBody':
+      "We've emailed the label to sam@example.com in this demo — no email is actually sent. {detail}",
     'screensB.returns.reference': 'Return reference',
     'screensB.returns.qrHint':
       'Show this code at the drop-off point, or stick the printed label on the parcel.',
@@ -997,7 +999,8 @@ export const screensB = {
     'screensB.returns.needItem': 'Wählen Sie mindestens einen Artikel',
     'screensB.returns.needReason': 'Wählen Sie einen Grund, damit wir sie bearbeiten',
     'screensB.returns.created': 'Rücksendung angelegt',
-    'screensB.returns.labelEmailed': 'Etikett an sam@example.com gemailt',
+    'screensB.returns.labelEmailed':
+      'Etikett in dieser Demo an sam@example.com gemailt — eine echte E-Mail wird nicht verschickt',
     'screensB.returns.continue': 'Weiter',
     'screensB.returns.getLabel': 'Etikett holen',
     'screensB.returns.emailLabel': 'Etikett mailen',
@@ -1014,7 +1017,7 @@ export const screensB = {
     'screensB.returns.howSend': 'Wie möchten Sie es schicken?',
     'screensB.returns.doneTitle': 'Ihre Rücksendung ist eingerichtet',
     'screensB.returns.doneBody':
-      'Wir haben das Etikett an sam@example.com gemailt. {detail}',
+      'Wir haben das Etikett in dieser Demo an sam@example.com gemailt — eine echte E-Mail wird nicht verschickt. {detail}',
     'screensB.returns.reference': 'Referenz der Rücksendung',
     'screensB.returns.qrHint':
       'Zeigen Sie diesen Code an der Abgabestelle oder kleben Sie das gedruckte Etikett aufs Paket.',
@@ -1664,7 +1667,8 @@ export const screensB = {
     'screensB.returns.needReason':
       'Choisissez un motif pour que nous puissions traiter le retour',
     'screensB.returns.created': 'Retour créé',
-    'screensB.returns.labelEmailed': 'Étiquette envoyée à sam@example.com',
+    'screensB.returns.labelEmailed':
+      'Étiquette envoyée à sam@example.com dans cette démo — aucun e-mail n’est réellement envoyé',
     'screensB.returns.continue': 'Continuer',
     'screensB.returns.getLabel': 'Obtenir mon étiquette',
     'screensB.returns.emailLabel': 'M’envoyer l’étiquette',
@@ -1681,7 +1685,7 @@ export const screensB = {
     'screensB.returns.howSend': 'Comment souhaitez-vous l’envoyer ?',
     'screensB.returns.doneTitle': 'Votre retour est prêt',
     'screensB.returns.doneBody':
-      'Nous avons envoyé l’étiquette à sam@example.com. {detail}',
+      'Nous avons envoyé l’étiquette à sam@example.com dans cette démo — aucun e-mail n’est réellement envoyé. {detail}',
     'screensB.returns.reference': 'Référence du retour',
     'screensB.returns.qrHint':
       'Présentez ce code au point de dépôt, ou collez l’étiquette imprimée sur le colis.',
@@ -2331,7 +2335,8 @@ export const screensB = {
     'screensB.returns.needItem': 'Vyberte alespoň jednu položku k vrácení',
     'screensB.returns.needReason': 'Vyberte důvod, ať to můžeme zpracovat',
     'screensB.returns.created': 'Vrácení založeno',
-    'screensB.returns.labelEmailed': 'Štítek odeslán na sam@example.com',
+    'screensB.returns.labelEmailed':
+      'Štítek odeslán na sam@example.com v této ukázce — žádný e-mail se ve skutečnosti neposílá',
     'screensB.returns.continue': 'Pokračovat',
     'screensB.returns.getLabel': 'Získat štítek',
     'screensB.returns.emailLabel': 'Poslat mi štítek',
@@ -2348,7 +2353,7 @@ export const screensB = {
     'screensB.returns.howSend': 'Jak to chcete poslat?',
     'screensB.returns.doneTitle': 'Vrácení je připravené',
     'screensB.returns.doneBody':
-      'Štítek jsme poslali na sam@example.com. {detail}',
+      'Štítek jsme poslali na sam@example.com v této ukázce — žádný e-mail se ve skutečnosti neposílá. {detail}',
     'screensB.returns.reference': 'Referenční číslo vrácení',
     'screensB.returns.qrHint':
       'Ukažte tento kód na sběrném místě, nebo nalepte vytištěný štítek na balík.',
@@ -2992,7 +2997,8 @@ export const screensB = {
     'screensB.returns.needItem': 'Vælg mindst én vare at returnere',
     'screensB.returns.needReason': 'Vælg en årsag, så vi kan behandle den',
     'screensB.returns.created': 'Returnering oprettet',
-    'screensB.returns.labelEmailed': 'Label sendt til sam@example.com',
+    'screensB.returns.labelEmailed':
+      'Label sendt til sam@example.com i denne demo — der sendes ingen rigtig e-mail',
     'screensB.returns.continue': 'Fortsæt',
     'screensB.returns.getLabel': 'Hent min label',
     'screensB.returns.emailLabel': 'Send mig labelen',
@@ -3009,7 +3015,7 @@ export const screensB = {
     'screensB.returns.howSend': 'Hvordan vil du sende den?',
     'screensB.returns.doneTitle': 'Din returnering er klar',
     'screensB.returns.doneBody':
-      'Vi har sendt labelen til sam@example.com. {detail}',
+      'Vi har sendt labelen til sam@example.com i denne demo — der sendes ingen rigtig e-mail. {detail}',
     'screensB.returns.reference': 'Returreference',
     'screensB.returns.qrHint':
       'Vis denne kode på afleveringsstedet, eller sæt den printede label på pakken.',
@@ -3641,7 +3647,8 @@ export const screensB = {
     'screensB.returns.needItem': '请至少选择一件要退回的商品',
     'screensB.returns.needReason': '请选择原因，以便我们处理',
     'screensB.returns.created': '退货已创建',
-    'screensB.returns.labelEmailed': '寄件标签已发送至 sam@example.com',
+    'screensB.returns.labelEmailed':
+      '本演示中寄件标签已发送至 sam@example.com——实际不会发出任何邮件',
     'screensB.returns.continue': '继续',
     'screensB.returns.getLabel': '获取寄件标签',
     'screensB.returns.emailLabel': '把标签发给我',
@@ -3656,7 +3663,8 @@ export const screensB = {
     'screensB.returns.notePlaceholder': '这有助于我们改进 — 但你不必解释。',
     'screensB.returns.howSend': '你想怎么寄出？',
     'screensB.returns.doneTitle': '退货已安排好',
-    'screensB.returns.doneBody': '我们已把寄件标签发送至 sam@example.com。{detail}',
+    'screensB.returns.doneBody':
+      '本演示中我们已把寄件标签发送至 sam@example.com——实际不会发出任何邮件。{detail}',
     'screensB.returns.reference': '退货编号',
     'screensB.returns.qrHint': '在投递点出示此码，或把打印好的标签贴在包裹上。',
     'screensB.returns.whatNext': '接下来会发生什么',
@@ -4271,7 +4279,8 @@ export const screensB = {
     'screensB.returns.needItem': '請至少選一件要退回的商品',
     'screensB.returns.needReason': '請選擇原因，我們才能處理',
     'screensB.returns.created': '退貨已建立',
-    'screensB.returns.labelEmailed': '寄件標籤已寄至 sam@example.com',
+    'screensB.returns.labelEmailed':
+      '本示範已把寄件標籤寄至 sam@example.com——實際不會寄出任何電子郵件',
     'screensB.returns.continue': '繼續',
     'screensB.returns.getLabel': '取得寄件標籤',
     'screensB.returns.emailLabel': '把標籤寄給我',
@@ -4286,7 +4295,8 @@ export const screensB = {
     'screensB.returns.notePlaceholder': '這能幫我們改進 — 但你不必解釋。',
     'screensB.returns.howSend': '你想怎麼寄出？',
     'screensB.returns.doneTitle': '你的退貨已安排好',
-    'screensB.returns.doneBody': '我們已把寄件標籤寄至 sam@example.com。{detail}',
+    'screensB.returns.doneBody':
+      '本示範中我們已把寄件標籤寄至 sam@example.com——實際不會寄出任何電子郵件。{detail}',
     'screensB.returns.reference': '退貨編號',
     'screensB.returns.qrHint': '在交件據點出示這組代碼，或把列印好的標籤貼在包裹上。',
     'screensB.returns.whatNext': '接下來會怎樣',
@@ -4909,7 +4919,8 @@ export const screensB = {
     'screensB.returns.needItem': 'اختر عنصرًا واحدًا على الأقل لإرجاعه',
     'screensB.returns.needReason': 'اختر سببًا حتى نتمكن من معالجة الطلب',
     'screensB.returns.created': 'أُنشئ طلب الإرجاع',
-    'screensB.returns.labelEmailed': 'أُرسل الملصق إلى sam@example.com',
+    'screensB.returns.labelEmailed':
+      'أُرسل الملصق إلى sam@example.com في هذا العرض التوضيحي — لا يُرسل أي بريد إلكتروني فعليًا',
     'screensB.returns.continue': 'متابعة',
     'screensB.returns.getLabel': 'احصل على الملصق',
     'screensB.returns.emailLabel': 'أرسل لي الملصق',
@@ -4925,7 +4936,8 @@ export const screensB = {
       'هذا يساعدنا على تحسين الأمور — لكنك لست مضطرًا للشرح.',
     'screensB.returns.howSend': 'كيف تفضّل إرساله؟',
     'screensB.returns.doneTitle': 'أصبح الإرجاع جاهزًا',
-    'screensB.returns.doneBody': 'أرسلنا الملصق إلى sam@example.com. {detail}',
+    'screensB.returns.doneBody':
+      'أرسلنا الملصق إلى sam@example.com في هذا العرض التوضيحي — لا يُرسل أي بريد إلكتروني فعليًا. {detail}',
     'screensB.returns.reference': 'رقم مرجع الإرجاع',
     'screensB.returns.qrHint':
       'اعرض هذا الرمز في نقطة التسليم، أو ألصق الملصق المطبوع على الطرد.',
