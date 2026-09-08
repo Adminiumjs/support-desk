@@ -1,9 +1,9 @@
 /**
  * THE SLOTS THIS HELP DESK MOUNTS, and what it draws where nothing fills one.
  *
- * ── THREE OF TWELVE, AND THE BOUNDARY IS STRUCTURAL ────────────────────────
+ * ── THREE OF THIRTEEN, AND THE BOUNDARY IS STRUCTURAL ──────────────────────
  *
- * `vendor/host/slots.ts` carries the CLOSED REGISTRY — twelve ids, every place
+ * `vendor/host/slots.ts` carries the CLOSED REGISTRY — thirteen ids, every place
  * in any Adminium app an add-on may reach. This list is three of them, and the
  * three are what a CUSTOMER help portal can honestly host. `manifest.json`
  * declares exactly one frontend and its `side` is `customer`; the staff half
@@ -37,7 +37,7 @@ import {
 
 /**
  * THIS host's list. The import above renames the closed registry on the way in
- * — `vendor/host/slots.ts` exports all twelve under the name `HOSTED_SLOTS`,
+ * — `vendor/host/slots.ts` exports the whole registry under the name `HOSTED_SLOTS`,
  * the same identifier this file uses for the three ids the app actually
  * mounts, and importing the wrong one silently widens every check in the kit.
  * `guards/mounts.ts` asserts this list is a strict subset of the registry so a
