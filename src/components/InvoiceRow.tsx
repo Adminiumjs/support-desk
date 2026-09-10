@@ -31,7 +31,7 @@ export interface InvoiceRowProps {
   invoice: Invoice;
   /** Drops the bottom border on the last row. */
   last?: boolean;
-  /** "Download PDF", or a payment retry on a failed invoice. */
+  /** A payment retry, offered on a failed invoice only (34-T28b). */
   onDownload: () => void;
 }
 
@@ -59,12 +59,22 @@ export function InvoiceRow({ invoice, last = false, onDownload }: InvoiceRowProp
         </SoftPill>
       </span>
       <span className="inv__action">
-        <IconButton
-          icon={failed ? "refresh-cw" : "download"}
-          label={t(failed ? "chrome.invoice.retry" : "chrome.invoice.download")}
-          small
-          onClick={onDownload}
-        />
+        {/*
+          * ONLY THE RETRY (34-T28b). The download half named a `.pdf` nobody
+          * writes — `invoiceDownloadToast` said "Downloading inv-9.pdf" and no
+          * file has ever existed. A button that reports a result it did not
+          * produce is the simulated result this fleet's audit catalogued, so
+          * the button goes rather than being labelled: this app has no demo
+          * marker convention to label it with.
+          */}
+        {failed && (
+          <IconButton
+            icon="refresh-cw"
+            label={t("chrome.invoice.retry")}
+            small
+            onClick={onDownload}
+          />
+        )}
       </span>
     </div>
   );

@@ -72,7 +72,7 @@ import {
 import {
   freeDeliveryLine,
   filterStores,
-  invoiceDownloadToast,
+  invoiceRetryToast,
   storeKeyToast,
   storeSearchToast,
   visibleWish,
@@ -1744,7 +1744,7 @@ export const useAppStore = create<Store>((set, get) => ({
   exportInvoices: () =>
     get().showToast(t("chrome.toast.downloading", { file: INVOICE_EXPORT_FILE })),
 
-  downloadInvoice: (invoice) => get().showToast(invoiceDownloadToast(invoice)),
+  downloadInvoice: (invoice) => get().showToast(invoiceRetryToast(invoice)),
 
   /* ---------------------------------------------------------- wishlist */
 

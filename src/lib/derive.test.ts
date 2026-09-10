@@ -68,7 +68,7 @@ import {
   groupRecent,
   insurancePrimaryIcon,
   insurancePrimaryLabel,
-  invoiceDownloadToast,
+  invoiceRetryToast,
   invoicesInPeriod,
   leaderEarned,
   leaderLine,
@@ -464,22 +464,26 @@ describe("plan lines", () => {
   });
 });
 
-describe("invoiceDownloadToast", () => {
+describe("invoiceRetryToast", () => {
   it("uses the same verb as the status pill for a failed payment", () => {
     /* The row shows "Retrying" (never "Failed"); the toast must not call it
      * something else. Driven off the pill so a relabel moves both. */
-    const toast = invoiceDownloadToast(invoice("INV-9", "12 Apr 2026", "plan", "failed"));
+    const toast = invoiceRetryToast(invoice("INV-9", "12 Apr 2026", "plan", "failed"));
     expect(toast.startsWith(invoiceStatusMeta("failed").label)).toBe(true);
     expect(toast).toBe("Retrying payment for INV-9");
   });
 
-  it("lower-cases the id for the filename and only for the filename", () => {
-    expect(invoiceDownloadToast(invoice("INV-9", "12 Jul 2026", "plan", "paid"))).toBe(
-      "Downloading inv-9.pdf",
-    );
-    expect(invoiceDownloadToast(invoice("CRN-1", "09 Jun 2026", "refund", "refunded"))).toBe(
-      "Downloading crn-1.pdf",
-    );
+  it("has no download branch left to be dishonest in (34-T28b)", () => {
+    /*
+     * It used to answer a paid invoice with "Downloading inv-9.pdf" — a file
+     * that has never been written, in eight languages. The row now offers the
+     * control only where a retry means something, so a paid invoice reaches
+     * this function through no button at all; if one is ever added, this says
+     * what it must not go back to.
+     */
+    const paid = invoiceRetryToast(invoice("INV-9", "12 Jul 2026", "plan", "paid"));
+    expect(paid).not.toMatch(/download/i);
+    expect(paid).not.toMatch(/\.pdf/i);
   });
 });
 

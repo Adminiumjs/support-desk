@@ -52,28 +52,27 @@ export const lib = {
     'lib.stores.foundToast': "{locations} found",
 
     /* --------------------------------------------------------- billing */
-    'lib.billing.statusPaid': "Paid",
-    'lib.billing.statusRefunded': "Refunded",
-    'lib.billing.statusRetrying': "Retrying",
-    'lib.billing.emptyPeriodTitle': "No invoices in that period",
-    'lib.billing.emptyPeriodText':
+    'lib.invoicing.statusPaid': "Paid",
+    'lib.invoicing.statusRefunded': "Refunded",
+    'lib.invoicing.statusRetrying': "Retrying",
+    'lib.invoicing.emptyPeriodTitle': "No invoices in that period",
+    'lib.invoicing.emptyPeriodText':
       "Nothing was issued while you were on this account in that period. Invoices appear the day they're raised, and we keep seven years of them.",
-    'lib.billing.emptyFilterTitle': "Nothing in this filter",
-    'lib.billing.emptyFilterPlan':
+    'lib.invoicing.emptyFilterTitle': "Nothing in this filter",
+    'lib.invoicing.emptyFilterPlan':
       "No plan invoices in this period — try another filter, or export everything as a CSV.",
-    'lib.billing.emptyFilterHardware':
+    'lib.invoicing.emptyFilterHardware':
       "No hardware invoices in this period — try another filter, or export everything as a CSV.",
-    'lib.billing.emptyFilterRefund':
+    'lib.invoicing.emptyFilterRefund':
       "No refunds in this period — try another filter, or export everything as a CSV.",
-    'lib.billing.intro':
+    'lib.invoicing.intro':
       "Every invoice since you joined, plus what's coming next. Downloads are PDFs with VAT broken out.",
-    'lib.billing.planFree': "free",
-    'lib.billing.perYear': "{price} / year",
-    'lib.billing.perMonth': "{price} / month",
-    'lib.billing.noCharge': "Nothing to bill — the free tier has no charges.",
-    'lib.billing.nextCharge': "Next charge {date}, taken from the card below.",
-    'lib.billing.retryingPayment': "Retrying payment for {id}",
-    'lib.billing.downloading': "Downloading {file}",
+    'lib.invoicing.planFree': "free",
+    'lib.invoicing.perYear': "{price} / year",
+    'lib.invoicing.perMonth': "{price} / month",
+    'lib.invoicing.noCharge': "Nothing to bill — the free tier has no charges.",
+    'lib.invoicing.nextCharge': "Next charge {date}, taken from the card below.",
+    'lib.invoicing.retryingPayment': "Retrying payment for {id}",
 
     /* ------------------------------------------------------------ wish */
     'lib.wish.stockIn': "In stock",
@@ -290,30 +289,29 @@ export const lib = {
     'lib.stores.searchNearYou': '{locations} in Ihrer Nähe',
     'lib.stores.foundToast': '{locations} gefunden',
 
-    'lib.billing.statusPaid': 'Bezahlt',
-    'lib.billing.statusRefunded': 'Erstattet',
-    'lib.billing.statusRetrying': 'Neuer Versuch',
-    'lib.billing.emptyPeriodTitle': 'Keine Rechnungen in diesem Zeitraum',
-    'lib.billing.emptyPeriodText':
+    'lib.invoicing.statusPaid': 'Bezahlt',
+    'lib.invoicing.statusRefunded': 'Erstattet',
+    'lib.invoicing.statusRetrying': 'Neuer Versuch',
+    'lib.invoicing.emptyPeriodTitle': 'Keine Rechnungen in diesem Zeitraum',
+    'lib.invoicing.emptyPeriodText':
       'In diesem Zeitraum wurde nichts ausgestellt, während Sie dieses Konto hatten. Rechnungen erscheinen am Tag der Ausstellung, und wir bewahren sie sieben Jahre lang auf.',
-    'lib.billing.emptyFilterTitle': 'Nichts in diesem Filter',
-    'lib.billing.emptyFilterPlan':
+    'lib.invoicing.emptyFilterTitle': 'Nichts in diesem Filter',
+    'lib.invoicing.emptyFilterPlan':
       'Keine Tarifrechnungen in diesem Zeitraum — probieren Sie einen anderen Filter oder exportieren Sie alles als CSV.',
-    'lib.billing.emptyFilterHardware':
+    'lib.invoicing.emptyFilterHardware':
       'Keine Hardwarerechnungen in diesem Zeitraum — probieren Sie einen anderen Filter oder exportieren Sie alles als CSV.',
-    'lib.billing.emptyFilterRefund':
+    'lib.invoicing.emptyFilterRefund':
       'Keine Erstattungen in diesem Zeitraum — probieren Sie einen anderen Filter oder exportieren Sie alles als CSV.',
-    'lib.billing.intro':
+    'lib.invoicing.intro':
       'Jede Rechnung seit Ihrem Beitritt, plus was als Nächstes kommt. Downloads sind PDFs mit ausgewiesener MwSt.',
-    'lib.billing.planFree': 'kostenlos',
-    'lib.billing.perYear': '{price} / Jahr',
-    'lib.billing.perMonth': '{price} / Monat',
-    'lib.billing.noCharge':
+    'lib.invoicing.planFree': 'kostenlos',
+    'lib.invoicing.perYear': '{price} / Jahr',
+    'lib.invoicing.perMonth': '{price} / Monat',
+    'lib.invoicing.noCharge':
       'Nichts abzurechnen — der kostenlose Tarif verursacht keine Kosten.',
-    'lib.billing.nextCharge':
+    'lib.invoicing.nextCharge':
       'Nächste Abbuchung {date}, von der Karte unten.',
-    'lib.billing.retryingPayment': 'Zahlung für {id} wird erneut versucht',
-    'lib.billing.downloading': '{file} wird heruntergeladen',
+    'lib.invoicing.retryingPayment': 'Zahlung für {id} wird erneut versucht',
 
     'lib.wish.stockIn': 'Auf Lager',
     'lib.wish.stockLow': 'Wenig Bestand',
@@ -525,30 +523,29 @@ export const lib = {
     /* Le participe s’accorde avec « adresse », d’où les deux variantes. */
     'lib.stores.foundToast': '{locations} trouvée|{locations} trouvées',
 
-    'lib.billing.statusPaid': 'Payée',
-    'lib.billing.statusRefunded': 'Remboursée',
-    'lib.billing.statusRetrying': 'Nouvelle tentative',
-    'lib.billing.emptyPeriodTitle': 'Aucune facture sur cette période',
-    'lib.billing.emptyPeriodText':
+    'lib.invoicing.statusPaid': 'Payée',
+    'lib.invoicing.statusRefunded': 'Remboursée',
+    'lib.invoicing.statusRetrying': 'Nouvelle tentative',
+    'lib.invoicing.emptyPeriodTitle': 'Aucune facture sur cette période',
+    'lib.invoicing.emptyPeriodText':
       'Rien n’a été émis pendant que vous étiez sur ce compte sur cette période. Les factures apparaissent le jour de leur émission, et nous les conservons sept ans.',
-    'lib.billing.emptyFilterTitle': 'Rien dans ce filtre',
-    'lib.billing.emptyFilterPlan':
+    'lib.invoicing.emptyFilterTitle': 'Rien dans ce filtre',
+    'lib.invoicing.emptyFilterPlan':
       'Aucune facture d’abonnement sur cette période — essayez un autre filtre, ou exportez tout en CSV.',
-    'lib.billing.emptyFilterHardware':
+    'lib.invoicing.emptyFilterHardware':
       'Aucune facture de matériel sur cette période — essayez un autre filtre, ou exportez tout en CSV.',
-    'lib.billing.emptyFilterRefund':
+    'lib.invoicing.emptyFilterRefund':
       'Aucun remboursement sur cette période — essayez un autre filtre, ou exportez tout en CSV.',
-    'lib.billing.intro':
+    'lib.invoicing.intro':
       'Toutes vos factures depuis votre inscription, et ce qui arrive ensuite. Les téléchargements sont des PDF avec la TVA détaillée.',
-    'lib.billing.planFree': 'gratuit',
-    'lib.billing.perYear': '{price} / an',
-    'lib.billing.perMonth': '{price} / mois',
-    'lib.billing.noCharge':
+    'lib.invoicing.planFree': 'gratuit',
+    'lib.invoicing.perYear': '{price} / an',
+    'lib.invoicing.perMonth': '{price} / mois',
+    'lib.invoicing.noCharge':
       'Rien à facturer — l’offre gratuite n’entraîne aucun frais.',
-    'lib.billing.nextCharge':
+    'lib.invoicing.nextCharge':
       'Prochain prélèvement le {date}, sur la carte ci-dessous.',
-    'lib.billing.retryingPayment': 'Nouvelle tentative de paiement pour {id}',
-    'lib.billing.downloading': 'Téléchargement de {file}',
+    'lib.invoicing.retryingPayment': 'Nouvelle tentative de paiement pour {id}',
 
     'lib.wish.stockIn': 'En stock',
     'lib.wish.stockLow': 'Stock faible',
@@ -754,30 +751,29 @@ export const lib = {
     'lib.stores.foundToast':
       '{locations} nalezena|{locations} nalezeny|{locations} nalezeno',
 
-    'lib.billing.statusPaid': 'Zaplaceno',
-    'lib.billing.statusRefunded': 'Vráceno',
-    'lib.billing.statusRetrying': 'Opakuje se',
-    'lib.billing.emptyPeriodTitle': 'V tomto období žádné faktury',
-    'lib.billing.emptyPeriodText':
+    'lib.invoicing.statusPaid': 'Zaplaceno',
+    'lib.invoicing.statusRefunded': 'Vráceno',
+    'lib.invoicing.statusRetrying': 'Opakuje se',
+    'lib.invoicing.emptyPeriodTitle': 'V tomto období žádné faktury',
+    'lib.invoicing.emptyPeriodText':
       'V tomto období vám na tomto účtu nebylo nic vystaveno. Faktury se objeví v den vystavení a uchováváme je sedm let.',
-    'lib.billing.emptyFilterTitle': 'V tomto filtru nic není',
-    'lib.billing.emptyFilterPlan':
+    'lib.invoicing.emptyFilterTitle': 'V tomto filtru nic není',
+    'lib.invoicing.emptyFilterPlan':
       'V tomto období nejsou žádné faktury za tarif — zkuste jiný filtr, nebo vše exportujte jako CSV.',
-    'lib.billing.emptyFilterHardware':
+    'lib.invoicing.emptyFilterHardware':
       'V tomto období nejsou žádné faktury za hardware — zkuste jiný filtr, nebo vše exportujte jako CSV.',
-    'lib.billing.emptyFilterRefund':
+    'lib.invoicing.emptyFilterRefund':
       'V tomto období nejsou žádné vratky — zkuste jiný filtr, nebo vše exportujte jako CSV.',
-    'lib.billing.intro':
+    'lib.invoicing.intro':
       'Každá faktura od vašeho začátku a k tomu, co přijde příště. Ke stažení jsou PDF s rozepsanou DPH.',
-    'lib.billing.planFree': 'zdarma',
-    'lib.billing.perYear': '{price} / rok',
-    'lib.billing.perMonth': '{price} / měsíc',
-    'lib.billing.noCharge':
+    'lib.invoicing.planFree': 'zdarma',
+    'lib.invoicing.perYear': '{price} / rok',
+    'lib.invoicing.perMonth': '{price} / měsíc',
+    'lib.invoicing.noCharge':
       'Není co účtovat — bezplatný tarif nic nestojí.',
-    'lib.billing.nextCharge':
+    'lib.invoicing.nextCharge':
       'Další platba {date}, stržená z karty níže.',
-    'lib.billing.retryingPayment': 'Opakujeme platbu za {id}',
-    'lib.billing.downloading': 'Stahuje se {file}',
+    'lib.invoicing.retryingPayment': 'Opakujeme platbu za {id}',
 
     'lib.wish.stockIn': 'Skladem',
     'lib.wish.stockLow': 'Málo skladem',
@@ -978,30 +974,29 @@ export const lib = {
     'lib.stores.searchNearYou': '{locations} i nærheden af dig',
     'lib.stores.foundToast': '{locations} fundet',
 
-    'lib.billing.statusPaid': 'Betalt',
-    'lib.billing.statusRefunded': 'Refunderet',
-    'lib.billing.statusRetrying': 'Forsøger igen',
-    'lib.billing.emptyPeriodTitle': 'Ingen fakturaer i den periode',
-    'lib.billing.emptyPeriodText':
+    'lib.invoicing.statusPaid': 'Betalt',
+    'lib.invoicing.statusRefunded': 'Refunderet',
+    'lib.invoicing.statusRetrying': 'Forsøger igen',
+    'lib.invoicing.emptyPeriodTitle': 'Ingen fakturaer i den periode',
+    'lib.invoicing.emptyPeriodText':
       'Der blev ikke udstedt noget, mens du havde denne konto i den periode. Fakturaer vises den dag, de udstedes, og vi gemmer dem i syv år.',
-    'lib.billing.emptyFilterTitle': 'Intet i dette filter',
-    'lib.billing.emptyFilterPlan':
+    'lib.invoicing.emptyFilterTitle': 'Intet i dette filter',
+    'lib.invoicing.emptyFilterPlan':
       'Ingen abonnementsfakturaer i denne periode — prøv et andet filter, eller eksportér det hele som CSV.',
-    'lib.billing.emptyFilterHardware':
+    'lib.invoicing.emptyFilterHardware':
       'Ingen hardwarefakturaer i denne periode — prøv et andet filter, eller eksportér det hele som CSV.',
-    'lib.billing.emptyFilterRefund':
+    'lib.invoicing.emptyFilterRefund':
       'Ingen refusioner i denne periode — prøv et andet filter, eller eksportér det hele som CSV.',
-    'lib.billing.intro':
+    'lib.invoicing.intro':
       'Alle fakturaer siden du blev kunde, plus hvad der kommer næste gang. Downloads er PDF-filer med moms specificeret.',
-    'lib.billing.planFree': 'gratis',
-    'lib.billing.perYear': '{price} / år',
-    'lib.billing.perMonth': '{price} / måned',
-    'lib.billing.noCharge':
+    'lib.invoicing.planFree': 'gratis',
+    'lib.invoicing.perYear': '{price} / år',
+    'lib.invoicing.perMonth': '{price} / måned',
+    'lib.invoicing.noCharge':
       'Intet at fakturere — det gratis niveau koster ikke noget.',
-    'lib.billing.nextCharge':
+    'lib.invoicing.nextCharge':
       'Næste betaling {date}, trukket fra kortet nedenfor.',
-    'lib.billing.retryingPayment': 'Prøver betalingen for {id} igen',
-    'lib.billing.downloading': 'Downloader {file}',
+    'lib.invoicing.retryingPayment': 'Prøver betalingen for {id} igen',
 
     'lib.wish.stockIn': 'På lager',
     'lib.wish.stockLow': 'Få på lager',
@@ -1203,28 +1198,27 @@ export const lib = {
     'lib.stores.searchNearYou': '你附近有 {locations}',
     'lib.stores.foundToast': '找到 {locations}',
 
-    'lib.billing.statusPaid': '已支付',
-    'lib.billing.statusRefunded': '已退款',
-    'lib.billing.statusRetrying': '重试中',
-    'lib.billing.emptyPeriodTitle': '该期间没有账单',
-    'lib.billing.emptyPeriodText':
+    'lib.invoicing.statusPaid': '已支付',
+    'lib.invoicing.statusRefunded': '已退款',
+    'lib.invoicing.statusRetrying': '重试中',
+    'lib.invoicing.emptyPeriodTitle': '该期间没有账单',
+    'lib.invoicing.emptyPeriodText':
       '在该期间，你使用此账户时没有开具任何账单。账单在开具当天出现，我们会保留七年。',
-    'lib.billing.emptyFilterTitle': '该筛选下没有内容',
-    'lib.billing.emptyFilterPlan':
+    'lib.invoicing.emptyFilterTitle': '该筛选下没有内容',
+    'lib.invoicing.emptyFilterPlan':
       '该期间没有套餐账单 — 换个筛选条件，或把全部导出为 CSV。',
-    'lib.billing.emptyFilterHardware':
+    'lib.invoicing.emptyFilterHardware':
       '该期间没有硬件账单 — 换个筛选条件，或把全部导出为 CSV。',
-    'lib.billing.emptyFilterRefund':
+    'lib.invoicing.emptyFilterRefund':
       '该期间没有退款 — 换个筛选条件，或把全部导出为 CSV。',
-    'lib.billing.intro':
+    'lib.invoicing.intro':
       '自你加入以来的每一张账单，以及接下来的费用。下载文件为 PDF，增值税单独列出。',
-    'lib.billing.planFree': '免费',
-    'lib.billing.perYear': '{price} / 年',
-    'lib.billing.perMonth': '{price} / 月',
-    'lib.billing.noCharge': '无需付费 — 免费套餐不产生任何费用。',
-    'lib.billing.nextCharge': '下次扣款 {date}，从下方的卡片扣除。',
-    'lib.billing.retryingPayment': '正在重试 {id} 的付款',
-    'lib.billing.downloading': '正在下载 {file}',
+    'lib.invoicing.planFree': '免费',
+    'lib.invoicing.perYear': '{price} / 年',
+    'lib.invoicing.perMonth': '{price} / 月',
+    'lib.invoicing.noCharge': '无需付费 — 免费套餐不产生任何费用。',
+    'lib.invoicing.nextCharge': '下次扣款 {date}，从下方的卡片扣除。',
+    'lib.invoicing.retryingPayment': '正在重试 {id} 的付款',
 
     'lib.wish.stockIn': '有货',
     'lib.wish.stockLow': '库存不多',
@@ -1419,28 +1413,27 @@ export const lib = {
     'lib.stores.searchNearYou': '你附近有 {locations}',
     'lib.stores.foundToast': '找到 {locations}',
 
-    'lib.billing.statusPaid': '已付款',
-    'lib.billing.statusRefunded': '已退款',
-    'lib.billing.statusRetrying': '重試中',
-    'lib.billing.emptyPeriodTitle': '此期間沒有帳單',
-    'lib.billing.emptyPeriodText':
+    'lib.invoicing.statusPaid': '已付款',
+    'lib.invoicing.statusRefunded': '已退款',
+    'lib.invoicing.statusRetrying': '重試中',
+    'lib.invoicing.emptyPeriodTitle': '此期間沒有帳單',
+    'lib.invoicing.emptyPeriodText':
       '在此期間，你使用這個帳戶時沒有開立任何帳單。帳單會在開立當天出現，我們會保留七年。',
-    'lib.billing.emptyFilterTitle': '此篩選沒有內容',
-    'lib.billing.emptyFilterPlan':
+    'lib.invoicing.emptyFilterTitle': '此篩選沒有內容',
+    'lib.invoicing.emptyFilterPlan':
       '此期間沒有方案帳單 — 換個篩選條件，或將全部匯出為 CSV。',
-    'lib.billing.emptyFilterHardware':
+    'lib.invoicing.emptyFilterHardware':
       '此期間沒有硬體帳單 — 換個篩選條件，或將全部匯出為 CSV。',
-    'lib.billing.emptyFilterRefund':
+    'lib.invoicing.emptyFilterRefund':
       '此期間沒有退款 — 換個篩選條件，或將全部匯出為 CSV。',
-    'lib.billing.intro':
+    'lib.invoicing.intro':
       '自你加入以來的每一張帳單，以及接下來的費用。下載檔案為 PDF，加值稅另行列出。',
-    'lib.billing.planFree': '免費',
-    'lib.billing.perYear': '{price} / 年',
-    'lib.billing.perMonth': '{price} / 月',
-    'lib.billing.noCharge': '沒有要收的費用 — 免費方案不會產生任何費用。',
-    'lib.billing.nextCharge': '下次扣款 {date}，從下方的卡片扣除。',
-    'lib.billing.retryingPayment': '正在重試 {id} 的付款',
-    'lib.billing.downloading': '正在下載 {file}',
+    'lib.invoicing.planFree': '免費',
+    'lib.invoicing.perYear': '{price} / 年',
+    'lib.invoicing.perMonth': '{price} / 月',
+    'lib.invoicing.noCharge': '沒有要收的費用 — 免費方案不會產生任何費用。',
+    'lib.invoicing.nextCharge': '下次扣款 {date}，從下方的卡片扣除。',
+    'lib.invoicing.retryingPayment': '正在重試 {id} 的付款',
 
     'lib.wish.stockIn': '有貨',
     'lib.wish.stockLow': '庫存不多',
@@ -1638,28 +1631,27 @@ export const lib = {
     'lib.stores.searchNearYou': '{locations} بالقرب منك',
     'lib.stores.foundToast': 'تم العثور على {locations}',
 
-    'lib.billing.statusPaid': 'مدفوعة',
-    'lib.billing.statusRefunded': 'مستردة',
-    'lib.billing.statusRetrying': 'إعادة المحاولة',
-    'lib.billing.emptyPeriodTitle': 'لا توجد فواتير في تلك الفترة',
-    'lib.billing.emptyPeriodText':
+    'lib.invoicing.statusPaid': 'مدفوعة',
+    'lib.invoicing.statusRefunded': 'مستردة',
+    'lib.invoicing.statusRetrying': 'إعادة المحاولة',
+    'lib.invoicing.emptyPeriodTitle': 'لا توجد فواتير في تلك الفترة',
+    'lib.invoicing.emptyPeriodText':
       'لم يصدر أي شيء أثناء وجودك على هذا الحساب في تلك الفترة. تظهر الفواتير يوم إصدارها، ونحتفظ بها سبع سنوات.',
-    'lib.billing.emptyFilterTitle': 'لا يوجد شيء ضمن هذه التصفية',
-    'lib.billing.emptyFilterPlan':
+    'lib.invoicing.emptyFilterTitle': 'لا يوجد شيء ضمن هذه التصفية',
+    'lib.invoicing.emptyFilterPlan':
       'لا توجد فواتير اشتراك في هذه الفترة — جرّب تصفية أخرى، أو صدّر كل شيء بصيغة CSV.',
-    'lib.billing.emptyFilterHardware':
+    'lib.invoicing.emptyFilterHardware':
       'لا توجد فواتير أجهزة في هذه الفترة — جرّب تصفية أخرى، أو صدّر كل شيء بصيغة CSV.',
-    'lib.billing.emptyFilterRefund':
+    'lib.invoicing.emptyFilterRefund':
       'لا توجد مبالغ مستردة في هذه الفترة — جرّب تصفية أخرى، أو صدّر كل شيء بصيغة CSV.',
-    'lib.billing.intro':
+    'lib.invoicing.intro':
       'كل فاتورة منذ انضمامك، بالإضافة إلى ما هو قادم. الملفات المتاحة للتنزيل بصيغة PDF مع بيان ضريبة القيمة المضافة.',
-    'lib.billing.planFree': 'مجاني',
-    'lib.billing.perYear': '{price} / سنة',
-    'lib.billing.perMonth': '{price} / شهر',
-    'lib.billing.noCharge': 'لا شيء للفوترة — الباقة المجانية بلا رسوم.',
-    'lib.billing.nextCharge': 'الخصم التالي {date}، من البطاقة أدناه.',
-    'lib.billing.retryingPayment': 'إعادة محاولة الدفع للفاتورة {id}',
-    'lib.billing.downloading': 'جارٍ تنزيل {file}',
+    'lib.invoicing.planFree': 'مجاني',
+    'lib.invoicing.perYear': '{price} / سنة',
+    'lib.invoicing.perMonth': '{price} / شهر',
+    'lib.invoicing.noCharge': 'لا شيء للفوترة — الباقة المجانية بلا رسوم.',
+    'lib.invoicing.nextCharge': 'الخصم التالي {date}، من البطاقة أدناه.',
+    'lib.invoicing.retryingPayment': 'إعادة محاولة الدفع للفاتورة {id}',
 
     'lib.wish.stockIn': 'متوفر',
     'lib.wish.stockLow': 'الكمية محدودة',

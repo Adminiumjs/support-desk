@@ -121,10 +121,10 @@ export function storeKeyToast(count: number): string {
 
 export function invoiceStatusMeta(status: InvoiceStatus): PillMeta {
   const labels: Record<InvoiceStatus, string> = {
-    paid: t("lib.billing.statusPaid"),
-    refunded: t("lib.billing.statusRefunded"),
+    paid: t("lib.invoicing.statusPaid"),
+    refunded: t("lib.invoicing.statusRefunded"),
     /* Deliberately not "Failed". */
-    failed: t("lib.billing.statusRetrying"),
+    failed: t("lib.invoicing.statusRetrying"),
   };
   const style: Record<InvoiceStatus, Omit<PillMeta, "label">> = {
     paid: { fg: "--pos", soft: "--pos-soft", icon: "check-circle-2" },
@@ -162,8 +162,8 @@ export interface EmptyCopy {
 export function billingEmpty(periodCount: number, filter: string): EmptyCopy {
   if (!periodCount) {
     return {
-      title: t("lib.billing.emptyPeriodTitle"),
-      text: t("lib.billing.emptyPeriodText"),
+      title: t("lib.invoicing.emptyPeriodTitle"),
+      text: t("lib.invoicing.emptyPeriodText"),
     };
   }
   /*
@@ -174,23 +174,23 @@ export function billingEmpty(periodCount: number, filter: string): EmptyCopy {
    */
   const text =
     filter === "refund"
-      ? t("lib.billing.emptyFilterRefund")
+      ? t("lib.invoicing.emptyFilterRefund")
       : filter === "hardware"
-        ? t("lib.billing.emptyFilterHardware")
-        : t("lib.billing.emptyFilterPlan");
-  return { title: t("lib.billing.emptyFilterTitle"), text };
+        ? t("lib.invoicing.emptyFilterHardware")
+        : t("lib.invoicing.emptyFilterPlan");
+  return { title: t("lib.invoicing.emptyFilterTitle"), text };
 }
 
 export function blIntro(): string {
-  return t("lib.billing.intro");
+  return t("lib.invoicing.intro");
 }
 
 /** `free` / `£3.99 / month` / `£39.90 / year`. */
 export function planPriceLine(monthly: number, cycle: string): string {
-  if (monthly === 0) return t("lib.billing.planFree");
+  if (monthly === 0) return t("lib.invoicing.planFree");
   return cycle === "annual"
-    ? t("lib.billing.perYear", { price: money(monthly * 10) })
-    : t("lib.billing.perMonth", { price: moneyLoose(monthly) });
+    ? t("lib.invoicing.perYear", { price: money(monthly * 10) })
+    : t("lib.invoicing.perMonth", { price: moneyLoose(monthly) });
 }
 
 /**
@@ -209,14 +209,19 @@ export function nextChargeDate(cycle: string): string {
 }
 
 export function nextChargeLine(monthly: number, cycle: string): string {
-  if (monthly === 0) return t("lib.billing.noCharge");
-  return t("lib.billing.nextCharge", { date: nextChargeDate(cycle) });
+  if (monthly === 0) return t("lib.invoicing.noCharge");
+  return t("lib.invoicing.nextCharge", { date: nextChargeDate(cycle) });
 }
 
-export function invoiceDownloadToast(invoice: Invoice): string {
-  return invoice.status === "failed"
-    ? t("lib.billing.retryingPayment", { id: invoice.id })
-    : t("lib.billing.downloading", { file: `${invoice.id.toLowerCase()}.pdf` });
+/**
+ * The retry toast, and nothing else (34-T28b).
+ *
+ * It used to answer a download with "Downloading inv-9.pdf" for a file that
+ * has never been written. The row now offers the control only where a retry is
+ * meaningful, so there is no second branch to be dishonest in.
+ */
+export function invoiceRetryToast(invoice: Invoice): string {
+  return t("lib.invoicing.retryingPayment", { id: invoice.id });
 }
 
 /* ============================================================ wishlist == */
