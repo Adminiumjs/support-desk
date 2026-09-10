@@ -34,10 +34,61 @@ import {
   labelPairingSourceGuard,
   lexiconGuard,
   payloadCastsGuard,
+  deliveryClaimsGuard,
+  recordPayloadGuard,
   stylesGuard,
   tierGuard,
   vendoredGuard,
 } from "../testing/kit/index.ts";
+
+/**
+ * Claims about a delivery this app makes, each answered (34 D19, 34-T28b).
+ *
+ * ── WHAT THIS LIST IS ───────────────────────────────────────────────────────
+ *
+ * A seeded demo delivers nothing: no email leaves, no file is written, no
+ * carrier is called. Every string below says otherwise, and every one of them
+ * was already shipping when the guard arrived. The list is therefore a
+ * BASELINE and a RATCHET — it is what was here, written down, and a claim
+ * added after today fails until somebody adds a line and says why.
+ *
+ * ── AND WHAT WAS FIXED RATHER THAN LISTED ───────────────────────────────────
+ *
+ * The invoice download toast — "Downloading inv-9.pdf", for a file that has
+ * never existed — is NOT here, because 34-T28b removed the button that said
+ * it, and renamed the namespace it lived in. That is the shape a fix takes; the rest are deposited, see below.
+ *
+ * The remainder is in `27-residual-work.md` under support-desk: each of these
+ * is either a demo disclaimer this app already carries in prose (the returns
+ * pair), narrative fiction inside a seeded scenario (the breach screens), or a
+ * simulated result that needs the same treatment the billing toast got.
+ */
+const DELIVERY_CLAIMS: Record<string, string> = {
+  // Already honest, in prose rather than with a marker: "…in this demo — no
+  // email is actually sent", translated into all eight.
+  'screensB.returns.labelEmailed': 'carries its own in-sentence demo disclaimer, ×8',
+  'screensB.returns.doneBody': 'carries its own in-sentence demo disclaimer, ×8',
+
+  // Narrative inside a seeded scenario — a fictional breach that happened to a
+  // fictional address before the reader arrived. Not a claim about an action
+  // this app took.
+  'chrome.breach.hit': 'seeded scenario: a past event in the fiction, not an action taken now',
+  'screensA.breach.checkIntro': 'seeded scenario: a past event in the fiction',
+
+  // Simulated results. Deposited — 27-residual-work.md, support-desk.
+  'chrome.toast.downloading': 'simulated: no file is written — 27-residual, support-desk',
+  'lib.clips.downloadToast': 'simulated: no file is written — 27-residual, support-desk',
+  'screensA.downloads.toastFile': 'simulated: no file is written — 27-residual, support-desk',
+  'lib.transfer.done': 'simulated: no email leaves — 27-residual, support-desk',
+  'screensB.warranty.doneBody': 'simulated: no email leaves — 27-residual, support-desk',
+  'screensB.members.inviteSentTo': 'simulated: no invite is sent — 27-residual, support-desk',
+  'screensB.refer.inviteSent': 'simulated: no invite is sent — 27-residual, support-desk',
+  'screensA.installers.toastRequest': 'simulated: nothing is requested — 27-residual, support-desk',
+  'screensA.gift.sentNow': 'simulated: nothing is dispatched — 27-residual, support-desk',
+  'chrome.recycle.title.post': 'simulated: no label is posted — 27-residual, support-desk',
+  'screensB.tradein.doneTitle': 'simulated: no pack is dispatched — 27-residual, support-desk',
+};
+
 
 /* ─── the kit's own gates ─────────────────────────────────────────────────── */
 
@@ -56,6 +107,29 @@ payloadCastsGuard(hostKit);
 factsGuard(hostKit);
 vendoredGuard(hostKit);
 stylesGuard(hostKit);
+/*
+ * 34 D19. This app labels no simulation — it has no demo-marker convention at
+ * all — so every claim it makes has to be answered in `claimsDeclared`, by
+ * name, with the argument being made.
+ */
+deliveryClaimsGuard(hostKit, {
+  bundleFor: (locale) => MESSAGES[locale as keyof typeof MESSAGES] ?? {},
+  /*
+   * This app DOES label its simulations — it just does it in a sentence rather
+   * than with a suffix: "…in this demo — no email is actually sent", translated
+   * into all eight. These are that sentence's stable half, per language.
+   */
+  /*
+   * NONE. This app labels its simulations in PROSE — "…in this demo, no email
+   * is actually sent" — rather than with a suffix, and eight declared
+   * substrings matched most of those and missed the ones a translator phrased
+   * differently. Every claim is answered by name below instead.
+   */
+  demoLabels: {},
+  claimsDeclared: DELIVERY_CLAIMS,
+});
+recordPayloadGuard(hostKit);
+
 tierGuard(hostKit);
 
 /* ─── what is true of THIS host and no other ──────────────────────────────── */
