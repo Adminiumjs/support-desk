@@ -480,6 +480,9 @@
         "group": "manifest:helpdesk",
         "icon": "inbox",
         "order": 2
+      },
+      "bindings": {
+        "rows": "tickets"
       }
     },
     {
@@ -493,6 +496,9 @@
         "group": "manifest:helpdesk",
         "icon": "book-open",
         "order": 3
+      },
+      "bindings": {
+        "rows": "kb_articles"
       }
     },
     {
@@ -506,6 +512,9 @@
         "group": "manifest:helpdesk",
         "icon": "users",
         "order": 4
+      },
+      "bindings": {
+        "rows": "agents"
       }
     }
   ],
