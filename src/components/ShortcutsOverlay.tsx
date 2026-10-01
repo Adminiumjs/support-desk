@@ -1,5 +1,5 @@
 /*
- * ShortcutsOverlay — the keyboard reference (port spec §5.5).
+ * ShortcutsOverlay — the keyboard reference.
  * Store-connected: takes no props.
  *
  * The two prose lines carry `{slot}` markers rather than being spliced from

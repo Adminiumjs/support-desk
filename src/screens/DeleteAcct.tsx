@@ -1,5 +1,5 @@
 /*
- * `deleteacct` — Account deletion (delta B §8). Max-width 760.
+ * `deleteacct` — Account deletion. Max-width 760.
  *
  * The comp flag is `isDelete`, not `isDeleteacct`. Entry is the Security
  * screen's "Start deletion" button, which routes through `gotoDelete()` and

@@ -1,5 +1,5 @@
 /*
- * `newticket` — Open a ticket (port spec §6.8). Screen-local only; the field
+ * `newticket` — Open a ticket. Screen-local only; the field
  * primitives, the card and the attachment chip are styled by components.css.
  */
 

@@ -1,5 +1,5 @@
 /**
- * The static list this help desk registers at startup (24 §5.9).
+ * The static list this help desk registers at startup.
  *
  * ── THE IMPORT BELOW IS THE ONLY PLACE THIS APP NAMES AN ADD-ON ────────────
  *
@@ -55,7 +55,7 @@ export function demoAddOns(): AddOn[] {
 /**
  * What every add-on starts from, keyed by add-on key and OPAQUE to this app.
  * The credentialled add-on's `secret: true` settings are absent by
- * CONSTRUCTION (24 D15): they live in its server half and `register()` does
+ * CONSTRUCTION: they live in its server half and `register()` does
  * not put them in `settings`.
  */
 export const DEFAULT_ADD_ON_SETTINGS: AddOnSettings = defaultSettingsFor(REGISTERED);

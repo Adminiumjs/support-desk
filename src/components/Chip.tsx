@@ -1,5 +1,5 @@
 /*
- * Chip — `fchipStyle`, the most reused control in the comp (port spec §4.3).
+ * Chip — `fchipStyle`, the most reused control in the comp.
  * Filter chips, product tiles, feedback thumbs, quick replies, period toggles.
  */
 

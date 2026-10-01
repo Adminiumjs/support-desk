@@ -1,5 +1,5 @@
 /*
- * `auto` — Automations builder (delta spec A §2, logic C §3.4 `autoVals`).
+ * `auto` — Automations builder.
  * Max-width 900.
  *
  * The live list is `state.automations`; `auGone` hides deleted rules so Undo

@@ -14,10 +14,10 @@
  *                            record is a RETURN the customer has just opened,
  *                            and the act is getting a prepaid label to send it
  *                            back — the reader's OWN record, which is half of
- *                            why the slot's surface is `both` (31 O1, §12.2).
+ *                            why the slot's surface is `both`.
  *   `order.dispatch.panel`   the READING of a shipment — where is it, what
  *                            reference can I quote. For a return the parcel
- *                            travels TOWARD the business (31 O4), and the
+ *                            travels TOWARD the business, and the
  *                            panel neither knows nor cares.
  *   `order.dispatch.actions` the DOING of a dispatch is a warehouse surface,
  *                            and this app has no screen where that person
@@ -58,7 +58,7 @@ export type EveryHostedSlotIsInTheRegistry = Extract<
 >;
 
 /**
- * WHAT THIS APP DRAWS WHERE NOTHING FILLS EACH SLOT (24 D6, D19).
+ * WHAT THIS APP DRAWS WHERE NOTHING FILLS EACH SLOT.
  *
  * `speaks` — a real empty state in words, where a reader has something to be
  * told. `silent` — nothing at all, where a placeholder would make an
@@ -68,12 +68,13 @@ export type EveryHostedSlotIsInTheRegistry = Extract<
  */
 export const SLOT_EMPTY_BEHAVIOUR: Readonly<Record<HostedSlotId, SlotEmptyBehaviour>> = {
   /*
-   * SILENT, and this is the mount where D6 does the most work here. The
-   * returns wizard's final step has always ended in a reference code, an
-   * email-a-label button and a what-happens-next list — a finished screen. The
-   * slot is ADDITIVE: with nothing connected the step is byte-identical to the
-   * screen this app shipped before the seam, which is exactly the claim a
-   * reviewer switching the add-on off is checking.
+   * SILENT, and this is the mount where designing the app with its empty
+   * slots already in it does the most work. The returns wizard's final step
+   * has always ended in a reference code, an email-a-label button and a
+   * what-happens-next list — a finished screen. The slot is ADDITIVE: with
+   * nothing connected the step is byte-identical to the screen this app
+   * shipped before the seam, which is exactly the claim a reviewer switching
+   * the add-on off is checking.
    */
   "record.actions": "silent",
   /*

@@ -1,5 +1,5 @@
 /*
- * `downloads` — Downloads & manuals (port spec §6.29, logic §8.20).
+ * `downloads` — Downloads & manuals.
  * Category chips filter by `kind`; firmware rows read "Get file", everything
  * else "Download". Both app-store cards share one handler.
  */

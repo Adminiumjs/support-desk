@@ -291,7 +291,7 @@
   background: var(--accent);
   border-color: transparent;
 }
-/* Ruling R2: the comp snapped via justify-content. Animate a knob instead. */
+/* The comp snapped via justify-content. Animate a knob instead. */
 .sd-toggle__knob {
   inline-size: 21px;
   block-size: 21px;
@@ -2689,7 +2689,7 @@
 }
 /* Five icon buttons plus the wordmark overflow a 375px viewport, so the
  * command palette and "All screens" buttons only appear from 560px — the
- * comp's `hdrExtras` gate, as a media query (ruling R5). Nothing becomes
+ * comp's `hdrExtras` gate, as a media query. Nothing becomes
  * unreachable: ⌘K is meaningless on touch and the footer links All screens. */
 .hdr-cmd-btn,
 .hdr-grid-btn,

@@ -1,5 +1,5 @@
 /*
- * `newticket` — Open a ticket (port spec §6.8, validation §9.1, logic §8.4).
+ * `newticket` — Open a ticket.
  *
  * max-width 720. The five field groups are product / topic / subject /
  * description / attachments, then the simulated-replies note and the submit.
@@ -24,7 +24,7 @@ import { useI18n } from "../i18n";
 import { useAppStore } from "../state/store";
 import "../styles/screen-newticket.css";
 
-/** Hard cap on the description, mirrored by the counter (spec §9.3). */
+/** Hard cap on the description, mirrored by the counter. */
 const DESC_MAX = 1000;
 
 export default function NewTicket() {

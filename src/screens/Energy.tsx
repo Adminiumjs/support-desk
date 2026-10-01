@@ -1,5 +1,5 @@
 /*
- * `energy` — Energy insights (port spec §6.26, logic §8.26). Max-width 900.
+ * `energy` — Energy insights. Max-width 900.
  *
  * Period pills drive the whole page from `ENERGY[period]`. Bar heights come
  * from `barHeight()` (max(6, round(v / max * 130)) px) inside <MiniChart>; the

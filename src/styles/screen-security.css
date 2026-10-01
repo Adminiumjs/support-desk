@@ -1,4 +1,4 @@
-/* screen-security.css — `security` (port spec §6.32). Imported by Security.tsx. */
+/* screen-security.css — `security`. Imported by Security.tsx. */
 
 .sec__h1 {
   margin: 0;
@@ -195,7 +195,7 @@
   border-color: var(--danger);
 }
 
-/* Only-this-device empty state (delta §6.9). */
+/* Only-this-device empty state. */
 .sec__empty {
   margin-block-start: 12px;
 }

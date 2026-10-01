@@ -1,5 +1,5 @@
 /*
- * The four search surfaces (port spec §10). All case-insensitive substring
+ * The four search surfaces. All case-insensitive substring
  * matching — no fuzzy scoring, no randomness, stable ordering everywhere.
  */
 
@@ -145,7 +145,7 @@ const isScreen = (c: Command) => c.id.startsWith("screen:");
  *
  * Empty query: the comp filtered for `Actions` or screen rows and then sliced
  * 9 — but because screens are pushed first, the Actions group was unreachable
- * without typing (spec §13.2 #10, a dead affordance). Fixed here: actions
+ * without typing (a dead affordance). Fixed here: actions
  * come first, then screens, still capped at 9.
  */
 export function rankCommands(commands: Command[], q: string): Command[] {

@@ -1,5 +1,5 @@
 /*
- * `security` — Security & privacy (port spec §6.32, logic §8.35).
+ * `security` — Security & privacy.
  * Max-width 820.
  *
  * The "Recommended" badge on a toggle row shows only when the toggle is
@@ -10,7 +10,7 @@
  * nested switch button. Nested buttons are invalid, so the row itself carries
  * `role="switch"` and the switch graphic is decorative (`aria-hidden`).
  *
- * Delta §6.9: signing a session out is undoable, an empty state appears once
+ * Signing a session out is undoable, an empty state appears once
  * this device is the only one left, and "Start deletion" is no longer a
  * dead-end toast — it opens the three-step `deleteacct` flow.
  */
@@ -52,7 +52,7 @@ export default function Security() {
     [allSessions, secOut],
   );
 
-  /* Only this device left signed in — the empty state below (delta §6.9). */
+  /* Only this device left signed in — the empty state below. */
   const onlyThisDevice = sessions.every((s) => s.current);
 
   const flip = (id: string, label: string, was: boolean) => {

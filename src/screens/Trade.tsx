@@ -1,9 +1,9 @@
 /*
- * `trade` — Trade account signup (delta spec B §7, logic C §3.3).
+ * `trade` — Trade account signup.
  *
  * B2B: installers, electricians and letting agents apply for a discount tier
  * and 30-day credit terms. This is NOT `tradein` (the B2C device valuation) —
- * they share no state, no handler and no dataset. See delta spec B §0b.
+ * they share no state, no handler and no dataset.
  *
  * Two states: the confirmation card once `tdDone` holds an application,
  * otherwise the form. Validation is toast-only and lives in the store

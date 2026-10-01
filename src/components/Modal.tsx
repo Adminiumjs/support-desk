@@ -1,6 +1,6 @@
 /*
- * Modal — the generic overlay pattern the shortcuts sheet established
- * (port spec §5.5). Ruling R6 adds what the comp lacked: `role="dialog"`,
+ * Modal — the generic overlay pattern the shortcuts sheet established.
+ * This port adds what the comp lacked: `role="dialog"`,
  * `aria-modal`, a focus trap, Escape handling and body scroll locking.
  */
 

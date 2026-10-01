@@ -1,5 +1,5 @@
 /*
- * Footer — on every view (port spec §5.11): a brand column plus 8 link
+ * Footer — on every view: a brand column plus 8 link
  * columns carrying 51 label → handler pairs.
  *
  * Store-connected: takes no props.

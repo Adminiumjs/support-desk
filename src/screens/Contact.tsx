@@ -1,11 +1,11 @@
 /*
- * `contact` — Contact us (port spec §6.11, logic §8.10). Max-width 900.
+ * `contact` — Contact us. Max-width 900.
  *
- * Ruling R2 (preserved): the "How returns work" link on THIS screen opens the
+ * Preserved from the comp: the "How returns work" link on THIS screen opens the
  * `a_return` ARTICLE, not the returns wizard. The comp overrides `gotoReturns`
  * inside `contactVals()` and that is deliberate — do not "fix" it.
  *
- * The note form uses the single all-or-nothing check from §9.2: a failure is
+ * The note form uses the comp's single all-or-nothing check: a failure is
  * one warn toast, never per-field errors.
  */
 
@@ -164,7 +164,7 @@ export default function Contact() {
           <div className="sd-card con__info">
             <p className="sd-eyebrow">{t("screensA.contact.returnsDepot")}</p>
             <p className="con__info-body">{t("screensA.contact.returnsBody")}</p>
-            {/* Ruling R2 (preserved): the article, not the wizard. */}
+            {/* Preserved from the comp: the article, not the wizard. */}
             <button
               type="button"
               className="fx-nav con__returns"

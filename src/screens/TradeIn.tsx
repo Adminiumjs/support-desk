@@ -1,5 +1,5 @@
 /*
- * `tradein` — Trade-in valuation (port spec §6.14, logic §8.39, data §7.17).
+ * `tradein` — Trade-in valuation.
  *
  * Two states: the pack confirmation once `tiSent` is set, otherwise the
  * valuation form with a live quote. The maths is deterministic —

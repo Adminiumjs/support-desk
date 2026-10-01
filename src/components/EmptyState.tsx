@@ -1,5 +1,5 @@
 /*
- * EmptyState — the dashed-outline empty (port spec §4.8). Six in the comp:
+ * EmptyState — the dashed-outline empty. Six in the comp:
  * KB results, appointments, saved articles, notifications, partner queue,
  * spare-parts basket.
  */

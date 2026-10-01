@@ -1,5 +1,5 @@
 /*
- * `stores` — Store locator (delta spec A §7, logic C §"storeVals").
+ * `stores` — Store locator.
  *
  * Search + kind chips filter the same list twice: `filterStores()` is the one
  * definition, so the count under the map, the toasts the store fires and the

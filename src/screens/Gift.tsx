@@ -1,5 +1,5 @@
 /*
- * `gift` — Gift cards (port spec §6.22 / §8.33 / §9.2). Max-width 900.
+ * `gift` — Gift cards. Max-width 900.
  *
  * Two states: the purchase form, and the confirmation once `gcBought` holds a
  * code. The code is deterministic (`giftCode(amount, recipient)`), never
@@ -33,7 +33,7 @@ import { giftCode, money, moneyLoose } from "../lib/format";
 import { top, useAppStore } from "../state/store";
 import "../styles/screen-gift.css";
 
-/* The select renders labels; the store keeps the id (§6.22). The map holds
+/* The select renders labels; the store keeps the id. The map holds
    message keys, so the labels follow the reader's locale. */
 const WHEN_KEY: Record<GiftWhen, MessageKey> = {
   now: "screensA.gift.whenNow",

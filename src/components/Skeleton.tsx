@@ -1,5 +1,5 @@
 /*
- * The loading skeleton (delta spec C §3.2).
+ * The loading skeleton.
  *
  * `<SkeletonScreen />` is store-connected and renders the whole `<main>`, so
  * App can hand off to it wholesale while `busy` is true. `<Skel>` is the bare

@@ -1,5 +1,5 @@
 /*
- * The error-state model (ruling R4).
+ * The error-state model.
  *
  * The comp exposed `errorState` as an authoring boolean so a designer could
  * force every screen into its failure state. Here the real behaviour is
@@ -8,7 +8,7 @@
  * so it stays testable without adding UI chrome.
  *
  * Precedence, decided once in `viewGate()`: loading beats error beats the
- * screen. Ruling R6: screens do not replicate the comp's `is*` suppression
+ * screen. Screens do not replicate the comp's `is*` suppression
  * sweep; App renders one of the three and nothing else.
  */
 
@@ -42,14 +42,14 @@ export const ERR_TITLE_KEYS: Partial<Record<ViewId, MessageKey>> = {
 
 /**
  * The body copy. The comp left a literal `—` escape unrendered here;
- * ruling R7 says emit the real em dash.
+ * this port emits the real em dash.
  */
 export function errText(): string {
   return t("lib.errors.text");
 }
 
 /**
- * Hard-coded in the comp, kept hard-coded here (ruling R2: no `Date.now()`) —
+ * Hard-coded in the comp, kept hard-coded here (no `Date.now()`) —
  * but only the instant is fixed. Rendering runs through `Intl` at call time so
  * the stamp follows the reader's locale, which a module-level const could not.
  */
@@ -155,7 +155,7 @@ export function forcedErrorMode(search?: string): boolean {
 export type ViewGate = "loading" | "error" | "screen";
 
 /**
- * The single precedence decision (spec C §7.3 ported as an early return).
+ * The single precedence decision (ported as an early return).
  *
  * `<main>` renders the skeleton while busy, the error screen when this view
  * has failed (or the demo switch is on), and the real screen otherwise.

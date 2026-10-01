@@ -1,5 +1,5 @@
 /*
- * `share` — Shared clips (delta spec B §9, logic C §3.3 `shareVals`).
+ * `share` — Shared clips.
  * Max-width 900.
  *
  * The live list is `state.shareLinks` (created links are unshifted onto it);

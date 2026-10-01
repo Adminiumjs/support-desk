@@ -1,12 +1,12 @@
 /*
- * `forum` — Community forum (port spec §6.35 / §8.9). Max-width 1120.
+ * `forum` — Community forum. Max-width 1120.
  *
  * Category chips filter the thread list; the list itself is an accordion with
- * exactly one open thread at a time (`fopen`, seeded to `f2`). Ruling R2:
- * the sidebar "This week" numbers are hard-coded in the markup as authored —
- * they are NOT derived from the thread data.
+ * exactly one open thread at a time (`fopen`, seeded to `f2`). The sidebar
+ * "This week" numbers are hard-coded in the markup as authored — they are NOT
+ * derived from the thread data.
  *
- * Delta §6.1: a category with no threads now shows an empty state instead of a
+ * A category with no threads now shows an empty state instead of a
  * blank column.
  */
 
@@ -28,7 +28,7 @@ import { percentText } from "../lib/format";
 import { useAppStore } from "../state/store";
 import "../styles/screen-forum.css";
 
-/* Ruling R2: the sidebar figures are authored in the comp, not derived — kept
+/* The sidebar figures are authored in the comp, not derived — kept
  * as numbers so `Intl` renders the digits and the percent sign. */
 const WEEK_POSTS = 128;
 const WEEK_ANSWERED_PCT = 91;
@@ -55,7 +55,7 @@ export default function Forum() {
   const catCount = (id: string) =>
     id === "all" ? threads.length : threads.filter((t) => t.cat === id).length;
 
-  /* Posting is a demo dead end everywhere it appears (§8.2). */
+  /* Posting is a demo dead end everywhere it appears. */
   const newPost = () => showToast(t("screensA.forum.toastPost"), "info");
 
   const toggle = (id: string) => set({ fopen: fopen === id ? null : id });
@@ -205,7 +205,7 @@ export default function Forum() {
         <aside className="forum-side">
           <Card className="forum-side__card">
             <Eyebrow>{t("screensA.forum.thisWeek")}</Eyebrow>
-            {/* Ruling R2: hard-coded in the comp, kept as authored. */}
+            {/* Hard-coded in the comp, kept as authored. */}
             <div className="forum-stats">
               <div>
                 <div className="forum-stats__n">{number(WEEK_POSTS)}</div>

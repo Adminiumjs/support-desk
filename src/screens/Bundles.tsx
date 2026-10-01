@@ -1,5 +1,5 @@
 /*
- * `bundles` — Bundle deals (port spec §6.21 / §8.29). Max-width 1000.
+ * `bundles` — Bundle deals. Max-width 1000.
  *
  * Three fixed bundle cards plus the build-your-own picker. The BYO discount is
  * a flat 10% once three or more devices are selected; the seeded selection

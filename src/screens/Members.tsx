@@ -1,11 +1,11 @@
 /*
- * `members` — Household members (port spec §6.27, logic §8.30). Max-width 820.
+ * `members` — Household members. Max-width 820.
  *
  * The seeded list lives in the store (`members`); removals are tracked in
  * `mbOut` and role changes in `mbRoles`, so the effective role of a row is
  * `mbRoles[id] ?? member.role`.
  *
- * Delta §6.4: the invite toast is now the short "Invite sent" with the address
+ * The invite toast is now the short "Invite sent" with the address
  * in a success banner, removing a member is undoable, and an empty state
  * appears once the owner is the only one left.
  */
@@ -35,7 +35,7 @@ import type { Member, MemberRole } from "../data/types";
 import "../styles/screen-members.css";
 
 /**
- * The member-role pill family (port spec §4.2). `label` is a message key, not
+ * The member-role pill family. `label` is a message key, not
  * prose — this table is module scope and has no hook, so it is resolved at the
  * render site below.
  */
@@ -63,7 +63,7 @@ const ROLE: Record<
   },
 };
 
-/** The tint every invited member gets (port spec §2.7). */
+/** The tint every invited member gets. */
 const NEW_MEMBER_TINT = "#b06f8f";
 
 export default function Members() {
@@ -83,7 +83,7 @@ export default function Members() {
     [members, mbOut],
   );
 
-  /* Nobody but the owner is left (delta §6.4). */
+  /* Nobody but the owner is left. */
   const alone = list.every((m) => (mbRoles[m.id] ?? m.role) === "owner");
 
   const invite = () => {

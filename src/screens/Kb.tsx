@@ -1,9 +1,9 @@
 /*
- * Kb — the knowledge-base results page (port spec §6.2 / §10.3).
+ * Kb — the knowledge-base results page.
  *
  * Query, facet chips and sort all live in the store; `kbSearch` does the
  * matching, the facet counts (computed over the pre-facet base, so they react
- * to the query) and the count label. No pagination anywhere (ruling R3).
+ * to the query) and the count label. No pagination anywhere.
  */
 
 import { useMemo } from "react";

@@ -3,7 +3,7 @@
  *
  * `SKEL_SHAPE` maps a view to one of four block layouts. Note that `grid` is
  * a SHAPE here, not a view — the delta brief's sixteenth "view" was this table
- * leaking into a probe (delta B §0a). Anything unlisted falls to `list`.
+ * leaking into a probe. Anything unlisted falls to `list`.
  *
  * The busy cycle is time-based and load-bearing for the demo feel:
  * 620 ms on first paint, 480 ms per navigation, 620 ms on retry.

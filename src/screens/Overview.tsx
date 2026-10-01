@@ -1,5 +1,5 @@
 /*
- * `overview` — Every screen in the portal (port spec §6.39). Max-width 1120.
+ * `overview` — Every screen in the portal. Max-width 1120.
  *
  * The catalogue is `dataSource.overviewGroups()`: 8 groups, 54 entries. Every
  * card routes through `ovGo`, which owns the seeding special cases (`chat`

@@ -9,7 +9,7 @@
  * both its own records and the shape it promised. Nothing here names an
  * add-on; `src/add-ons/registry.ts` is the only shipped file that does.
  *
- * ── THE INBOUND READING (31 O4) ────────────────────────────────────────────
+ * ── THE INBOUND READING ────────────────────────────────────────────────────
  *
  * A return travels TOWARD the business. The conformance suite makes the
  * carrier contract direction-symmetric, and the payload mapping here follows
@@ -35,8 +35,8 @@ import { dataSource } from "../data/source.ts";
 /**
  * WHEN THIS SHOP THINKS IT IS.
  *
- * A pin and not `new Date()`, for 24 D11's reason: a delivery estimate is date
- * arithmetic relative to today, and a demo whose dates move is a demo nobody
+ * A pin and not `new Date()`, because no demo calls a real service: a
+ * delivery estimate is date arithmetic relative to today, and a demo whose dates move is a demo nobody
  * can screenshot or assert. A WEDNESDAY, mid-morning and before the carrier's
  * default cut-off, because "today's van has not gone yet" is the ordinary case
  * worth showing; a reader who wants the other one moves the cut-off in the

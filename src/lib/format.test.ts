@@ -1,5 +1,5 @@
 /*
- * The formatters (port spec §12).
+ * The formatters.
  *
  * Every string a customer reads goes through this file, so the tests here are
  * about the *rules*, not the seed data — prefixes come from `../data/demo` so

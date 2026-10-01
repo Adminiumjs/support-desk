@@ -1,4 +1,4 @@
-/* `status` — Service status (port spec §6.31). Scoped to `.st`. */
+/* `status` — Service status. Scoped to `.st`. */
 
 .st .st__h1 {
   margin: 0 0 6px;

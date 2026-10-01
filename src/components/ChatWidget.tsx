@@ -1,8 +1,8 @@
 /*
- * ChatWidget — the floating FAB and panel (port spec §5.10, logic §8.11).
+ * ChatWidget — the floating FAB and panel.
  * A global overlay, not a view. Store-connected: takes no props.
  *
- * Replies are simulated and deterministic (ruling R4): the bot line is
+ * Replies are simulated and deterministic: the bot line is
  * `CHAT_REPLIES[priorUserMessages % 4]`, and the typing indicator runs
  * through the injectable delay helper in lib/thread.ts.
  */

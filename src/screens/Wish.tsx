@@ -1,5 +1,5 @@
 /*
- * `wish` — Wishlist (delta spec A §5, logic C §"wishVals").
+ * `wish` — Wishlist.
  *
  * Saved products with price-drop and stock watching. Removal is the `wlOut`
  * id list (undoable from the toast), never a mutation of the dataset, so

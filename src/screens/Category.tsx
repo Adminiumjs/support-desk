@@ -1,5 +1,5 @@
 /*
- * Category — every article in one knowledge-base category (port spec §6.3).
+ * Category — every article in one knowledge-base category.
  * Content cap 1120px.
  */
 

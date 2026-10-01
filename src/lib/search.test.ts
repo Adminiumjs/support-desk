@@ -1,5 +1,5 @@
 /*
- * The four search surfaces (port spec §10).
+ * The four search surfaces.
  *
  * Everything here runs on hand-built fixtures — a copy edit to the demo
  * knowledge base must never turn this file red.
@@ -124,7 +124,7 @@ describe("matchArticles", () => {
     /*
      * A double space between words is NOT normalised, so a fat-fingered query
      * finds nothing even though the words are both there. Documented rather
-     * than fixed: substring matching is the stated rule (§10), and collapsing
+     * than fixed: substring matching is the stated rule, and collapsing
      * whitespace would also have to decide what to do with a quoted phrase.
      */
     expect(matchArticles(ARTICLES, "pairing  the")).toEqual([]);
@@ -382,8 +382,7 @@ describe("rankCommands", () => {
   it("puts actions before screens on an empty query — rule 1", () => {
     /*
      * The comp pushed screens first and then sliced 9, which buried the
-     * Actions group where no one could reach it without typing (spec §13.2
-     * #10). This ordering is the fix, so it is asserted, not incidental.
+     * Actions group where no one could reach it without typing. This ordering is the fix, so it is asserted, not incidental.
      *
      * The `act:` / `screen:` id prefixes are what decide the split, and the
      * `group` / `hint` here are deliberately NOT the English "Actions" and

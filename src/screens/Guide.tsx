@@ -1,12 +1,12 @@
 /*
- * `guide` — Seasonal gift guide (delta spec B §11, logic C §3.3).
+ * `guide` — Seasonal gift guide.
  *
  * A merchandising page: seasonal hero, tag filters, product picks with
  * strike-through pricing and badges, delivery cut-offs and a gift-wrapping
  * note. Every filter matches at least one pick, so there is no empty state.
  *
  * Max-width 1000 + `.fx-wide` — the only new view eligible for the 1800px →
- * 1440px ultra-wide bump (ruling R5). `columnClass("guide")` emits both, so no
+ * 1440px ultra-wide bump. `columnClass("guide")` emits both, so no
  * inline `maxWidth` may be used here: an inline style would beat the media
  * query and freeze the column at 1000.
  *

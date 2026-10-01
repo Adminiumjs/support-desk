@@ -1,5 +1,5 @@
 /*
- * StatusPill — `pillStyle` / `softPill` (port spec §4.2).
+ * StatusPill — `pillStyle` / `softPill`.
  *
  * `<StatusPill status={ticket.status} />` covers the four ticket statuses.
  * Every other family (orders, devices, appointments, parts stock, roles…)

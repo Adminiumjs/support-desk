@@ -5,7 +5,7 @@
  * `auOff` and its own `on` flag is not false; deleted rules go into `auGone`
  * so Undo can put them back.
  *
- * Ruling R2: the comp minted new ids with `Math.random()`. Ids here are the
+ * The comp minted new ids with `Math.random()`. Ids here are the
  * list length plus one, which is unique because the list only ever grows —
  * deletion is an id blacklist, not a splice.
  */

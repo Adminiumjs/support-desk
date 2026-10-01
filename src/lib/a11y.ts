@@ -1,5 +1,5 @@
 /*
- * Accessibility layers (port spec §2.4, orchestrator ruling R6).
+ * Accessibility layers.
  *
  * Three palette overrides — high contrast, deuteranopia, monochrome — plus a
  * reduce-motion setting and a display-size scale. All three palettes layer ON
@@ -14,7 +14,7 @@ import { percentText } from "./format";
 
 /* -------------------------------------------------------------- defaults */
 
-/** The documented INITIAL values (spec §7.0). */
+/** The documented INITIAL values. */
 export const A11Y_INITIAL_FLAGS: A11yFlags = {
   contrast: false,
   motion: false,
@@ -33,7 +33,7 @@ export const A11Y_INITIAL: A11ySettings = {
  * Reset restores the documented initial values.
  *
  * The comp's `a11yReset()` set `motion: true` while the initial state had
- * `motion: false` (spec §13.1) — a real source inconsistency. Ruling R2: fix
+ * `motion: false` — a real source inconsistency. The port fixes
  * it, so reset and first paint now agree.
  */
 export function a11yReset(): A11ySettings {
@@ -254,7 +254,7 @@ const FOCUSABLE = [
 
 /**
  * Trap Tab focus inside `node` and restore it on release. Used by the modal,
- * the command palette and the mobile sheet (ruling R6).
+ * the command palette and the mobile sheet.
  */
 export function trapFocus(node: HTMLElement): () => void {
   const previous = document.activeElement as HTMLElement | null;

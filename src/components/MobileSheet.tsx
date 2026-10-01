@@ -1,8 +1,8 @@
 /*
- * MobileSheet — the top-dropping menu behind the hamburger (port spec §5.6).
+ * MobileSheet — the top-dropping menu behind the hamburger.
  * Store-connected: takes no props.
  *
- * Ruling R6 adds `role="dialog"`, `aria-modal`, a focus trap and Escape.
+ * This port adds `role="dialog"`, `aria-modal`, a focus trap and Escape.
  */
 
 import { useEffect, useRef } from "react";

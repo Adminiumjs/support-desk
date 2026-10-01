@@ -1,9 +1,9 @@
 /*
- * `refer` — Refer a friend (port spec §6.24 / §8.19). Max-width 820.
+ * `refer` — Refer a friend. Max-width 820.
  *
  * Everything is derived from the seeded `referrals` list: 2 joined of a goal
  * of 5 gives "£40 earned" and a 40% bar. The invite form uses the app-wide
- * weak email rule (`indexOf('@') < 1`) — there is no regex anywhere (§9.2).
+ * weak email rule (`indexOf('@') < 1`) — there is no regex anywhere.
  */
 
 import {
@@ -125,7 +125,7 @@ export default function Refer() {
           >
             {t("screensB.refer.copyCode")}
           </ButtonPrimary>
-          {/* Delta §6.13 — cross-link to the new leaderboard. */}
+          {/* Cross-link to the new leaderboard. */}
           <ButtonSecondary
             icon="trophy"
             iconSize={16}

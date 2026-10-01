@@ -1,5 +1,5 @@
 /*
- * The ticket-thread reducer (port spec §8.4 / §8.6, ruling R4).
+ * The ticket-thread reducer.
  *
  * This is the state machine behind every conversation in the app, so the suite
  * is built on hand-made tickets rather than the demo seed — a failure here is a

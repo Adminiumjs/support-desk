@@ -1,13 +1,13 @@
 /*
  * The single Zustand store.
  *
- * Modelled on the comp's state shape (port spec §7.0) with three deliberate
+ * Modelled on the comp's state shape with three deliberate
  * changes:
  *   • the JS window width is gone — layout switches are real CSS media
- *     queries at 980 / 1120 (ruling R5);
+ *     queries at 980 / 1120;
  *   • the comp's instance-mutable stores (tickets, appointments, registered
  *     devices, referrals, members) are first-class state, because a hooks
- *     port cannot rely on `forceUpdate` (spec §13.2 #1);
+ *     port cannot rely on `forceUpdate`;
  *   • the lazily-created keys (shortcuts, cpOpen, cpQ, cpIndex) are declared
  *     up front with their documented defaults.
  *
@@ -192,7 +192,7 @@ const DELETE_PHRASE = "DELETE";
 const DELETE_CHECKS = 3;
 
 /**
- * The deletion date the comp hard-codes (ruling R2: no `Date.now()`). Only the
+ * The deletion date the comp hard-codes (no `Date.now()`). Only the
  * instant is fixed — the rendering runs through `Intl` at call time, so the
  * reader sees "26 August", "26. August" or "٢٦ أغسطس".
  */
@@ -395,7 +395,7 @@ export interface AppState {
   offline: boolean;
   succ: SuccessMessage | null;
   /**
-   * Ruling R3: the persisted theme stays binary. This flag records that the
+   * The persisted theme stays binary. This flag records that the
    * user toggled it by hand, which stops the OS being followed.
    */
   themeManual: boolean;
@@ -499,7 +499,7 @@ export interface AppState {
 
   /* --- add-ons --- */
   /**
-   * The seam's fields (kit README §7). `registry` boots EMPTY and is filled at
+   * The seam's fields (see the host kit's README). `registry` boots EMPTY and is filled at
    * bootstrap by `registerAddOns` — an empty registry is a valid state, so the
    * seam lands before any add-on does and every slot draws its fallback.
    */
@@ -591,7 +591,7 @@ export interface AppActions {
   dismissSuccess: () => void;
   runSuccessAction: () => void;
 
-  /* --- the busy / error / offline layer (ruling R4) --- */
+  /* --- the busy / error / offline layer --- */
   /** Start the 620 ms first-paint skeleton. App calls this once on mount. */
   bootBusy: () => void;
   /** Explicit busy window; `go()` already fires a 480 ms one. */
@@ -608,7 +608,7 @@ export interface AppActions {
   /** Offline banner "Retry now". */
   retryConnection: () => void;
 
-  /* --- theme (ruling R3) --- */
+  /* --- theme --- */
   /** Adopt an OS theme change; ignored once the user has toggled by hand. */
   syncSystemTheme: (theme: ThemeName) => void;
   /** The Accessibility screen's escape hatch. */
@@ -1012,7 +1012,7 @@ export const useAppStore = create<Store>((set, get) => ({
     set({ toast: null });
   },
 
-  /* Ruling R3: toggling by hand latches the theme; the OS is no longer
+  /* Toggling by hand latches the theme; the OS is no longer
    * followed until `followSystemTheme()` releases it. */
   toggleTheme: () =>
     set((s) => ({
@@ -1030,7 +1030,7 @@ export const useAppStore = create<Store>((set, get) => ({
 
   /* -------------------------------------------------------- navigation */
 
-  /* Every navigation restarts the 480 ms skeleton window (spec C §2.2). */
+  /* Every navigation restarts the 480 ms skeleton window. */
   go: (view, patch) => {
     const changed = get().view !== view;
     set({ view, menu: false, ...(patch ?? {}) });
@@ -2238,7 +2238,7 @@ export const useAppStore = create<Store>((set, get) => ({
    * CONNECTED and ENABLED are different facts in the seam — a credential is a
    * thing you have, switching on is a decision you made — but THIS HOST CANNOT
    * HOLD A CREDENTIAL AT ALL: it is a static customer bundle with no server
-   * half of its own, and 24 D15 keeps every secret out of it. So here the two
+   * half of its own, and secrets never reach the browser. So here the two
    * facts coincide, exactly as they do in `ecommerce-storefront`, whose store
    * records the reasoning at length. The day this app is served hosted, the
    * facts come apart again and the second set arrives with a screen that can
@@ -2257,7 +2257,7 @@ export const useAppStore = create<Store>((set, get) => ({
     }),
 
   /**
-   * DISCONNECT REMOVES SURFACES, NEVER DATA (24 D16). What goes: the add-on's
+   * DISCONNECT REMOVES SURFACES, NEVER DATA. What goes: the add-on's
    * fills stop rendering, so the return-label panel and the tracking timeline
    * are gone from the moment the set changes and the wizard's own words are
    * back. What stays: everything the customer made — the RMA, its reference,

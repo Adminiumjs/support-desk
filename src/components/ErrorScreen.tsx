@@ -1,12 +1,11 @@
 /*
- * The failed-load screen and the offline banner (delta spec C §3.1,
- * ruling R4).
+ * The failed-load screen and the offline banner.
  *
  * Both are store-connected. `<ErrorScreen />` replaces the whole `<main>`
  * when `viewGate()` says `error`; `<OfflineBanner />` sits between the
  * breadcrumbs and the screen body and is independent of the error state.
  *
- * Ruling R7: the second reassurance card's em dash is a real em dash here —
+ * The second reassurance card's em dash is a real em dash here —
  * the comp left the escape sequence unrendered.
  */
 

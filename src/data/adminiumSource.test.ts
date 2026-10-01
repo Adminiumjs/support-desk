@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 /**
- * Connected mode (28-public-surface.md §5.2, 28-T28 wave 3).
+ * Connected mode.
  *
  * ── WHY THIS DRIVES A REAL CLIENT ──────────────────────────────────────────
  * `createPublicClient` takes an injectable `fetch`, so these run the SHIPPED
@@ -9,7 +9,8 @@
  * under test too.
  *
  * ── AND WHAT IS WORTH ASSERTING IN AN APP THIS FAR AHEAD OF ITS SCHEMA ─────
- * 28-T33 §7 said this repo "cannot be reconciled at all as scoped", and the
+ * An audit of the example apps said this repo "cannot be reconciled at all as
+ * scoped", and the
  * source file's header lists the twenty-odd features with no table. So the
  * tests below pin the boundary rather than pretending there is not one: what
  * the ten real tables produce, what the two closed unions drop, what a
@@ -192,7 +193,7 @@ describe("the side of the key decides what is read", () => {
     expect(snap!.orders.map((o) => o.id)).toEqual(["ORD-1"]);
     const order = snap!.orders[0]!;
     expect(order.addr).toEqual(["1 Alder Street", "Old Mill"]);
-    // Steps come back in `position` order, and WS-I G-3: there is no time
+    // Steps come back in `position` order, and gap G-3: there is no time
     // column, so `when` carries the event's detail or nothing.
     expect(order.steps.map((s) => s.label)).toEqual(["Packed", "Delivered"]);
     expect(order.steps[0]!.when).toBe("");
@@ -209,9 +210,9 @@ describe("the side of the key decides what is read", () => {
 describe("what a connected build refuses to carry over", () => {
   it("prints no brand and knows no customer", async () => {
     const connected = snapshotSource((await snapshot())!);
-    // WS-I G-1: seven components printed HEARTH straight from the seed.
+    // Gap G-1: seven components printed HEARTH straight from the seed.
     expect(connected.brand()).toBe("");
-    // WS-I G-2: identity is not solved.
+    // Gap G-2: identity is not solved.
     expect(connected.customer()).toEqual({ initials: "", tint: "", email: "" });
     expect(connected.agent().name).toBe("Maya");
   });

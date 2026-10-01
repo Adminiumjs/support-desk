@@ -1,11 +1,11 @@
 /*
- * `parts` — Spare parts (port spec §6.20, logic §8.41, data §7.19).
+ * `parts` — Spare parts.
  *
  * Category chips → a `ListCard` of parts → the basket bar → the repair-guide
  * callout. Out-of-stock parts swap "Add" for "Notify me" and never enter the
- * basket. Chip-filtered, never paginated (ruling R3).
+ * basket. Chip-filtered, never paginated.
  *
- * Delta §6.8: a category with no parts shows an empty state in place of the
+ * A category with no parts shows an empty state in place of the
  * list.
  *
  * Max-width 900.
@@ -40,7 +40,7 @@ interface StockMeta {
   icon: string;
 }
 
-/** Parts stock pills (port spec §4.2). */
+/** Parts stock pills. */
 const STOCK: Record<PartStock, StockMeta> = {
   in: {
     label: "screensB.parts.stockIn",

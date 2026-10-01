@@ -1,8 +1,8 @@
 /*
- * `returns` — Returns wizard (port spec §6.13, logic §8.15, data §7.10).
+ * `returns` — Returns wizard.
  *
  * Three steps in one panel: Items → Reason → Label. The step gates are
- * toast-only (§9.2); the RMA is deterministic (`rmaRef(rPicked.length)`, so
+ * toast-only; the RMA is deterministic (`rmaRef(rPicked.length)`, so
  * the seeded single item gives RMA-4419137).
  *
  * Max-width 760. The step footer lives inside the panel on every step.
@@ -128,7 +128,7 @@ export default function Returns() {
                       className="rt-order"
                       name="return-order"
                       selected={rOrder === id}
-                      /* Changing order clears the picked items (§8.15). */
+                      /* Changing order clears the picked items. */
                       onSelect={() => set({ rOrder: id, rPicked: [] })}
                       note={line}
                     >
@@ -258,15 +258,15 @@ export default function Returns() {
 
             {/*
               SLOTS — the RMA as a record an add-on can act on, and the parcel
-              as a shipment a customer can read. BOTH ADDITIVE AND BOTH SILENT
-              (24 D6): with nothing connected this step is byte-identical to
+              as a shipment a customer can read. BOTH ADDITIVE AND BOTH SILENT:
+              with nothing connected this step is byte-identical to
               the screen this app shipped before the seam — the reference, the
               email-a-label button and the what-next list are a finished flow,
               not a fallback. With a carrier connected, the prepaid-label panel
               appears here (`record.actions` — this is the customer's OWN
               record, which is half of why that slot's surface is `both`), and
               once a label exists the tracking panel below it follows the
-              parcel TOWARD the business (31 O4). The host maps its wizard
+              parcel TOWARD the business. The host maps its wizard
               state into the seam's shapes in `add-ons/records.ts`; nothing
               here names an add-on.
              */}

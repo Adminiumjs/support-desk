@@ -1,6 +1,6 @@
 /*
- * OutageBanner — the live degradation strip above the sticky header
- * (port spec §5.9). Store-connected: takes no props.
+ * OutageBanner — the live degradation strip above the sticky header.
+ * Store-connected: takes no props.
  *
  * Visible unless dismissed, everything is healthy, or the user is already on
  * the `status` screen. With the seeded data exactly one component is degraded.

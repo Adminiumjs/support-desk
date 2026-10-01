@@ -1,4 +1,4 @@
-/* `downloads` — Downloads & manuals (port spec §6.29). Scoped to `.dl`. */
+/* `downloads` — Downloads & manuals. Scoped to `.dl`. */
 
 .dl .dl__h1 {
   margin: 0 0 6px;

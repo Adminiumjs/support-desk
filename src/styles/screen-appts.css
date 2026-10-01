@@ -1,4 +1,4 @@
-/* `appts` — Service appointments (port spec §6.18). Scoped to `.ap`. */
+/* `appts` — Service appointments. Scoped to `.ap`. */
 
 .ap .ap__head {
   display: flex;

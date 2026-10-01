@@ -1,5 +1,5 @@
 /*
- * `notifs` — Notifications history (port spec §6.28, logic §8.31).
+ * `notifs` — Notifications history.
  * Max-width 820.
  *
  * Read state is tracked in `ntRead`, so a seeded notification is unread when
@@ -7,7 +7,7 @@
  * FULL list, not the filtered one; the filtered list is grouped by `n.day`
  * preserving first-seen day order.
  *
- * Delta §6.5: "Mark all read" is undoable, its toast copy shortened, and it
+ * "Mark all read" is undoable, its toast copy shortened, and it
  * raises a success banner. The command palette's twin action deliberately
  * keeps the old plain toast.
  */

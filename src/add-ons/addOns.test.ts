@@ -42,7 +42,7 @@ import {
 } from "../testing/kit/index.ts";
 
 /**
- * Claims about a delivery this app makes, each answered (34 D19, 34-T28b).
+ * Claims about a delivery this app makes, each answered.
  *
  * ── WHAT THIS LIST IS ───────────────────────────────────────────────────────
  *
@@ -55,10 +55,11 @@ import {
  * ── AND WHAT WAS FIXED RATHER THAN LISTED ───────────────────────────────────
  *
  * The invoice download toast — "Downloading inv-9.pdf", for a file that has
- * never existed — is NOT here, because 34-T28b removed the button that said
- * it, and renamed the namespace it lived in. That is the shape a fix takes; the rest are deposited, see below.
+ * never existed — is NOT here, because the button that said it was removed,
+ * and the namespace it lived in was renamed. That is the shape a fix takes;
+ * the rest are deposited, see below.
  *
- * The remainder is in `27-residual-work.md` under support-desk: each of these
+ * The remainder is recorded as follow-up work for this app: each of these
  * is either a demo disclaimer this app already carries in prose (the returns
  * pair), narrative fiction inside a seeded scenario (the breach screens), or a
  * simulated result that needs the same treatment the billing toast got.
@@ -75,7 +76,7 @@ const DELIVERY_CLAIMS: Record<string, string> = {
   'chrome.breach.hit': 'seeded scenario: a past event in the fiction, not an action taken now',
   'screensA.breach.checkIntro': 'seeded scenario: a past event in the fiction',
 
-  // Simulated results. Deposited — 27-residual-work.md, support-desk.
+  // Simulated results. Deposited as follow-up work for this app.
   'chrome.toast.downloading': 'simulated: no file is written — 27-residual, support-desk',
   'lib.clips.downloadToast': 'simulated: no file is written — 27-residual, support-desk',
   'screensA.downloads.toastFile': 'simulated: no file is written — 27-residual, support-desk',
@@ -108,7 +109,7 @@ factsGuard(hostKit);
 vendoredGuard(hostKit);
 stylesGuard(hostKit);
 /*
- * 34 D19. This app labels no simulation — it has no demo-marker convention at
+ * This app labels no simulation — it has no demo-marker convention at
  * all — so every claim it makes has to be answered in `claimsDeclared`, by
  * name, with the argument being made.
  */
@@ -155,9 +156,9 @@ describe("support-desk · the add-ons it registers", () => {
   });
 
   it("starts with nothing switched on, so the desk is finished without it", () => {
-    // 24 D6, asserted rather than described: the first render after a boot
-    // draws every slot's empty state, and this step of the wizard is
-    // byte-identical to the screen this app shipped before the seam.
+    // The honest empty state, asserted rather than described: the first
+    // render after a boot draws every slot's empty state, and this step of the
+    // wizard is byte-identical to the screen this app shipped before the seam.
     for (const slot of HOSTED_SLOTS) {
       expect(registry.fillsFor(slot, new Set()), slot).toEqual([]);
     }
@@ -173,8 +174,9 @@ describe("support-desk · the add-ons it registers", () => {
   });
 
   it("holds no secret, because there is nowhere in this app to put one", () => {
-    // 24 D15 from the host's side: the default document this app boots with
-    // has no field for either of the carrier's two credentials.
+    // Secrets never reach the browser, from the host's side: the default
+    // document this app boots with has no field for either of the carrier's
+    // two credentials.
     const flat = JSON.stringify(DEFAULT_ADD_ON_SETTINGS);
     expect(flat).not.toContain("api_key");
     expect(flat).not.toContain("account_number");
@@ -182,9 +184,10 @@ describe("support-desk · the add-ons it registers", () => {
 
   it("fills the record slot the returns wizard mounts", () => {
     // The seam is only worth having if something crosses it: the carrier's
-    // prepaid-return-label fill reaches `record.actions` (31 O4). It also
-    // fills three slots this app does not mount, and those never render —
-    // which is D21 working rather than a mismatch.
+    // prepaid-return-label fill reaches `record.actions`. It also fills three
+    // slots this app does not mount, and those never render — which is slot
+    // ids naming a surface, not an app, working as designed rather than a
+    // mismatch.
     const all = new Set(registry.all.map((a) => a.key));
     expect(registry.fillsFor("record.actions", all).map((f) => f.addOn)).toContain("shipping-dhl");
   });

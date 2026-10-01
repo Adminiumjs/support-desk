@@ -1,10 +1,10 @@
 /*
- * Home — the help-center landing page (port spec §6.1).
+ * Home — the help-center landing page.
  *
  * Four stacked bands, each capped at 1120px: the search hero, the category
  * grid, the popular-article list and the "open a ticket" CTA. No breadcrumbs.
  *
- * Ruling R5: the width cap comes from the shared `.w-1120` + `.fx-wide` pair so
+ * The width cap comes from the shared `.w-1120` + `.fx-wide` pair so
  * the 1800px ultra-wide rule reaches the bands too.
  */
 

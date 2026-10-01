@@ -1,5 +1,5 @@
 /*
- * `status` — Service status (port spec §6.31, logic §8.21).
+ * `status` — Service status.
  * Seeded data has one degraded component, so the banner reads degraded and the
  * open-incident timeline is visible.
  *

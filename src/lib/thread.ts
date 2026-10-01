@@ -1,5 +1,5 @@
 /*
- * The ticket-thread reducer (port spec §8.4 / §8.6, orchestrator ruling R4).
+ * The ticket-thread reducer.
  *
  * Pure and unit-testable: no timers, no React, no Math.random. The caller
  * schedules the agent reply through the injectable `delay` helper below, so a
@@ -102,7 +102,7 @@ export function topicOffset(topic: string | undefined): number {
 
 /**
  * The canned agent reply — chosen deterministically by topic from a rotating
- * pool (ruling R4). `msgCount` is the message count *after* the customer
+ * pool. `msgCount` is the message count *after* the customer
  * message was appended.
  */
 export function pickAgentReply(
@@ -198,7 +198,7 @@ function result(
  *
  * Returns a fresh state — the input is never mutated, so React sees a new
  * reference every time (the comp mutated in place and called `forceUpdate`,
- * which a hooks port cannot do; spec §13.2 #1).
+ * which a hooks port cannot do).
  */
 export function threadReducer(
   state: ThreadState,

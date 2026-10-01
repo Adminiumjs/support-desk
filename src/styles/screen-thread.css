@@ -1,5 +1,5 @@
 /*
- * `thread` — Ticket thread (port spec §6.10). The bubbles, the typing dots
+ * `thread` — Ticket thread. The bubbles, the typing dots
  * and the horizontal timeline are shared components; this file owns the page
  * padding, the header card and the composer.
  */

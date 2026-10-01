@@ -1,5 +1,5 @@
 /*
- * `transfer` — Warranty transfer (delta spec A §4, logic C §"transferVals").
+ * `transfer` — Warranty transfer.
  *
  * Two mutually exclusive branches: the `trDone` receipt, or the form. The
  * device picker reads the same `registered` list the Warranty screen writes
@@ -33,7 +33,7 @@ import { transferDoneLine } from "../lib/derive";
 import { useAppStore } from "../state/store";
 import "../styles/screen-transfer.css";
 
-/** The numbered "How it works" list (spec A §4.2g) — message keys. */
+/** The numbered "How it works" list — message keys. */
 const HOW_IT_WORKS: MessageKey[] = [
   "screensB.transfer.how1",
   "screensB.transfer.how2",

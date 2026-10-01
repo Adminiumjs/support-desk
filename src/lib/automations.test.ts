@@ -1,5 +1,5 @@
 /*
- * The automations builder (delta spec A §2, ruling R2).
+ * The automations builder.
  *
  * Small module, three rules that are easy to break:
  *
@@ -289,7 +289,7 @@ describe("id minting", () => {
 
   it("collides if it is ever fed the visible count instead", () => {
     /*
-     * The trap ruling R2 leaves behind. Delete r4 and the board shows three
+     * The trap deterministic ids leave behind. Delete r4 and the board shows three
      * rules — but r4 is still in `automations` and its id is in `auGone`.
      * Minting from the visible count re-issues "r4", so the new rule would be
      * created straight into the blacklist and never appear, and Undo on the

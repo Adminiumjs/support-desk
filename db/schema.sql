@@ -1,4 +1,4 @@
--- Support Desk — PostgreSQL schema (§10.4 contract).
+-- Support Desk — PostgreSQL schema.
 --
 -- This is the real database that backs the full self-host stack: the help desk
 -- portal reads it (through Adminium's records API) and the auto-generated

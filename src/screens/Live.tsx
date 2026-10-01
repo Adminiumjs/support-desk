@@ -1,5 +1,5 @@
 /*
- * `live` — Live view & clips (delta spec A §1, logic C §3.3 `liveVals`).
+ * `live` — Live view & clips.
  * Max-width 900, with a shallower top gutter than the other screens.
  *
  * The camera picker drives everything below it: the stage (which swaps itself

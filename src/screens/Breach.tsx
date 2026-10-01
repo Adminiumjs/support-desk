@@ -1,5 +1,5 @@
 /*
- * `breach` — Data breach notice (delta B §5). Max-width 760.
+ * `breach` — Data breach notice. Max-width 760.
  *
  * A public incident-disclosure page: what leaked, an "am I affected" checker
  * that runs against the canned exposed list, the suggested actions, and the
@@ -56,7 +56,7 @@ export default function Breach() {
   const timeline = dataSource.breachTimeline();
 
   /* Aligned with `BR_STEPS`: step 1 has no action, step 2 opens security
-   * settings, step 3 opens a ticket. Explicit rather than inferred (ruling R6). */
+   * settings, step 3 opens a ticket. Explicit rather than inferred. */
   const stepActions: (() => void)[] = [
     () => undefined,
     () => go("security"),

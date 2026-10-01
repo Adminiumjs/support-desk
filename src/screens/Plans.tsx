@@ -1,8 +1,8 @@
 /*
- * `plans` — Hearth Care plans (port spec §6.23 / §8.34). Max-width 1000.
+ * `plans` — Hearth Care plans. Max-width 1000.
  *
- * Ruling R1: this screen ships. Its pricing copy is demo fiction inside the
- * example app and is exempt from the deferred-monetization sweep (18 §3.4).
+ * This screen ships. Its pricing copy is demo fiction inside the
+ * example app and is exempt from the deferred-monetization sweep.
  *
  * Annual price is simply `mo * 10` ("2 months free"); the per-month equivalent
  * shown under it is `yr / 12`.
@@ -189,7 +189,7 @@ export default function Plans() {
           </p>
           <p className="plans-bottom__body">{billingLine}</p>
           <div className="plans-billing__acts">
-            {/* Delta §6.13 — the real invoice history now exists. */}
+            {/* The real invoice history now exists. */}
             <ButtonSecondary icon="file-text" onClick={gotoBilling}>
               {t("screensB.plans.invoices")}
             </ButtonSecondary>

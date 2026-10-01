@@ -1,5 +1,5 @@
 /*
- * TypingDots — three blinking dots (port spec §3.5). The thread uses the 7px
+ * TypingDots — three blinking dots. The thread uses the 7px
  * / 1.3s pair inside a bubble; the chat widget uses the 6px / 1.2s pair.
  *
  * `.fx-nomotion` freezes the animation for reduce-motion users.

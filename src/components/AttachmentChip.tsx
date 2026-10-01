@@ -1,6 +1,6 @@
 /*
  * AttachmentChip — the mono file chip on the new-ticket form and the warranty
- * claim (port spec §6.8 step 5).
+ * claim.
  */
 
 import { useT } from "../i18n";

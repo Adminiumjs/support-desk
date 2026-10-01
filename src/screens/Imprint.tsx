@@ -1,12 +1,12 @@
 /*
- * `imprint` — legally-required company information (port spec §6.38).
+ * `imprint` — legally-required company information.
  * Max-width 760. Fully static: no state, no handlers, no `imprintVals()`.
  *
  * Every detail is fictional, which the closing callout says out loud.
  *
  * The terms on the left are UI labels and are keyed; the values on the right
  * are the fictional record itself — company name, postal address, personal
- * names, registration numbers, e-mail and phone — and stay as authored (§3.4).
+ * names, registration numbers, e-mail and phone — and stay as authored.
  */
 
 import { Callout } from "../components";

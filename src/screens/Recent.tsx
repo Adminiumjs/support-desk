@@ -1,5 +1,5 @@
 /*
- * `recent` — Recently viewed (delta spec A §6, logic C §3.3 `recentVals`).
+ * `recent` — Recently viewed.
  * Falls to the 820 default column.
  *
  * Device-local history of help articles and store products. Chip counts come

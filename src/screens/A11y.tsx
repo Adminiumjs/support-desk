@@ -1,15 +1,15 @@
 /*
- * `a11y` — Accessibility settings (port spec §6.34, logic §8.42). Max-width 900.
+ * `a11y` — Accessibility settings. Max-width 900.
  *
- * Ruling R6: all three override layers ship (higher contrast, red-green
+ * All three override layers ship (higher contrast, red-green
  * friendly, monochrome) plus reduce motion, and `lib/a11y.ts` stamps them onto
  * <html> — this screen never sets a data attribute by hand.
  *
- * Ruling R2: `resetA11y()` restores the DOCUMENTED initial values. The comp's
+ * `resetA11y()` restores the DOCUMENTED initial values. The comp's
  * reset set `motion: true` while first paint had `motion: false`; that was a
  * real inconsistency, and the store now uses `a11yReset()` from lib/a11y.
  *
- * Ruling R3: the aside gained an "Appearance" card. `state.theme` stays binary,
+ * The aside gained an "Appearance" card. `state.theme` stays binary,
  * and `themeManual` records whether the header toggle has been used; the card's
  * button clears it and re-adopts the OS preference.
  *
@@ -37,7 +37,7 @@ import { themeModeNote } from "../lib/theme";
 import { useAppStore } from "../state/store";
 import "../styles/screen-a11y.css";
 
-/** Chip type scales with the size it represents (§8.42). */
+/** Chip type scales with the size it represents. */
 function chipFontSize(scale: number): number {
   return 11.5 + (scale - 1) * 12;
 }
@@ -186,7 +186,7 @@ export default function A11y() {
             </button>
           </Card>
 
-          {/* Ruling R3 — the escape hatch back to the system theme. */}
+          {/* The escape hatch back to the system theme. */}
           <Card className="a11__shortcuts">
             <p className="a11__shortcuts-head">
               <Icon name="sun-moon" size={18} />

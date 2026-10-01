@@ -1,5 +1,5 @@
 /*
- * ThreadBubble — one message in a ticket thread (port spec §6.10 step 4).
+ * ThreadBubble — one message in a ticket thread.
  * Agent bubbles sit start-aligned with a shadow; customer bubbles mirror to
  * the end and fill with `--accent-soft`.
  */

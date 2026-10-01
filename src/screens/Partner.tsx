@@ -1,5 +1,5 @@
 /*
- * `partner` — Partner portal (port spec §6.36 / §8.32). Max-width 1000.
+ * `partner` — Partner portal. Max-width 1000.
  *
  * The job queue is `PT_JOBS` minus `ptOut`. Both Accept and Pass push the job
  * into `ptOut`, so the "Jobs this month" KPI (`18 + done`) increments either
@@ -89,7 +89,7 @@ export default function Partner() {
           </div>
           <p className="pt-head__meta">{PARTNER.meta}</p>
         </div>
-        {/* Delta §6.13 — cross-link to the new trade-account signup. */}
+        {/* Cross-link to the new trade-account signup. */}
         <ButtonSecondary icon="percent" onClick={gotoTrade}>
           {t("screensB.partner.tradeAccount")}
         </ButtonSecondary>

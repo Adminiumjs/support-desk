@@ -21,7 +21,7 @@
  * Category.tsx contributes no keys — every string it renders comes from the
  * data seam.
  *
- * NOT translated, by 18-marketplace-launch.md §3.4 and the brand rules: the
+ * NOT translated, by the brand rules: the
  * Hearth brand, Adminium, personal and place names, postal addresses, e-mail
  * addresses, phone numbers, file names, version strings, reference codes, and
  * the literal confirmation word DELETE (the store compares against it).

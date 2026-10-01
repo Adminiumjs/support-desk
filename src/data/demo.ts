@@ -1,5 +1,5 @@
 /*
- * The seeded demo dataset (port spec §7), transcribed from the comp.
+ * The seeded demo dataset, transcribed from the comp.
  *
  * Every string is verbatim apart from the de-branding pass: the fictional
  * company is "Hearth", and ticket / order / serial / SKU / gift codes carry

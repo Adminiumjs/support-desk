@@ -1,6 +1,5 @@
 /*
- * ArticleBody — the block renderer for the article body DSL (port spec §6.4
- * step 5). Six block kinds: p, h, ul, ol, tip, warn.
+ * ArticleBody — the block renderer for the article body DSL. Six block kinds: p, h, ul, ol, tip, warn.
  */
 
 import { useT } from "../i18n";

@@ -1,4 +1,4 @@
-/* screen-about.css — `about` (port spec §6.37). Imported by About.tsx only. */
+/* screen-about.css — `about`. Imported by About.tsx only. */
 
 .abt {
   padding-block: clamp(28px, 5vw, 60px) clamp(40px, 6vw, 72px);

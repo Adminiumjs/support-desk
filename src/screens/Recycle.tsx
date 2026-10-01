@@ -1,5 +1,5 @@
 /*
- * `recycle` — Recycling drop-off (delta B §6). Max-width 900.
+ * `recycle` — Recycling drop-off. Max-width 900.
  *
  * Two mutually exclusive branches: the confirmation card once `rcBooked` is
  * set, otherwise the form. Validation and the reference live in the store
@@ -7,7 +7,7 @@
  *
  * The postcode field is unconditional. The comp gated it on a ternary that
  * could only ever be `true`; the behaviour is identical, so it is simply not
- * ported as a gate (delta B §6.3c).
+ * ported as a gate.
  */
 
 import {

@@ -1,5 +1,5 @@
 /*
- * The inline success banner (`succeed()`, delta spec C §2.4 / §7.2).
+ * The inline success banner (`succeed()`).
  *
  * Store-connected, no props. It sits between the breadcrumbs and the screen
  * body, auto-dismisses after 7 s, and always offers an explicit dismiss.

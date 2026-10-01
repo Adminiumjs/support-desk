@@ -1,5 +1,5 @@
 /*
- * Timelines (port spec §4.4): the 3-node horizontal one on the ticket thread,
+ * Timelines: the 3-node horizontal one on the ticket thread,
  * the vertical one on orders / claims / status incidents, and the numbered
  * step indicator on the returns wizard.
  */

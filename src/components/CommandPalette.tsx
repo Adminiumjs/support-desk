@@ -1,8 +1,8 @@
 /*
- * CommandPalette — ⌘K (port spec §5.4, ranking §10.4).
+ * CommandPalette — ⌘K.
  * Store-connected: takes no props.
  *
- * Ruling R6 adds `role="dialog"`, `aria-modal`, a focus trap and a listbox
+ * This port adds `role="dialog"`, `aria-modal`, a focus trap and a listbox
  * relationship the comp did not have.
  */
 

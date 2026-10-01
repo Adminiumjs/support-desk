@@ -1,5 +1,5 @@
 /*
- * `installers` — Installer finder (port spec §6.19, logic §8.40).
+ * `installers` — Installer finder.
  * The radius select filters the seeded installers by miles; searching only
  * validates the postcode and toasts.
  */

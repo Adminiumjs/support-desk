@@ -1,9 +1,9 @@
 /*
- * `about` — About us (port spec §6.37). Max-width 1000.
+ * `about` — About us. Max-width 1000.
  *
  * Fully static: the comp builds no `aboutVals()`, only two navigation
- * handlers. The team tiles and the workshop panel are procedural gradients
- * (§2.6 / §2.8), not bitmaps — the workshop panel is the one placeholder keyed
+ * handlers. The team tiles and the workshop panel are procedural gradients,
+ * not bitmaps — the workshop panel is the one placeholder keyed
  * off `--accent` rather than a per-entity tint, so it uses a local class
  * instead of `<PlaceholderTile>`.
  *
@@ -36,7 +36,7 @@ const VALUES: { icon: string; title: MessageKey; body: MessageKey }[] = [
   },
 ];
 
-/* Names are in-fiction demo content (§3.4) and stay as authored; the job
+/* Names are in-fiction demo content and stay as authored; the job
    titles beside them are UI labels and are keyed. */
 const TEAM: { initials: string; tint: string; name: string; role: MessageKey }[] = [
   { initials: "MA", tint: "#4f8bd6", name: "Maya Aturi", role: "screensA.about.role1" },

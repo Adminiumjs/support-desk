@@ -1,10 +1,10 @@
 /*
- * Breadcrumbs — the trail above every screen except `home` (port spec §5.8).
+ * Breadcrumbs — the trail above every screen except `home`.
  * Store-connected: takes no props.
  *
  * The wrapper width comes from `columnClass()`, the same helper the screens
  * use, so the trail lines up with the page below it — including the 1800px
- * ultra-wide bump (ruling R5). An inline max-width would beat that media
+ * ultra-wide bump. An inline max-width would beat that media
  * query, so there isn't one.
  */
 

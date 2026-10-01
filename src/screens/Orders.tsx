@@ -1,11 +1,11 @@
 /*
- * `orders` — Order status (port spec §6.12, logic §8.8, data §7.7).
+ * `orders` — Order status.
  *
- * Lookup card → validation ladder (§9.2, inline `ordErr`, never a toast) →
+ * Lookup card → validation ladder (inline `ordErr`, never a toast) →
  * result card with the four stacked blocks (summary / timeline / carrier +
  * address / line items) → two follow-up buttons.
  *
- * Max-width 820. No pagination (ruling R3): the demo chips are the whole
+ * Max-width 820. No pagination: the demo chips are the whole
  * order book.
  */
 
@@ -38,7 +38,7 @@ interface OrderStatusMeta {
   icon: string;
 }
 
-/** `ORDER_STATUS` (port spec §4.2). */
+/** `ORDER_STATUS`. */
 const ORDER_STATUS: Record<OrderStatus, OrderStatusMeta> = {
   transit: {
     label: "screensB.orders.statusTransit",
@@ -60,7 +60,7 @@ const ORDER_STATUS: Record<OrderStatus, OrderStatusMeta> = {
   },
 };
 
-/** `ordHeadline` (§8.8). */
+/** `ordHeadline`. */
 function headline(order: Order, t: TFunction): string {
   if (order.status === "delivered") {
     const last = order.steps[order.steps.length - 1];

@@ -1,10 +1,10 @@
 /*
- * Header — the sticky bar on every screen (port spec §5.7), including the
+ * Header — the sticky bar on every screen, including the
  * live search dropdown.
  *
  * Store-connected: takes no props.
  *
- * Ruling R5: the 980 / 1120 switches are real CSS media queries. The nav and
+ * The 980 / 1120 switches are real CSS media queries. The nav and
  * the CTA carry `.hdr-nav` / `.hdr-cta`, the hamburger `.hdr-menu-btn`, the
  * inline field `.hdr-search-field` and the fallback button `.hdr-search-btn`;
  * the responsive block at the END of components.css decides which of each pair
@@ -68,7 +68,7 @@ export function Header() {
         e.preventDefault();
         /* Below 1120 the inline field is `display: none`: it is still in the
          * DOM, but focusing it is a no-op. Fall back to the search screen so
-         * the documented shortcut is never a dead key (ruling R5 / R2). */
+         * the documented shortcut is never a dead key. */
         const field = inputRef.current;
         if (field && field.offsetParent !== null) {
           field.focus();

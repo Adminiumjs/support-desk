@@ -3,7 +3,7 @@
  *
  * The comp never loads a bitmap. Article heroes, product tiles, category
  * chips and avatars are all three stacked gradients derived from a per-entity
- * hex tint (port spec §2.6). Same helpers, same alpha constants.
+ * hex tint. Same helpers, same alpha constants.
  */
 
 import { useAppStore } from "../state/store";

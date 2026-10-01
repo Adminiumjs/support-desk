@@ -1,7 +1,7 @@
 /*
  * Domain types for the Support Desk demo.
  *
- * Ported from the Hearth Help Desk comp (port spec §7). Every collection the
+ * Ported from the Hearth Help Desk comp. Every collection the
  * screens read is typed here; the seeded values live in `./demo.ts` and are
  * reached through the DataSource seam in `./source.ts`.
  *
@@ -752,11 +752,10 @@ export type FormErrors = Record<string, string>;
 
 /* ================================================================= delta =
  *
- * Everything below belongs to the fifteen views added by the revised comp
- * (delta specs A, B and C). Ordering follows the spec: live, auto, billing,
- * transfer, wish, recent, stores, board, breach, recycle, trade, share,
- * insurance, guide, deleteacct — then the cross-cutting error / skeleton
- * models.
+ * Everything below belongs to the fifteen views added by the revised comp.
+ * Ordering follows the revision: live, auto, billing, transfer, wish, recent,
+ * stores, board, breach, recycle, trade, share, insurance, guide, deleteacct —
+ * then the cross-cutting error / skeleton models.
  * ======================================================================== */
 
 /* -------------------------------------------------- live view and clips */
@@ -1205,7 +1204,7 @@ export interface DeleteSchedule {
 
 /* -------------------------------------------- errors, skeletons, layout */
 
-/** `grid` is a SKELETON SHAPE, not a view (delta B §0a). */
+/** `grid` is a SKELETON SHAPE, not a view. */
 export type SkeletonShape = "grid" | "form" | "doc" | "list";
 
 /** A command-palette row, built from screens + actions + articles. */

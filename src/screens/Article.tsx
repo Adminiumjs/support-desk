@@ -1,5 +1,5 @@
 /*
- * Article — one knowledge-base article (port spec §6.4). Content cap 820px.
+ * Article — one knowledge-base article. Content cap 820px.
  *
  * Meta row, display heading, placeholder hero, save/library actions, the
  * block-DSL body, the helpful bar and up to three related articles.

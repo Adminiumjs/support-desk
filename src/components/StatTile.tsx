@@ -1,5 +1,5 @@
 /*
- * StatTile — the KPI card used on energy, partner and about (port spec §4.5).
+ * StatTile — the KPI card used on energy, partner and about.
  */
 
 import { Icon } from "./Icon";

@@ -1,10 +1,10 @@
 /*
  * SearchHero — the home hero: eyebrow, display heading, lede and the big
- * search field with its live dropdown (port spec §6.1 A).
+ * search field with its live dropdown.
  *
  * Store-connected: takes no props.
  *
- * Ruling R2 fix — the comp styled "open a ticket" in the no-results line like
+ * Fixed here — the comp styled "open a ticket" in the no-results line like
  * a link but attached no handler. It is a real button here.
  */
 

@@ -1,4 +1,4 @@
-/* `warranty` — Warranty registration (port spec §6.15). */
+/* `warranty` — Warranty registration. */
 
 .scr-warranty__h1 {
   margin: 0 0 10px;
@@ -184,7 +184,7 @@
   font-weight: 700;
 }
 
-/* Per-device warranty-transfer button (delta §6.2 / §6.13). */
+/* Per-device warranty-transfer button. */
 .wr-dev__transfer {
   inline-size: 38px;
   block-size: 38px;

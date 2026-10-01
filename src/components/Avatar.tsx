@@ -1,7 +1,7 @@
 /*
  * Avatar — a rounded SQUARE (radius 12px), not a circle. The only avatar
  * primitive in the comp: initials at weight 800 over the tint's placeholder
- * gradient (port spec §4.6).
+ * gradient.
  */
 
 import { phBg, phInitials, useIsDark } from "./PlaceholderTile";

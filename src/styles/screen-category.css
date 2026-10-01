@@ -1,5 +1,5 @@
 /*
- * Category listing — port spec §6.3. Content cap 1120px.
+ * Category listing. Content cap 1120px.
  *
  * The rows are the shared `ArticleRow`; the only screen-local work is the
  * header block and the roomier row rhythm the comp uses here (18/20 padding,

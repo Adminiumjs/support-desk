@@ -1,11 +1,11 @@
 /*
- * `devices` — Device dashboard (port spec §6.25, logic §8.25). Max-width 1000.
+ * `devices` — Device dashboard. Max-width 1000.
  *
  * Five seeded devices with live stats and working toggles. The toggle value is
  * `devOn[id] ?? device.on`, and the toast reports the state the device is
  * moving *to*, derived from the previous value.
  *
- * Delta §6.13: the shortcut row gained Live view and Automations cards ahead of
+ * The shortcut row gained Live view and Automations cards ahead of
  * Notifications and Household. Their subtitles are derived rather than the
  * comp's hard-coded strings, so pausing a rule updates the card.
  */
@@ -30,7 +30,7 @@ import { useAppStore } from "../state/store";
 import type { DeviceHealth } from "../data/types";
 import "../styles/screen-devices.css";
 
-/** The device status family (port spec §4.2). */
+/** The device status family. */
 const DEVICE_STATUS: Record<
   DeviceHealth,
   { label: MessageKey; fg: string; soft: string; icon: string }
@@ -107,7 +107,7 @@ export default function Devices() {
     );
   }, [members, mbOut, t]);
 
-  /* Delta §6.13 — the two new shortcut cards. */
+  /* The two new shortcut cards. */
   const liveLine = useMemo(() => {
     const online = dataSource.cameras().filter((c) => !c.offline).length;
     const today = dataSource.clips().filter((c) => c.day === "Today").length;

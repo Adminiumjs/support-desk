@@ -1,7 +1,7 @@
 /*
- * `mytickets` — My tickets (port spec §6.9, logic §8.5).
+ * `mytickets` — My tickets.
  *
- * max-width 820. An email lookup card (no validation at all — spec §9.2) over
+ * max-width 820. An email lookup card (no validation at all) over
  * the ticket list, sorted newest-activity-first by `useTickets()`.
  */
 

@@ -1,5 +1,5 @@
 /*
- * `repair` — Repair booking (port spec §6.17, logic §8.18, validation §9.2).
+ * `repair` — Repair booking.
  * Two states: the confirmation card once `rpRef` is set, otherwise the form.
  *
  * Booking really does push onto `appts`, so the Appointments screen updates.

@@ -1,11 +1,11 @@
 /*
- * `warranty` — Warranty registration (port spec §6.15, logic §8.13, data §7.9).
+ * `warranty` — Warranty registration.
  *
  * Success panel (when `wDone`) OR the registration form, then the registered
- * device list, which renders either way. Validation is toast-only (§9.2) —
+ * device list, which renders either way. Validation is toast-only —
  * there are no field-level errors on this screen.
  *
- * Delta §6.2: every registered device gained a "Transfer this warranty" button,
+ * Every registered device gained a "Transfer this warranty" button,
  * and the list has an empty state — `transferSubmit()` removes the handed-over
  * device from `state.registered`, so this list really can end up empty.
  *
@@ -47,7 +47,7 @@ export default function Warranty() {
   const showToast = useAppStore((s) => s.showToast);
   const gotoTransfer = useAppStore((s) => s.gotoTransfer);
 
-  /* `gotoClaim(dev)` also resets `clRef` (port spec §8.1). */
+  /* `gotoClaim(dev)` also resets `clRef`. */
   function gotoClaim(deviceId?: string) {
     go("claim", { clRef: null, clDev: deviceId ?? clDev });
   }

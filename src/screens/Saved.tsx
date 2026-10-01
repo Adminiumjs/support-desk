@@ -1,5 +1,5 @@
 /*
- * `saved` — Saved articles (port spec §6.5, logic §8.27). Max-width 820.
+ * `saved` — Saved articles. Max-width 820.
  *
  * `savedIds` is insertion-ordered newest-first (the store's `toggleSave`
  * unshifts), so the list is rendered in that order with no extra sorting.

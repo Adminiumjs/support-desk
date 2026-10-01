@@ -1,5 +1,5 @@
 /*
- * `appts` — Service appointments (port spec §6.18, logic §8.16).
+ * `appts` — Service appointments.
  * Cancelling appends to `apptCancelled`; the list filters those out and splits
  * upcoming from past. Booking on the `repair` screen unshifts into `appts`.
  */
@@ -71,7 +71,7 @@ export default function Appts() {
   /*
    * Nothing is sent: there is no invite, no .ics and no calendar to reach.
    * The toast says so and takes the neutral kind every demo-labelled toast in
-   * this app uses, so it does not read as a delivered result (24 D11).
+   * this app uses, so it does not read as a delivered result.
    */
   function onCal() {
     showToast(t("screensA.appts.toastCalendar"), "info");
@@ -82,7 +82,7 @@ export default function Appts() {
     go("repair");
   }
 
-  /* Delta §6.3: same copy, now undoable. */
+  /* Same copy, now undoable. */
   function onCancel(a: Appointment) {
     set({ apptCancelled: [...apptCancelled, a.id] });
     undoToast(t("screensA.appts.toastCancelled", { id: a.id }), () =>

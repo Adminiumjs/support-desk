@@ -258,7 +258,7 @@ export const CRUMB_LABELS: Partial<Record<ViewId, MessageKey>> = {
 /**
  * The width utility classes for a view's `<main>`: `w-900`, `w-1000 fx-wide`…
  *
- * Ruling R5: the 1800 → 1440 ultra-wide bump exists once, in CSS. Columns of
+ * The 1800 → 1440 ultra-wide bump exists once, in CSS. Columns of
  * 1000px and wider opt in via `.fx-wide`; narrower ones never stretch. Use
  * this rather than an inline `maxWidth`, which would beat the media query.
  */
@@ -293,7 +293,7 @@ export interface ShortcutGroup {
   rows: { label: MessageKey; keys: string[] }[];
 }
 
-/** The literal `SC` table from the comp (port spec §5.5). */
+/** The literal `SC` table from the comp. */
 export const SHORTCUT_GROUPS: ShortcutGroup[] = [
   {
     name: "chrome.sc.group.goto",

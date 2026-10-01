@@ -2,7 +2,7 @@
  * Live view, clip history and shared links.
  *
  * The largest of the delta's four logic sections. Everything here is pure and
- * deterministic — ruling R2 forbids `Math.random()` and `Date.now()` in src,
+ * deterministic — `Math.random()` and `Date.now()` are forbidden in src,
  * so the comp's random share slug is replaced by `shareSlug()`, a stable hash
  * of the clip id and the sequence number.
  */
@@ -23,8 +23,8 @@ import type {
 /* ================================================================= live == */
 
 /**
- * The overlay clock. The *instant* is hard-coded, as the comp has it (ruling
- * R2: no `Date.now()`); the rendering is not. A function rather than a const
+ * The overlay clock. The *instant* is hard-coded, as the comp has it (no
+ * `Date.now()`); the rendering is not. A function rather than a const
  * because a const would freeze at whatever locale happened to be active when
  * this module was first evaluated — which is `en-US`, before React mounts.
  *

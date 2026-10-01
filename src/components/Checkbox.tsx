@@ -1,5 +1,5 @@
 /*
- * Checkbox — `boxStyle` + `rowSelStyle` (port spec §4.3). Used by the returns
+ * Checkbox — `boxStyle` + `rowSelStyle`. Used by the returns
  * wizard item picker and the survey contact opt-in.
  */
 

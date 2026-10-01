@@ -1,5 +1,5 @@
 /*
- * `404` — the wrong-turn page (port spec §6.7). max-width 620, fully static.
+ * `404` — the wrong-turn page. max-width 620, fully static.
  *
  * Named `NotFound` because `404` is not a legal component identifier; the
  * view key it renders is still `"404"`.

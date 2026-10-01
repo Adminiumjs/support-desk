@@ -1,5 +1,5 @@
 /*
- * `billing` — Billing & invoices (delta spec A §3, logic C §"billingVals").
+ * `billing` — Billing & invoices.
  *
  * Two summary cards (plan + payment method), then the invoice history: a
  * period segmented control, kind-filter chips scoped to that period, and the

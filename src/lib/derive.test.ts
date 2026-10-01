@@ -473,7 +473,7 @@ describe("invoiceRetryToast", () => {
     expect(toast).toBe("Retrying payment for INV-9");
   });
 
-  it("has no download branch left to be dishonest in (34-T28b)", () => {
+  it("has no download branch left to be dishonest in", () => {
     /*
      * It used to answer a paid invoice with "Downloading inv-9.pdf" — a file
      * that has never been written, in eight languages. The row now offers the

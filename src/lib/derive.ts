@@ -214,7 +214,7 @@ export function nextChargeLine(monthly: number, cycle: string): string {
 }
 
 /**
- * The retry toast, and nothing else (34-T28b).
+ * The retry toast, and nothing else.
  *
  * It used to answer a download with "Downloading inv-9.pdf" for a file that
  * has never been written. The row now offers the control only where a retry is

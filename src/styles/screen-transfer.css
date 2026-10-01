@@ -1,4 +1,4 @@
-/* screen-transfer.css — `transfer` (delta spec A §4). Imported by Transfer.tsx. */
+/* screen-transfer.css — `transfer`. Imported by Transfer.tsx. */
 
 .tr__h1 {
   margin: 0 0 12px;
@@ -84,7 +84,7 @@
   gap: 11px;
 }
 
-/* The comp trails the radio behind the label column (spec A §4.2a). */
+/* The comp trails the radio behind the label column. */
 .tr-dev .sd-radio {
   order: 2;
   margin-inline-start: auto;

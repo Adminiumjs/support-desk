@@ -1,5 +1,5 @@
 /*
- * Theme resolution (ruling R3).
+ * Theme resolution.
  *
  * The comp widened its `theme` authoring prop to `system | light | dark`, but
  * `state.theme` is still only ever `light` or `dark`. `system` is resolved

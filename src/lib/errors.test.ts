@@ -1,5 +1,5 @@
 /*
- * The error / offline model (ruling R4, spec C §7.3).
+ * The error / offline model.
  *
  * Three things are worth guarding here, and they are all seams rather than
  * arithmetic:
@@ -11,7 +11,7 @@
  *   2. `isOnline` / `watchConnection` touch globals that do not exist in a
  *      test (or in SSR). Both must degrade to "online" rather than throw, so
  *      the guards are exercised with the globals stubbed away entirely.
- *   3. The copy carries a typographic ruling (R7's real em dash) and a
+ *   3. The copy carries a typographic fix (a real em dash) and a
  *      per-view contract: every mapped view names its own whole headline.
  */
 
@@ -78,7 +78,7 @@ describe("error copy", () => {
     expect(errorCode("404")).toBe("ERR_TIMEOUT · 404_FETCH");
   });
 
-  it("emits a real em dash in the body copy (ruling R7)", () => {
+  it("emits a real em dash in the body copy", () => {
     /* The comp left the escape unrendered; a literal "&mdash;" (or a hyphen
      * standing in for the dash) would be invisible in review but not on
      * screen. Spelled as an escape so the assertion cannot be misread. */
@@ -87,7 +87,7 @@ describe("error copy", () => {
     expect(errText()).not.toContain(" - ");
   });
 
-  it("keeps the timestamp a static instant (ruling R2: no Date.now())", () => {
+  it("keeps the timestamp a static instant (no Date.now())", () => {
     /*
      * The instant is the contract, not its rendering: `errTime()` formats
      * through `Intl` and so reads differently in every locale, but it must

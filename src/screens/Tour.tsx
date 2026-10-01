@@ -1,5 +1,5 @@
 /*
- * `tour` — Onboarding tour (port spec §6.6, logic §8.28). Max-width 720.
+ * `tour` — Onboarding tour. Max-width 720.
  *
  * Four steps in one card. `tourStep` is clamped with `min(step, 3)` exactly as
  * the comp does, so a stale value can never index past the end of TOUR.
@@ -39,7 +39,7 @@ export default function Tour() {
     go("tour", { tourStep: i + 1 });
   };
 
-  /* Back and the dots move within the card; only Next scrolls to top (§8.28). */
+  /* Back and the dots move within the card; only Next scrolls to top. */
   const back = () => set({ tourStep: i - 1 });
 
   const skip = () => {

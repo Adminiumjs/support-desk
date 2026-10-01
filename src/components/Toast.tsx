@@ -1,9 +1,9 @@
 /*
- * Toast — the centred pill at the bottom of every screen (port spec §5.3).
+ * Toast — the centred pill at the bottom of every screen.
  * Store-connected: takes no props. Auto-dismiss is owned by the store
  * (2600 ms); this component only renders.
  *
- * Ruling R6: the live region is always mounted so assistive tech announces
+ * The live region is always mounted so assistive tech announces
  * each new message rather than only the first.
  */
 

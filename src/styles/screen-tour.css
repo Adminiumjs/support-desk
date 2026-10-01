@@ -1,4 +1,4 @@
-/* screen-tour.css — `tour` (port spec §6.6). Imported by Tour.tsx only. */
+/* screen-tour.css — `tour`. Imported by Tour.tsx only. */
 
 .tur {
   padding-block-start: clamp(28px, 5vw, 56px);

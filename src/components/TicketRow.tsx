@@ -1,5 +1,5 @@
 /*
- * TicketRow — one liftable row in the My tickets list (port spec §6.9).
+ * TicketRow — one liftable row in the My tickets list.
  */
 
 import { dataSource } from "../data/source";

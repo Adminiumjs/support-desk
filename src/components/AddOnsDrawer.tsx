@@ -34,7 +34,7 @@ import { useAppStore } from "../state/store.ts";
 import { Icon } from "./Icon.tsx";
 
 /**
- * THE NOT-AFFILIATED LINE, as its own component (24 AC6): any of this app's
+ * THE NOT-AFFILIATED LINE, as its own component: any of this app's
  * own `.tsx` files that prints `addOn.name`, `addOn.shortName` or
  * `addOn.monogram` must also mount an `Affiliation`, and the source half of
  * the label-pairing gate greps for exactly this.
@@ -93,7 +93,7 @@ function AddOnCard({ addOn }: { addOn: AddOn }) {
       }}
     >
       <div style={{ display: "flex", alignItems: "flex-start", gap: "13px" }}>
-        {/* Three letters on a neutral tile — never a mark, drawn or traced (24 D12). */}
+        {/* Three letters on a neutral tile — never a mark, drawn or traced. */}
         <span
           aria-hidden="true"
           style={{
@@ -157,7 +157,7 @@ function AddOnCard({ addOn }: { addOn: AddOn }) {
         </ul>
       </div>
 
-      {/* WHAT A DISCONNECT COSTS, IN WORDS, BEFORE IT HAPPENS (24 D16). Both
+      {/* WHAT A DISCONNECT COSTS, IN WORDS, BEFORE IT HAPPENS. Both
           sentences are the ADD-ON's — the only party that knows what it
           leaves behind — and they render whether or not it is connected,
           because the question is asked before pressing Connect. */}

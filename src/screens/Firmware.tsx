@@ -1,5 +1,5 @@
 /*
- * `firmware` — Firmware release notes (port spec §6.30, logic §8.17).
+ * `firmware` — Firmware release notes.
  * Chip filter over `release.devices`; no other handlers on this screen.
  */
 

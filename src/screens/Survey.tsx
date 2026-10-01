@@ -1,5 +1,5 @@
 /*
- * `survey` — Feedback survey (port spec §6.33, logic §8.36). Max-width 760.
+ * `survey` — Feedback survey. Max-width 760.
  * Two states, keyed off `svDone`.
  *
  * The progress meter counts five answers even though the form shows four
@@ -7,7 +7,7 @@
  * the comp counts and the label says so out loud ("<n> of 5 answered").
  *
  * The reference is deterministic — `surveyRef(nps, tagCount)` = FB-(52100 +
- * nps*13 + tags), no randomness anywhere (ruling R4).
+ * nps*13 + tags), no randomness anywhere.
  */
 
 import {

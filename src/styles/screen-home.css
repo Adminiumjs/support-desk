@@ -1,5 +1,5 @@
 /*
- * Home — port spec §6.1. Four bands, each capped at 1120px and centred; the
+ * Home. Four bands, each capped at 1120px and centred; the
  * page gutter lives on the bands, not on a shared `.fx-page` (the hero has a
  * taller top rhythm than the rest).
  */

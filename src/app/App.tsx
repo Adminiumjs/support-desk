@@ -11,10 +11,10 @@
  * the success banner, the footer, and the four overlays (toast, command
  * palette, shortcuts modal, chat widget).
  *
- * Ruling R5: nothing here measures the window. The 560 / 980 / 1120 / 1800
+ * Nothing here measures the window. The 560 / 980 / 1120 / 1800
  * switches are real CSS media queries in base.css and components.css.
  *
- * Ruling R6: the loading / error / screen precedence is one early return via
+ * The loading / error / screen precedence is one early return via
  * `viewGate()`, not the comp's `is*` string-prefix suppression sweep.
  */
 
@@ -266,7 +266,7 @@ export function App() {
     [],
   );
 
-  /* --- ruling R3: resolve the OS theme on mount, then keep tracking it
+  /* --- resolve the OS theme on mount, then keep tracking it
    * until the user toggles by hand. `syncSystemTheme` is the guard. --- */
   useEffect(() => {
     const { syncSystemTheme } = useAppStore.getState();
@@ -276,7 +276,7 @@ export function App() {
     });
   }, []);
 
-  /* --- spec C §2.1: the browser's own connection state --- */
+  /* --- the browser's own connection state --- */
   useEffect(() => {
     const { setOffline } = useAppStore.getState();
     if (!isOnline()) setOffline(true);
@@ -285,7 +285,7 @@ export function App() {
     });
   }, []);
 
-  /* --- spec C §2.2: 620 ms of skeleton on first paint; `go()` owns the
+  /* --- 620 ms of skeleton on first paint; `go()` owns the
    * 480 ms window on every navigation after that. --- */
   useEffect(() => {
     useAppStore.getState().bootBusy();
@@ -338,7 +338,7 @@ function isTyping(): boolean {
 }
 
 /**
- * The document-level shortcuts (port spec §5.5).
+ * The document-level shortcuts.
  *
  * `/` belongs to the header, and Escape inside a trapped overlay belongs to
  * that overlay; both are handled where they are owned. Everything else — the

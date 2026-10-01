@@ -1,5 +1,5 @@
 /*
- * `board` — Referral leaderboard (delta A §8). Max-width 820.
+ * `board` — Referral leaderboard. Max-width 820.
  *
  * There is no empty state: the seeded list is always populated. The sort is
  * `sortLeaders()`, whose comparator is `b.count - a.count` only — the seeded

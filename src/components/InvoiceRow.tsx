@@ -1,5 +1,5 @@
 /*
- * The billing table (delta spec A §3.4): a header strip plus six-column rows.
+ * The billing table: a header strip plus six-column rows.
  *
  * The columns are fixed-flex so the head and the rows line up; both live here
  * so they cannot drift apart.
@@ -31,7 +31,7 @@ export interface InvoiceRowProps {
   invoice: Invoice;
   /** Drops the bottom border on the last row. */
   last?: boolean;
-  /** A payment retry, offered on a failed invoice only (34-T28b). */
+  /** A payment retry, offered on a failed invoice only. */
   onDownload: () => void;
 }
 
@@ -60,7 +60,7 @@ export function InvoiceRow({ invoice, last = false, onDownload }: InvoiceRowProp
       </span>
       <span className="inv__action">
         {/*
-          * ONLY THE RETRY (34-T28b). The download half named a `.pdf` nobody
+          * ONLY THE RETRY. The download half named a `.pdf` nobody
           * writes — `invoiceDownloadToast` said "Downloading inv-9.pdf" and no
           * file has ever existed. A button that reports a result it did not
           * produce is the simulated result this fleet's audit catalogued, so

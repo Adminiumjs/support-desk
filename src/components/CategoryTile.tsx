@@ -1,6 +1,5 @@
 /*
- * CategoryTile — the liftable card in the home "Browse by topic" grid
- * (port spec §6.1 B).
+ * CategoryTile — the liftable card in the home "Browse by topic" grid.
  */
 
 import { counted } from "../lib/format";

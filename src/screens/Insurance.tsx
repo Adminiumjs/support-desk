@@ -1,9 +1,9 @@
 /*
- * `insurance` — Insurance claims / evidence packs (delta spec B §10, logic C §3.3).
+ * `insurance` — Insurance claims / evidence packs.
  *
  * Explains the evidence-pack product, lists existing packs with a
  * ready/building state, and offers a request form. Submitting does NOT append
- * a claim — it only toasts and raises the success banner (spec B §10.4).
+ * a claim — it only toasts and raises the success banner.
  *
  * The claim list has no empty branch by design: when `inOut` hides everything
  * the whole section simply vanishes.

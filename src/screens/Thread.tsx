@@ -1,10 +1,10 @@
 /*
- * `thread` — Ticket thread (port spec §6.10, simulation §8.6).
+ * `thread` — Ticket thread.
  *
  * max-width 820. Header card + 3-node timeline, the simulated-replies note,
  * the message list (plus the typing bubble) and the reply composer.
  *
- * Ruling R4: the agent reply is deterministic and scheduled through the
+ * The agent reply is deterministic and scheduled through the
  * injectable `delay` helper — both live inside `sendReply` on the store, so
  * this screen only renders `typing`.
  */

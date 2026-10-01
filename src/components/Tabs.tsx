@@ -1,6 +1,6 @@
 /*
  * Tabs — the segmented control used by the energy period switch, the plan
- * billing cycle and the security retention picker (port spec §4.3).
+ * billing cycle and the security retention picker.
  */
 
 export interface TabOption<T extends string = string> {
@@ -12,7 +12,7 @@ export interface TabsProps<T extends string = string> {
   options: TabOption<T>[];
   value: T;
   onChange: (id: T) => void;
-  /** Accessible name for the group — required (ruling R6). */
+  /** Accessible name for the group — required. */
   label: string;
   /** Gap in px — 6 by default, 9 on the plans cycle switch. */
   gap?: number;

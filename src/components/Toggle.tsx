@@ -1,7 +1,7 @@
 /*
  * Toggle — the switch on the devices, security and accessibility screens.
  *
- * Ruling R2: the comp moved the knob with `justify-content` and declared no
+ * The comp moved the knob with `justify-content` and declared no
  * transition, so it snapped. Here the knob is translated with
  * `transform: translateX(19px)` and a real transition (see components.css);
  * `.fx-nomotion` still kills it for reduce-motion users.
@@ -11,7 +11,7 @@ export interface ToggleProps {
   /** Current value. */
   on: boolean;
   onChange: (next: boolean) => void;
-  /** Accessible name — required (ruling R6). */
+  /** Accessible name — required. */
   label: string;
   /** Hides the visual label; the switch keeps its accessible name. */
   hideLabel?: boolean;

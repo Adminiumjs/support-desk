@@ -1,5 +1,5 @@
 /*
- * MiniChart — the energy bar chart and the progress meter (port spec §4.5).
+ * MiniChart — the energy bar chart and the progress meter.
  * Both are pure CSS; there is no charting library in the comp or the port.
  */
 
@@ -14,7 +14,7 @@ export interface MiniChartBar {
 
 export interface MiniChartProps {
   bars: MiniChartBar[];
-  /** Accessible summary — required (ruling R6). */
+  /** Accessible summary — required. */
   label: string;
   /** Chart block size in px. */
   height?: number;
@@ -59,7 +59,7 @@ export interface ProgressBarProps {
   pct: number;
   /** Rail height in px — 6 survey/warranty, 7 rooms/training, 8 refer. */
   height?: number;
-  /** Accessible name — required (ruling R6). */
+  /** Accessible name — required. */
   label: string;
   className?: string;
 }

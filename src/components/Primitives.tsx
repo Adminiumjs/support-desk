@@ -1,5 +1,5 @@
 /*
- * The repeated signatures worth extracting first (port spec §4.1):
+ * The repeated signatures worth extracting first:
  * Card, ListCard, Eyebrow, Callout, AccentIconTile and the two buttons.
  */
 
@@ -325,7 +325,7 @@ export function ButtonSecondary({
 
 export interface IconButtonProps extends Omit<NativeButton, "children"> {
   icon: string;
-  /** Required — becomes both the tooltip and the accessible name (ruling R6). */
+  /** Required — becomes both the tooltip and the accessible name. */
   label: string;
   /** Renders the label as visible text (the a11y "icon labels" toggle). */
   showLabel?: boolean;

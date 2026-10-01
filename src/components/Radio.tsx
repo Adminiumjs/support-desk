@@ -1,6 +1,6 @@
 /*
- * Radio — `radioStyle` + `rowSelStyle` from the comp's selection primitives
- * (port spec §4.3). Used for claim devices, return methods, repair types.
+ * Radio — `radioStyle` + `rowSelStyle` from the comp's selection primitives.
+ * Used for claim devices, return methods, repair types.
  */
 
 import type { ReactNode } from "react";

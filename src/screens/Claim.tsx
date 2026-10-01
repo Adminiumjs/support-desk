@@ -1,8 +1,8 @@
 /*
- * `claim` — Warranty claim (port spec §6.16, logic §8.14, data §7.9).
+ * `claim` — Warranty claim.
  *
  * Two states: the confirmation card once `clRef` is set, otherwise the form.
- * Validation is toast-only (§9.2). The reference is deterministic —
+ * Validation is toast-only. The reference is deterministic —
  * `claimRef(registered.length)`, so the two seeded devices give WC-48224.
  *
  * Max-width 820.
@@ -61,7 +61,7 @@ export default function Claim() {
     set({ clRef: null, clFault: "" });
   }
 
-  /* `gotoRepair()` also resets `rpRef` (port spec §8.1). */
+  /* `gotoRepair()` also resets `rpRef`. */
   function gotoRepair() {
     go("repair", { rpRef: null });
   }

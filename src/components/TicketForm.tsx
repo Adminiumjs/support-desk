@@ -1,6 +1,6 @@
 /*
  * TicketForm fields — the labelled field wrappers and the product picker the
- * new-ticket screen composes (port spec §6.8, §9.1).
+ * new-ticket screen composes.
  *
  * These are field primitives, not the whole form: the `newticket` screen owns
  * the layout and calls `submitTicket()` on the store.
@@ -208,7 +208,7 @@ export interface ProductPickerProps {
   products: Product[];
   value: ProductId | null;
   onChange: (id: ProductId) => void;
-  /** Accessible name for the group — required (ruling R6). */
+  /** Accessible name for the group — required. */
   label: string;
   className?: string;
 }

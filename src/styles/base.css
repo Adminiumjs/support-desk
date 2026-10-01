@@ -412,7 +412,7 @@ svg {
   transform: none !important;
 }
 
-/* The OS preference backs the in-app setting (ruling R6). */
+/* The OS preference backs the in-app setting. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -458,7 +458,7 @@ svg {
 .w-720  { max-inline-size: 720px; }
 .w-620  { max-inline-size: 620px; }
 
-/* --- ultra-wide (ruling R5) ---
+/* --- ultra-wide ---
  *
  * The comp implemented the 1800 → 1440 rule twice: a CSS class plus a
  * `colWidth()` JS mirror that had to stay in sync. Here it exists once, in
@@ -471,7 +471,7 @@ svg {
   }
 }
 
-/* --- the two real breakpoints (ruling R5) --- */
+/* --- the two real breakpoints --- */
 
 /* The header's 980 / 1120 switches live at the end of components.css, not
  * here. They toggle `display` on elements that also carry a component class

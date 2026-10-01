@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 /**
- * A `DataSource` backed by a real Adminium instance (28-public-surface.md §5.2,
- * 28-T28 wave 3).
+ * A `DataSource` backed by a real Adminium instance.
  *
  * ── READ THIS FIRST: THIS APP IS MOSTLY NOT IN ITS OWN DATABASE ────────────
- * 28-T33 §7 said support-desk "cannot be reconciled at all as scoped", and this
+ * An audit of the example apps said support-desk "cannot be reconciled at all
+ * as scoped", and this
  * file is what that sentence looks like in code. The seam declares about ninety
  * methods. `db/schema.sql` is TEN TABLES: agents, customers, products, the
  * knowledge base, tickets and their messages, and orders with their lines and
@@ -16,8 +16,8 @@
  * transfer — has NO TABLE ANYWHERE. Those methods are delegated to the demo
  * source unchanged, and they are fiction against a real deployment.
  *
- * That is not a gap to close in a mapping. It is 28-T36's re-scope, and until
- * it happens a connected build of this app is a real help desk wrapped in a
+ * That is not a gap to close in a mapping. It needs the missing tables added
+ * to the schema, and until that happens a connected build of this app is a real help desk wrapped in a
  * demo. The `DELEGATED` list at the bottom of this file is the honest inventory
  * — read it before pointing this at a tenant.
  *
@@ -35,12 +35,12 @@
  * fifth device gets a row the generated dashboard can edit and the help desk
  * cannot mention — the people-ops pattern, applied to a catalogue.
  *
- * ── WHAT THE SCHEMA CANNOT SAY (WS-I gaps, marked not hidden) ──────────────
+ * ── WHAT THE SCHEMA CANNOT SAY (gaps, marked not hidden) ───────────────────
  * G-1 THE VENDOR HAS NO RECORD: no brand name, no footer URL, no copyright
  *     line. Connected mode returns an empty brand, so the header wordmark is
  *     blank rather than another company's name.
  * G-2 Identity is not solved, so `customer()` is blank. The account screens
- *     have nobody to be until the claim flow lands (§3.4, O2).
+ *     have nobody to be until the claim flow lands.
  * G-3 `order_events` records a label and an order, never a TIME, so every step
  *     on the tracker reads without one.
  * G-4 A ticket's "updated" stamp is a relative phrase in the seed ("2h ago").
@@ -348,7 +348,7 @@ export async function loadSnapshot(client: PublicClient): Promise<Snapshot | nul
           product: product ?? (mappedProducts[0]?.id ?? "thermostat"),
           subject: row.subject,
           status: row.status,
-          // WS-I G-4: the seed's "2h ago" is a phrase, and there is no locale
+          // G-4: the seed's "2h ago" is a phrase, and there is no locale
           // here to phrase one in.
           updated: toTenantDay(row.updated_at, tz),
           rank: Date.parse(row.updated_at),
@@ -377,7 +377,7 @@ export async function loadSnapshot(client: PublicClient): Promise<Snapshot | nul
     const stepsByOrder = new Map<number, OrderStep[]>();
     for (const row of [...events].sort((a, b) => a.position - b.position)) {
       const list = stepsByOrder.get(row.order_id) ?? [];
-      // WS-I G-3: `order_events` records a label and never a time.
+      // G-3: `order_events` records a label and never a time.
       list.push({ label: row.label, when: row.detail ?? "", st: row.state });
       stepsByOrder.set(row.order_id, list);
     }
@@ -433,7 +433,7 @@ export async function loadSnapshot(client: PublicClient): Promise<Snapshot | nul
  * cards, plans, trade-in, smart home, energy, members, referrals, installers,
  * partner jobs, sessions, security, survey, cameras, clips, automations,
  * invoices and warranty transfer. None of those has a table. See the header:
- * this is 28-T36's re-scope written down, not a mapping that could be finished.
+ * this is the missing schema written down, not a mapping that could be finished.
  */
 export function snapshotSource(snap: Snapshot): DataSource {
   const productById = new Map(snap.products.map((p) => [p.id as string, p]));
@@ -445,9 +445,9 @@ export function snapshotSource(snap: Snapshot): DataSource {
 
     /* identity */
     agent: () => snap.agent,
-    // WS-I G-1: no brand column. Blank beats another company's name.
+    // G-1: no brand column. Blank beats another company's name.
     brand: () => "",
-    // WS-I G-2: nothing here knows who is reading.
+    // G-2: nothing here knows who is reading.
     customer: (): CustomerIdentity => ({ initials: "", tint: "", email: "" }),
 
     /* catalogue */

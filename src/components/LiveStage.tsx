@@ -1,5 +1,5 @@
 /*
- * The camera stage and one clip row (delta spec A §1).
+ * The camera stage and one clip row.
  *
  * `<LiveStage>` renders the online feed with its four overlay chips, or the
  * dashed "no feed" panel when the camera is offline — the caller passes the
